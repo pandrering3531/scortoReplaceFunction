@@ -1,0 +1,267 @@
+﻿@model ICollection<STPC.DynamicForms.Web.RT.Services.Entities.Hierarchy>
+@{
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+    
+    
+}
+<fieldset>
+    <legend></legend>
+    <div class="tree">
+       @* <input type="button" id="all" value="Expander" />*@
+
+        <ul id="HierarchiesTreeView">
+            <li>Jerarquias<span class="" style="display: inline-block" title="Agregar hijo"></span>
+
+                @if (ViewBag.IsSingleTenant == 1)
+                {
+                    @Html.ActionLink(" ", "Create", new { parentId = 0 }, new { style = "display:inline-block; margin-left: 5px;", @class = "ui-icon ui-icon-plusthick ui-state-default ui-corner-all NewLinkJerarquias", title = "Nuevo" })
+                }
+                @OrgTree(Model, null)
+                @helper OrgTree(ICollection<STPC.DynamicForms.Web.RT.Services.Entities.Hierarchy> nodes, STPC.DynamicForms.Web.RT.Services.Entities.Hierarchy parent)
+{
+    if (nodes.Any(n => n.Parent == parent))
+    { 
+                    <ul>
+                        @foreach (var node in nodes.Where(o => o.Parent == parent))
+                        {
+                            <li style="padding-left: 25px; padding-bottom: 5px;"><a class="nodeName">@node.Level |@node.Name</a>
+                                @Html.ActionLink(" ", "Create", new { parentId = node.Id }, new { style = "display:inline-block; margin-left: 5px;", @class = "ui-icon ui-icon-plusthick ui-state-default ui-corner-all NewLinkJerarquias", title = "Nuevo" })
+                                @Html.ActionLink(" ", "Edit", new { NodeId = node.Id, }, new { style = "display:inline-block; margin-left: 5px;", @class = "ui-icon ui-icon-document-b ui-state-default ui-corner-all EditLinkJerarquias", title = "Editar" })
+
+                                @*<span class="ui-icon ui-icon-plusthick ui-state-default ui-corner-all" style="display:inline-block; margin-left: 5px;" title="Agregar hijo" onclick="addchild('@node.Id');"></span>*@
+                                @*<span class="ui-icon ui-icon-document-b ui-state-default ui-corner-all" style="display:inline-block; margin-left: 5px;" title="Editar" onclick="EdtiNode('@node.Id');"></span>*@
+                                <span class="ui-icon ui-icon-trash ui-state-default ui-corner-all" style="display:inline-block; margin-left: 5px;" title="Eliminar" data-key="@node.Id" onclick="deleteme('@node.Id');"></span>
+                                @OrgTree(nodes, node)
+                            </li>
+                        }
+                    </ul>
+    }
+                }
+            </li>
+        </ul>
+    </div>
+</fieldset>
+<div id="modalCrearNodo" title="Crear nodo" style="display: none; width: 800px">
+</div>
+<div id="EditmodalContent" title="Edit nodo" style="display: none; width: 800px">
+</div>
+
+@section BottomAssets 
+  {
+
+    <script src="@Url.Content("~/Scripts/Hierarchies/_List.js")" type="text/javascript"></script>
+}
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.tree li').each(function () {
+            if ($(this).children('ul').length > 0) {
+                $(this).addClass('parent');
+            }
+        });
+
+        $('.tree li.parent > .nodeName').click(function () {
+            $(this).parent().toggleClass('active');
+            $(this).parent().children('ul').slideToggle('fast');
+        });
+        $('.tree li').each(function () {
+            $(this).toggleClass('active');
+            $(this).children('ul').slideToggle('fast');
+        });
+        $('#all').click(function () {
+
+            $('.tree li').each(function () {
+                $(this).toggleClass('active');
+                $(this).children('ul').slideToggle('fast');
+            });
+        });
+
+    });
+
+    function SetRequiered() {
+        var campos = $('input[type="text"]:required');
+        $(campos).each(function () {
+            $(this).live('keyup', function () {
+                if ($(this).val() != "") {
+                    $(this).removeClass('notFilled');
+                }
+                else {
+                    $(this).addClass('notFilled');
+                }
+            });
+        });
+    }
+
+    function ValidarRequeridosJerarquias() {
+        var correcto = true;
+        var campos = $('input[type="text"]:required');
+        var select = $('select:required');
+        $(campos).each(function () {
+            if ($(this).val() == '') {
+                correcto = false;
+                $(this).addClass('notFilled');
+
+                $(this).live('keyup', function () {
+                    if ($(this).val() != "") {
+                        $(this).removeClass('notFilled');
+                    }
+                    else {
+                        $(this).addClass('notFilled');
+                    }
+                });
+            }
+        });
+        $(select).each(function () {
+            if ($(this).val() == '') {
+                correcto = false;
+                $(this).addClass('notFilled');
+                $(this).live('keyup', function () {
+                    if ($(this).val() != "") {
+                        $(this).removeClass('notFilled');
+                    }
+                    else {
+                        $(this).addClass('notFilled');
+                    }
+                });
+            }
+        });
+        return correcto;
+    }
+    $('input[type="text"]:required').click(function () {
+        $(this).removeClass('notFilled');
+    });
+
+
+
+
+    $(".NewLinkJerarquias").button();
+    $('#modalCrearNodo').dialog({
+        autoOpen: false,
+        width: 650,
+        resizable: false,
+        modal: true,
+        buttons: {
+            "Actualizar": function () {
+                blockScreen("Actualizando jerarquias..");
+                $("#txtHierarchyName").keyup(function () {
+                    if ($(this).val() != "") {
+                        $(this).removeClass('notFilled');
+                    }
+                });
+                if ($("#txtHierarchyName").val() == '') {
+                    $("#txtHierarchyName").addClass('notFilled');
+                    return;
+                }
+                else {
+                    $("#txtHierarchyName").removeClass('notFilled');
+                }
+                if (ValidarRequeridosJerarquias()) {                   
+                    $("#updateJerarquiaFormNew").submit();
+                }
+            },
+            "Cancelar": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $(".NewLinkJerarquias").click(function () {
+        linkObj = $(this);
+        var dialogDiv = $('#modalCrearNodo');
+        var viewUrl = linkObj.attr('href');
+        $.get(viewUrl, function (data) {
+            dialogDiv.html(data);
+            var $form = $("#updateJerarquiaFormNew");
+            $form.unbind();
+            $form.data("validator", null);
+            $.validator.unobtrusive.parse(document);
+            $form.validate($form.data("unobtrusiveValidation").options);
+            dialogDiv.dialog('open');
+        });
+        return false;
+    });
+
+
+
+
+    $(".EditLinkJerarquias").button();
+    $(".decorated").button();
+    $('#EditmodalContent').dialog({
+        autoOpen: false,
+        width: 650,
+        resizable: false,
+        modal: true,
+        buttons: {
+            "Actualizar": function () {
+                blockScreen("Actualizando jerarquias..");
+                $("#txtHierarchyNameEdit").keyup(function () {
+                    if ($(this).val() != "") {
+                        $(this).removeClass('notFilled');
+                    }
+                });
+                if ($("#txtHierarchyNameEdit").val() == '') {
+                    $("#txtHierarchyNameEdit").addClass('notFilled');
+                    return;
+                }
+                else {
+                    $("#txtHierarchyNameEdit").removeClass('notFilled');
+                }
+                if (ValidarRequeridosJerarquias()) {
+                    $("#updateJerarquiaFormEdit").submit();
+                }
+            },
+            "Cancelar": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $(".EditLinkJerarquias").click(function () {
+
+        linkObj = $(this);
+        var dialogDiv = $('#EditmodalContent');
+        var viewUrl = linkObj.attr('href');
+        $.get(viewUrl, function (data) {
+            dialogDiv.html(data);
+            var $form = $("#updateJerarquiaFormEdit");
+            $form.unbind();
+            $form.data("validator", null);
+            $.validator.unobtrusive.parse(document);
+            $form.validate($form.data("unobtrusiveValidation").options);
+            dialogDiv.dialog('open');
+        });
+        return false;
+    });
+
+
+    function updateSuccessCreate(data) {
+        $("#CustomerForm").submit();
+        $('#modalContent').dialog("close");
+        $("#modalCrearNodo").dialog("close")                          
+    }
+
+    function updateSuccessUpdate(data) {
+        $("#CustomerForm").submit();
+        $('#EditmodalContent').dialog("close");
+        $('#modalCrearNodo').dialog("close");           
+        
+    }
+
+    function deleteme(key) {
+        if (confirm("¿Seguro de borrar este nodo?")) {
+            var theiteminthelist = $('span[data-key=' + key + ']').parent();
+            $.post("/Hierarchies/DeleteHierarchy", { id: key },
+                    function (data) {
+                        if (data.Success == true) {
+                            $(theiteminthelist).remove();
+                        }
+                        else alert("Delete failed");
+                    }, "json");
+        }
+    }
+</script>

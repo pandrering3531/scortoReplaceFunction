@@ -1,0 +1,136 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Helpers.FormPageActionsExtend>
+@{
+    ViewBag.Title = "Acciones por Página";
+
+    foreach (var action in Model)
+    {
+        ViewBag.GuidList = ViewBag.GuidList + action.Uid.ToString() + "/";
+    }
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+}
+@Html.AntiForgeryToken()
+@using (Ajax.BeginForm("UpdateActions", "FormPage",
+   new AjaxOptions { UpdateTargetId = "CustomerForm", OnSuccess = "onEditCustomerProfileSuccessActions" },
+   new { id = "EditCustomerProfileForm" }))
+{
+    @Html.Hidden("GoToPage", null, new { id = "GoToPage" })
+    @Html.Hidden("FormStateId", null, new { id = "FormStateId" })
+    @Html.Hidden("ActionId", null, new { id = "ActionId" })
+    
+    <div id="migas">
+        <p>Seleccionar las acciones que aplican para esta página: @ViewBag.FormPageName</p>
+    </div>
+    <br />
+    <table>
+        <tr>
+            <td>
+                <button id="NewAccion">Agregar nueva acción</button>
+
+            </td>
+            <td style="width: 50px;"></td>
+            <td></td>
+
+        </tr>
+
+
+    </table>
+
+    <br />
+    <div id="CustomerForm">
+        @{Html.RenderPartial("_List_FormPageActions");}
+    </div>
+  
+    @Html.Hidden("FormPageId", (Guid)ViewBag.FormPageId)
+    @Html.Hidden("FormId", (Guid)ViewBag.FormId)
+
+    <span class="ui-button-text" id="btnBackToPages" onclick="getPages('@ViewBag.FormId')">Volver a la lista de páginas</span>
+    
+    @Html.Hidden("arrayOrder", null, new { id = "txtArrayOrder" })
+    @Html.Hidden("GuidList", (string)ViewBag.GuidList)
+
+    <input type="button" id="StarQuery" value="Guardar"/>
+@*<input id="StarQuery" type="button">
+        Guardar</input>*@
+    <div id="testDiv"></div>
+}
+
+
+<div id="modalContent2"></div>
+<div id="modalContentStates" title="Agregar estado a la acción"></div>
+<div id="modalContentStrategies" title="Agregar estrategia a la acción"></div>
+
+
+@section BottomAssets 
+  {
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/TableDnD/jquery.tablednd.0.7.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        @* $(document).ready(function () {
+            // Initialise the table 
+            $("#TheTable").tableDnD({
+                onDragClass: "myDragClass",
+                onDrop: function (table, row) {
+                    $('#txtArrayOrder').val($('#TheTable').tableDnDSerialize());
+                    //alert($('#TheTable').tableDnDSerialize());
+                    var iNewOrderList = $('#txtArrayOrder').val();
+                    var iGuidList = $('#GuidList').val();
+
+                    $.post("@Url.Action("SaveOrder", "FormPage")", {
+                        iNewOrderList: iNewOrderList,
+                        iGuidList: iGuidList
+                    },
+          function (carData) {
+          });
+                }
+            });
+        });*@
+
+        
+        function getPages(id) {
+            console.log('Removing div')
+            $('div#EditIEvent').remove();
+            console.log('Removed div')
+            blockScreen("Un momento por favor....");
+            $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+                var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+                $('input[name="__RequestVerificationToken"]').val(tokenValue);
+                $.ajax({
+                    type: "POST",
+                    url: "/FormPage/LisPagePost/",
+                    data: {
+                        '__RequestVerificationToken': tokenValue, 'id': id
+                    },
+                    dataType: "html",
+                    success: function (evt) {
+                        $('#right-column').html
+
+                        if ($('div#NewPageDialog').length > 0) {
+                            console.log($('div#NewPageDialog').length)
+                            $('#NewPageDialog').remove();
+                        }
+                        $('#right-column').html(evt);
+
+
+                        $.unblockUI();
+                        //$("#EditCustomerProfileForm").submit();
+                    },
+                    error: function (result, status, error) {
+                        $.unblockUI();
+                        if (result.responseText == "EndSesion") {
+                            var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                            location.href = urlSite
+                        }
+                        else {
+                            alert("Error al cargar la pagina: " + result.responseText);
+                        }
+
+                    }
+                });
+            });
+
+        }
+    </script>
+}
+
+
+

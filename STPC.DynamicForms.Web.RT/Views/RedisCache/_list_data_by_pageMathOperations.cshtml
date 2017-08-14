@@ -1,0 +1,31 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.PageMathOperation>
+@{
+    
+}
+<section>
+    Registros encontrados: @Model.Count
+</section>
+<table id="table_PageMathOperatios_redis" class="resultados" summary="Sus páginas" style="width: 100%">
+    <tr class="nodrop nodrag">
+        <th>Expresión</th>
+        <th>Campo resultado</th>        
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Expression
+            </td>
+
+
+            <td>
+                @ViewData["ResultField" + item.ResultField]
+            </td>
+
+        </tr>
+    }
+</table>
+
+
+
+

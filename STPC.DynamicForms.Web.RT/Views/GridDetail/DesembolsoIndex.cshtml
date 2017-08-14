@@ -1,0 +1,341 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.TBL_Desembolso_FINCOMERCIOGrid>
+
+<input type="hidden" id="inRequestId" value="@ViewBag.RequestId"/>
+
+@{ 
+    var grid = new WebGrid(ajaxUpdateContainerId: "contenedor-grid-des", rowsPerPage: ViewBag.PageSize, canPage: true);
+    grid.Bind(Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+}
+<div id="contenedor-grid-des">
+@{
+    
+    IEnumerable<WebGridColumn> cols =
+        new List<WebGridColumn> {
+                new WebGridColumn{
+                    Header="Banco",
+                    Format = @<text>
+                                <input type="hidden" id="inIDDesembolso" value="@item.F_Id" class="edit"/>
+                                <span class="display"><label id="lblBanco">@item.F_varBanco</label></span>
+                                @Html.DropDownList("value", new SelectList(ViewBag.listBanks, "Value", "Text", @item.F_varIdBanco), "---Seleccione---", new{ @id="inEditBanco", @class="basico1_select edit", @required="true", @tooltip="true", @data_val="true", @data_val_required="* Campo requerido", @Width="100%"})
+                                </text>, Style="col2Width"
+                },
+                new WebGridColumn{
+                    Header="Número Cuenta",
+                    Format = @<text>
+                                <span class="display"><label id="lblNumeroCuenta">@item.F_varNumeroCuenta</label></span>
+                                <input type="text" id="inEditNumeroCuenta" value="@item.F_varNumeroCuenta" class="edit" required = "true", maxlength="10", tooltip="true", data_val="true", data_val_required="* Campo requerido"/>
+                                </text>, Style="col2Width"
+                },
+                new WebGridColumn{
+                    Header="Tipo Cuenta", 
+                    Format = @<text>
+                                <span class="display"><label id="lblTipoCuenta">@item.F_varTipoDesembolso</label></span>
+                    @Html.DropDownList("value",  new SelectList(ViewBag.listAccountType, "Value", "Text", @item.F_varTipoCuenta),  "---Seleccione---", new{ @id="inEditTipoCuenta", @required="true", @class="basico1_select edit", @tooltip="true", @data_val="true", @data_val_required="* Campo requerido", @Width="100%"})
+                                </text>, Style="col2Width"
+                },
+                new WebGridColumn{Header="Acciones",
+
+                    Format = @<text>
+                            <div style="display:@ViewBag.EditRoles">
+                                <input type="button" value="Editar" class="display edit-btn"/>
+                                <input type="button" value="Eliminar" class="display delete-btn"/>
+                                <input type="button" value="Guardar" class="edit save-btn"/>
+                                <input type="button" value="Cancelar" class="edit cancel-btn"/>
+                            </div>
+                            </text>, Style="col2Width"
+                },
+                new WebGridColumn{Header="Seleccionar",
+
+                    Format = @<text>
+                    <div style="display:@ViewBag.EditRoles">
+                        <input type="checkbox" id="inSelectDesembolso" class="SelectDesembolso" @((@item.F_bitSeleccionado ? "checked" : ""))/>
+                    </div>
+                            </text>, Style="col1Width"
+                }
+                
+            };
+}
+
+    <div>
+@grid.GetHtml(columns: cols, tableStyle: "webgrid-table",
+    headerStyle: "webgrid-header",
+    rowStyle: "webgrid-row-style",
+    alternatingRowStyle: "webgrid-alternating-row",
+    selectedRowStyle: "webgrid-selected-row",
+    footerStyle: "webgrid-footer", htmlAttributes: new { id = "contenedor-grid-des" })
+    <br />
+    <br />
+    <div style="display: none" id="divAddRow">
+
+        @{
+            STPC.DynamicForms.Web.RT.Services.Entities.TBL_Desembolso_FINCOMERCIOGrid t = new STPC.DynamicForms.Web.RT.Services.Entities.TBL_Desembolso_FINCOMERCIOGrid();
+        }
+        @Html.Partial("_addDesembolso", t)
+
+    </div>
+    <div style="display:@ViewBag.EditRoles">
+        <input type="button" value="Nuevo Registro" id="ClickToAdd" class="display ins-btn"/>
+    </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#ClickToAdd').click(function () {
+
+            $("#divAddRow").css("display", "block");
+
+        })
+
+        $(document).ready(function () {
+
+            $('.edit').hide();                                                  //Default is display
+
+            $('.ins-btn').on("click", function () {
+                var tr = $(this).parents('tr:first');
+                tr.find('.edit, .display').toggle();
+            });
+
+            $('.edit-btn, .cancel-btn').on("click", function () {
+                var tr = $(this).parents('tr:first');
+                tr.find('.edit, .display').toggle();
+            });
+
+            $('.inssave-btn').on("click", function () {
+                var tr = $(this).parents('tr:first');
+                var requestid = $('#inRequestId').val();
+                var idbanco = tr.find("#inBanco").val();
+                var banco = tr.find("#inBanco option:selected").text();
+                var cuenta = tr.find("#inNumeroCuenta").val();
+                var idtipoCuenta = tr.find("#inTipoCuenta").val();
+                var tipoCuenta = tr.find("#inTipoCuenta option:selected").text();
+                var isSuccess = -1;
+                var Registro =
+                {
+                    "F_RequestId": requestid,
+                    "F_varIdBanco": idbanco,
+                    "F_varBanco": banco,
+                    "F_varNumeroCuenta": cuenta,
+                    "F_varTipoCuenta": idtipoCuenta,
+                    "F_varTipoDesembolso": tipoCuenta
+                };
+                blockScreen("Un momento por favor....");
+
+                $.ajax({
+
+                    url: '/GridDetail/DesembolsoInsertData/',                           //InsertData method
+
+                    data: JSON.stringify(Registro),
+
+                    type: 'POST',
+
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function (result) {
+                        isSuccess = result;
+
+                    },
+                    error: function (result) {
+                        isSuccess = result;
+                    }
+
+                }).done(function (e) {
+                    if (isSuccess == "1") {                                     //Successfully saved
+                        var requestid = $('#inRequestId').val();
+                        var url = "/GridDetail/DesembolsoIndex?requestId=" + requestid + "&EditRol=''"; //Grid update
+                        var $container = $("#contenedor-grid-des");
+                        $container.load(url);
+                        $.unblockUI();
+                        alert("Registro guardado correctamente");
+
+                    }
+                    else {
+                        $.unblockUI();
+                        alert("Error. Por favor, revise los datos" + "\n" + isSuccess);            //Data Error
+                    }
+                });
+            });
+
+
+            $('.cancelinssave-btn').on("click", function () {
+                $("#divAddRow").css("display", "none");
+                blockScreen("Un momento por favor....");
+                var requestid = $('#inRequestId').val();
+                var url = "/GridDetail/DesembolsoIndex?requestId=" + requestid + "&EditRol=''";
+                var $container = $("#contenedor-grid-des");
+                $container.load(url);
+                $.unblockUI();
+            });
+
+
+            $('.save-btn').on("click", function () {
+                var requestid = $('#inRequestId').val();
+                var tr = $(this).parents('tr:first');
+                var id = tr.find("#inIDDesembolso").val();
+                var requestid = $('#inRequestId').val();
+
+                var idbanco = tr.find("#inEditBanco").val();
+                var banco = tr.find("#inEditBanco option:selected").text();
+                var cuenta = tr.find("#inEditNumeroCuenta").val();
+                var idtipoCuenta = tr.find("#inEditTipoCuenta").val();
+                var tipoCuenta = tr.find("#inEditTipoCuenta option:selected").text();
+                var isSuccess = -1;
+                
+                //var banco = tr.find("#inEditBanco").val();
+                //var cuenta = tr.find("#inEditNumeroCuenta").val();
+                //var tipoCuenta = tr.find("#inEditTipoCuenta").val();
+                var isSuccess = -1;
+
+                tr.find("#lblBanco").text(banco);
+                tr.find("#lblNumeroCuenta").text(cuenta);
+                tr.find("#lblTipoCuenta").text(tipoCuenta);
+
+                var Registro =
+                {
+                    "F_Id": id,
+                    "F_RequestId": requestid,
+                    "F_varIdBanco": idbanco,
+                    "F_varBanco": banco,
+                    "F_varNumeroCuenta": cuenta,
+                    "F_varTipoCuenta": idtipoCuenta,
+                    "F_varTipoDesembolso": tipoCuenta
+                };
+
+                blockScreen("Un momento por favor....");
+                $.ajax({
+
+                    url: '/GridDetail/DesembolsoSaveData/',
+
+                    data: JSON.stringify(Registro),
+
+                    type: 'POST',
+
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function (result) {
+                        isSuccess = result;
+
+                    },
+                    error: function (result) {
+                        isSuccess = result;
+                    }
+
+                }).done(function () {
+                    if (isSuccess == "1") {                                     //Successfully saved
+                        tr.find('.edit, .display').toggle();
+                        $.unblockUI();
+                        alert("Registro guardado correctamente");
+                    }
+                    else {                                                      //Data Error
+                        $.unblockUI();
+                        alert("Error. Por favor, revise los datos" + "\n" + isSuccess);
+                    }
+                });
+
+            });
+
+
+            $('.delete-btn').on("click", function () {
+                if (confirm("¿Seguro de borrar este registro?")) {
+
+                    var requestid = $('#inRequestId').val();
+                    var tr = $(this).parents('tr:first');
+                    var entidad = tr.find("#inEntidad").val();
+                    var id = tr.find("#inIDDesembolso").val();
+                    var isSuccess = -1;
+
+                    var Registro =
+                    {
+                        "F_Id": id,
+                        "F_RequestId": requestid
+                    };
+                    blockScreen("Un momento por favor....");
+                    $.ajax({
+
+                        url: '/GridDetail/DesembolsoDeleteData/',
+
+                        data: JSON.stringify(Registro),
+
+                        type: 'POST',
+
+                        contentType: 'application/json; charset=utf-8',
+
+                        success: function (result) {
+                            isSuccess = result;
+
+                        },
+                        error: function (result) {
+                            isSuccess = result;
+                        }
+
+                    }).done(function () {
+                        if (isSuccess == "1") {                                         // Successfully Deleted
+                            var requestid = $('#inRequestId').val();
+                            var url = "/GridDetail/DesembolsoIndex?requestId=" + requestid + "&EditRol=''";
+                            var $container = $("#contenedor-grid-des");
+                            $container.load(url);
+                            $.unblockUI();
+                            alert("Registro eliminado correctamente");
+                        }
+                        else {
+                            alert("Error. Por favor, revise los datos");                //Data Error
+                        }
+
+                    });
+
+                }
+            });
+
+            $('.SelectDesembolso').on("click", function () {
+
+                var requestid = $('#inRequestId').val();
+                var tr = $(this).parents('tr:first');
+                var id = tr.find("#inIDDesembolso").val();
+                var chkSelect = tr.find("#inSelectDesembolso").prop('checked');
+                var isSuccess = -1;
+
+                var Registro =
+                {
+                    "F_Id": id,
+                    "F_RequestId": requestid,
+                    "F_bitSeleccionado": chkSelect
+                };
+                blockScreen("Un momento por favor....");
+                $.ajax({
+
+                    url: '/GridDetail/DesembolsoUpdateSelect/',
+
+                    data: JSON.stringify(Registro),
+
+                    type: 'POST',
+
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function (result) {
+                        isSuccess = result;
+
+                    },
+                    error: function (result) {
+                        isSuccess = result;
+                    }
+
+                }).done(function () {
+                    if (isSuccess != "-1") {                                     //Successfully saved
+                        //$('#STPC_DFi_c25fdd03-8875-4ea2-8d08-a26b8011c9f2').val(isSuccess);
+                        var requestid = $('#inRequestId').val();
+                        var url = "/GridDetail/DesembolsoIndex?requestId=" + requestid + "&EditRol=''";
+                        var $container = $("#contenedor-grid-des");
+                        $container.load(url);
+                        $.unblockUI();
+                    }
+                    else {                                                      //Data Error
+                        alert("Error. Por favor, revise los datos" + "\n" + isSuccess);
+                        $.unblockUI();
+                    }
+                });
+
+            });
+
+        });
+
+</script>
+</div>
+        <div id="error"></div>

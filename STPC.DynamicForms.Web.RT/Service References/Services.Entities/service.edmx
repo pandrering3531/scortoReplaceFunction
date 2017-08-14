@@ -1,0 +1,1202 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="1.0">
+    <Schema Namespace="STPC.DynamicForms.Web.Models" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityType Name="AdCampaign">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Text" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Image" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Hierarchy_id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="BeginDate" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="EndDate" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Url" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="ApplyToChilds" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Hierarchy" Relationship="STPC.DynamicForms.Web.Models.AdCampaign_Hierarchy" FromRole="AdCampaign_Hierarchy_Source" ToRole="AdCampaign_Hierarchy_Target" />
+        <NavigationProperty Name="HierarchyByCampaign" Relationship="STPC.DynamicForms.Web.Models.AdCampaign_HierarchyByCampaign" FromRole="AdCampaign_HierarchyByCampaign_Source" ToRole="AdCampaign_HierarchyByCampaign_Target" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.AplicationName_AdCampaign" FromRole="AplicationName_AdCampaign_Target" ToRole="AplicationName_AdCampaign_Source" />
+      </EntityType>
+      <EntityType Name="Hierarchy">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="Level" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="NodeType" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Parent" Relationship="STPC.DynamicForms.Web.Models.Hierarchy_Parent" FromRole="Hierarchy_Parent_Source" ToRole="Hierarchy_Parent_Target" />
+        <NavigationProperty Name="Children" Relationship="STPC.DynamicForms.Web.Models.Hierarchy_Parent" FromRole="Hierarchy_Parent_Target" ToRole="Hierarchy_Parent_Source" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.AplicationName_Hierarchy" FromRole="AplicationName_Hierarchy_Target" ToRole="AplicationName_Hierarchy_Source" />
+      </EntityType>
+      <EntityType Name="AplicationName">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="Category" Relationship="STPC.DynamicForms.Web.Models.Category_AplicationName" FromRole="Category_AplicationName_Target" ToRole="Category_AplicationName_Source" />
+        <NavigationProperty Name="AdCampaign" Relationship="STPC.DynamicForms.Web.Models.AplicationName_AdCampaign" FromRole="AplicationName_AdCampaign_Source" ToRole="AplicationName_AdCampaign_Target" />
+        <NavigationProperty Name="Hierarchy" Relationship="STPC.DynamicForms.Web.Models.AplicationName_Hierarchy" FromRole="AplicationName_Hierarchy_Source" ToRole="AplicationName_Hierarchy_Target" />
+        <NavigationProperty Name="PerformanceIndicator" Relationship="STPC.DynamicForms.Web.Models.PerformanceIndicator_AplicationName" FromRole="PerformanceIndicator_AplicationName_Target" ToRole="PerformanceIndicator_AplicationName_Source" />
+        <NavigationProperty Name="Request" Relationship="STPC.DynamicForms.Web.Models.AplicationName_Request" FromRole="AplicationName_Request_Source" ToRole="AplicationName_Request_Target" />
+        <NavigationProperty Name="Report" Relationship="STPC.DynamicForms.Web.Models.Report_AplicationName" FromRole="Report_AplicationName_Target" ToRole="Report_AplicationName_Source" />
+        <NavigationProperty Name="MenuItem" Relationship="STPC.DynamicForms.Web.Models.MenuItem_AplicationName" FromRole="MenuItem_AplicationName_Target" ToRole="MenuItem_AplicationName_Source" />
+        <NavigationProperty Name="Option" Relationship="STPC.DynamicForms.Web.Models.Option_AplicationName" FromRole="Option_AplicationName_Target" ToRole="Option_AplicationName_Source" />
+      </EntityType>
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="Dependency" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Options" Relationship="STPC.DynamicForms.Web.Models.Option_Category" FromRole="Option_Category_Target" ToRole="Option_Category_Source" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.Category_AplicationName" FromRole="Category_AplicationName_Source" ToRole="Category_AplicationName_Target" />
+      </EntityType>
+      <EntityType Name="Option">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Key" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="Value" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="Category_Uid" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Option_Uid_Parent" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Category" Relationship="STPC.DynamicForms.Web.Models.Option_Category" FromRole="Option_Category_Source" ToRole="Option_Category_Target" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.Option_AplicationName" FromRole="Option_AplicationName_Source" ToRole="Option_AplicationName_Target" />
+      </EntityType>
+      <EntityType Name="PerformanceIndicator">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="IndicatorType" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Source" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="Enabled" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="LastModifiedBy" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Modified" Type="Edm.DateTime" Nullable="true" />
+        <Property Name="WarningMinValue" Type="Edm.Int32" Nullable="false" />
+        <Property Name="WarningMaxValue" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ViolationMinvalue" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ViolationMaxvalue" Type="Edm.Int32" Nullable="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Role" Relationship="STPC.DynamicForms.Web.Models.Role_PerformanceIndicator" FromRole="Role_PerformanceIndicator_Target" ToRole="Role_PerformanceIndicator_Source" />
+        <NavigationProperty Name="Hierarchy" Relationship="STPC.DynamicForms.Web.Models.PerformanceIndicator_Hierarchy" FromRole="PerformanceIndicator_Hierarchy_Source" ToRole="PerformanceIndicator_Hierarchy_Target" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.PerformanceIndicator_AplicationName" FromRole="PerformanceIndicator_AplicationName_Source" ToRole="PerformanceIndicator_AplicationName_Target" />
+      </EntityType>
+      <EntityType Name="Role">
+        <Key>
+          <PropertyRef Name="Rolename" />
+        </Key>
+        <Property Name="Rolename" Type="Edm.String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.Role_AplicationName" FromRole="Role_AplicationName_Source" ToRole="Role_AplicationName_Target" />
+        <NavigationProperty Name="ViewFields" Relationship="STPC.DynamicForms.Web.Models.Role_ViewFields" FromRole="Role_ViewFields_Source" ToRole="Role_ViewFields_Target" />
+        <NavigationProperty Name="EditFields" Relationship="STPC.DynamicForms.Web.Models.Role_EditFields" FromRole="Role_EditFields_Source" ToRole="Role_EditFields_Target" />
+        <NavigationProperty Name="PerformanceIndicator" Relationship="STPC.DynamicForms.Web.Models.Role_PerformanceIndicator" FromRole="Role_PerformanceIndicator_Source" ToRole="Role_PerformanceIndicator_Target" />
+        <NavigationProperty Name="Roles" Relationship="STPC.DynamicForms.Web.Models.ObjectPermissions_Role" FromRole="ObjectPermissions_Role_Target" ToRole="ObjectPermissions_Role_Source" />
+      </EntityType>
+      <EntityType Name="PageField">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="FormFieldType_Uid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="FormFieldName" Type="Edm.String" Nullable="true" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="FormFieldPrompt" Type="Edm.String" Nullable="true" MaxLength="1500" Unicode="true" FixedLength="false" />
+        <Property Name="LiteralText" Type="Edm.String" Nullable="true" MaxLength="1500" Unicode="true" FixedLength="false" />
+        <Property Name="IsRequired" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsHidden" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsMultipleSelect" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsEmptyOption" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="EmptyOption" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="ValidExtensions" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="ErrorExtensions" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="Orientation" Type="Edm.String" Nullable="true" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="OptionsMode" Type="Edm.String" Nullable="true" MaxLength="5" Unicode="true" FixedLength="false" />
+        <Property Name="Options" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="OptionsCategoryName" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="OptionsWebServiceUrl" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="ListSize" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Rows" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Cols" Type="Edm.Int32" Nullable="true" />
+        <Property Name="MaxSize" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="MaxSizeBD" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="MinSize" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="SortOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="PanelColumn" Type="Edm.Int32" Nullable="false" />
+        <Property Name="PanelColumnSortOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="PanelUid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="ShowDelete" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ValidationStrategyID" Type="Edm.Int32" Nullable="true" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Style" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Queryable" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ToolTip" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="ViewRoles" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="EditRoles" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="Panel" Relationship="STPC.DynamicForms.Web.Models.PageField_Panel" FromRole="PageField_Panel_Source" ToRole="PageField_Panel_Target" />
+        <NavigationProperty Name="FormFieldType" Relationship="STPC.DynamicForms.Web.Models.PageFieldType_Fields" FromRole="PageFieldType_Fields_Target" ToRole="PageFieldType_Fields_Source" />
+        <NavigationProperty Name="ViewR" Relationship="STPC.DynamicForms.Web.Models.PageField_ViewR" FromRole="PageField_ViewR_Source" ToRole="PageField_ViewR_Target" />
+        <NavigationProperty Name="EditR" Relationship="STPC.DynamicForms.Web.Models.PageField_EditR" FromRole="PageField_EditR_Source" ToRole="PageField_EditR_Target" />
+      </EntityType>
+      <EntityType Name="Panel">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="SortOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="512" Unicode="true" FixedLength="false" />
+        <Property Name="DivCssStyle" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="Columns" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="ViewRoles" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="EditRoles" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="Page" Relationship="STPC.DynamicForms.Web.Models.Panel_Page" FromRole="Panel_Page_Source" ToRole="Panel_Page_Target" />
+        <NavigationProperty Name="PanelFields" Relationship="STPC.DynamicForms.Web.Models.PageField_Panel" FromRole="PageField_Panel_Target" ToRole="PageField_Panel_Source" />
+      </EntityType>
+      <EntityType Name="FormPage">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="SortOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DisplayOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="512" Unicode="true" FixedLength="false" />
+        <Property Name="ReadOnlyState" Type="Edm.Guid" Nullable="true" />
+        <Property Name="ShortPath" Type="Edm.String" Nullable="true" MaxLength="50" Unicode="true" FixedLength="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="StrategyID" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Form" Relationship="STPC.DynamicForms.Web.Models.FormPage_Form" FromRole="FormPage_Form_Source" ToRole="FormPage_Form_Target" />
+        <NavigationProperty Name="Panels" Relationship="STPC.DynamicForms.Web.Models.Panel_Page" FromRole="Panel_Page_Target" ToRole="Panel_Page_Source" />
+        <NavigationProperty Name="PageEvents" Relationship="STPC.DynamicForms.Web.Models.PageEvent_FormPage" FromRole="PageEvent_FormPage_Target" ToRole="PageEvent_FormPage_Source" />
+        <NavigationProperty Name="PageActions" Relationship="STPC.DynamicForms.Web.Models.FormPage_PageActions" FromRole="FormPage_PageActions_Source" ToRole="FormPage_PageActions_Target" />
+        <NavigationProperty Name="FormPageByStates" Relationship="STPC.DynamicForms.Web.Models.FormPageByStates_FormPage" FromRole="FormPageByStates_FormPage_Target" ToRole="FormPageByStates_FormPage_Source" />
+      </EntityType>
+      <EntityType Name="Form">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="UserId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="Pages" Relationship="STPC.DynamicForms.Web.Models.FormPage_Form" FromRole="FormPage_Form_Target" ToRole="FormPage_Form_Source" />
+        <NavigationProperty Name="Reports" Relationship="STPC.DynamicForms.Web.Models.Report_Form" FromRole="Report_Form_Target" ToRole="Report_Form_Source" />
+      </EntityType>
+      <EntityType Name="Report">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="50" Unicode="true" FixedLength="false" />
+        <Property Name="ReportPath" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="Parameters" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="IsDefaultView" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Form" Relationship="STPC.DynamicForms.Web.Models.Report_Form" FromRole="Report_Form_Source" ToRole="Report_Form_Target" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.Report_AplicationName" FromRole="Report_AplicationName_Source" ToRole="Report_AplicationName_Target" />
+      </EntityType>
+      <EntityType Name="PageEvent">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="FieldValue" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="ListenerField" Type="Edm.String" Nullable="true" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="FormPageUid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="ListenerFieldId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="PageFieldUid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="SourceField" Type="Edm.String" Nullable="true" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="EventType" Type="Edm.String" Nullable="true" MaxLength="30" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="FormPage" Relationship="STPC.DynamicForms.Web.Models.PageEvent_FormPage" FromRole="PageEvent_FormPage_Source" ToRole="PageEvent_FormPage_Target" />
+      </EntityType>
+      <EntityType Name="FormPageActions">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="512" Unicode="true" FixedLength="false" />
+        <Property Name="Caption" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="IsAssociated" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsExecuteStrategy" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="IsPrivateResource" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="PageId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="DisplayOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Save" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="GoToPageId" Type="Edm.Guid" Nullable="true" />
+        <Property Name="FormStatesUid" Type="Edm.Guid" Nullable="true" />
+        <Property Name="ShowSuccessMessage" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ShowFailureMessage" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="SuccessMessage" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="FailureMessage" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="StrategyID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Resource" Type="Edm.String" Nullable="true" MaxLength="1024" Unicode="true" FixedLength="false" />
+        <Property Name="SendUserParam" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="SendRequestIdParam" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="SendHierarchyIdParam" Type="Edm.Boolean" Nullable="false" />
+        <NavigationProperty Name="FormPageActionsRolesList" Relationship="STPC.DynamicForms.Web.Models.FormPageActions_FormPageActionsRolesList" FromRole="FormPageActions_FormPageActionsRolesList_Source" ToRole="FormPageActions_FormPageActionsRolesList_Target" />
+        <NavigationProperty Name="FormPageActionsByStatesList" Relationship="STPC.DynamicForms.Web.Models.FormPageActionsByStates_FormPageActions" FromRole="FormPageActionsByStates_FormPageActions_Target" ToRole="FormPageActionsByStates_FormPageActions_Source" />
+        <NavigationProperty Name="FormStates" Relationship="STPC.DynamicForms.Web.Models.FormStates_FormPageActionsList" FromRole="FormStates_FormPageActionsList_Target" ToRole="FormStates_FormPageActionsList_Source" />
+      </EntityType>
+      <EntityType Name="FormPageActionsRoles">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Rolename" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="FormPageActionsUid" Type="Edm.Guid" Nullable="false" />
+      </EntityType>
+      <EntityType Name="FormPageActionsByStates">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="FormPageActionsUid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="FormStatesUid" Type="Edm.Guid" Nullable="false" />
+        <NavigationProperty Name="FormPageActions" Relationship="STPC.DynamicForms.Web.Models.FormPageActionsByStates_FormPageActions" FromRole="FormPageActionsByStates_FormPageActions_Source" ToRole="FormPageActionsByStates_FormPageActions_Target" />
+        <NavigationProperty Name="FormStates" Relationship="STPC.DynamicForms.Web.Models.FormStates_FormPageActionsByStatesList" FromRole="FormStates_FormPageActionsByStatesList_Target" ToRole="FormStates_FormPageActionsByStatesList_Source" />
+      </EntityType>
+      <EntityType Name="FormStates">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="StateName" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="StateSymbol" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="FormPageActionsList" Relationship="STPC.DynamicForms.Web.Models.FormStates_FormPageActionsList" FromRole="FormStates_FormPageActionsList_Source" ToRole="FormStates_FormPageActionsList_Target" />
+        <NavigationProperty Name="FormPageActionsByStatesList" Relationship="STPC.DynamicForms.Web.Models.FormStates_FormPageActionsByStatesList" FromRole="FormStates_FormPageActionsByStatesList_Source" ToRole="FormStates_FormPageActionsByStatesList_Target" />
+        <NavigationProperty Name="FormPageByStates" Relationship="STPC.DynamicForms.Web.Models.FormPageByStates_FormStates" FromRole="FormPageByStates_FormStates_Target" ToRole="FormPageByStates_FormStates_Source" />
+      </EntityType>
+      <EntityType Name="FormPageByStates">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="FormStatesUid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="FormPageUid" Type="Edm.Guid" Nullable="false" />
+        <NavigationProperty Name="FormStates" Relationship="STPC.DynamicForms.Web.Models.FormPageByStates_FormStates" FromRole="FormPageByStates_FormStates_Source" ToRole="FormPageByStates_FormStates_Target" />
+        <NavigationProperty Name="FormPage" Relationship="STPC.DynamicForms.Web.Models.FormPageByStates_FormPage" FromRole="FormPageByStates_FormPage_Source" ToRole="FormPageByStates_FormPage_Target" />
+      </EntityType>
+      <EntityType Name="PageFieldType">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="FieldTypeName" Type="Edm.String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="SortOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="FieldType" Type="Edm.String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="ControlType" Type="Edm.String" Nullable="false" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="ErrorMsgRequired" Type="Edm.String" Nullable="true" MaxLength="300" Unicode="true" FixedLength="false" />
+        <Property Name="RegExDefault" Type="Edm.String" Nullable="true" MaxLength="300" Unicode="true" FixedLength="false" />
+        <Property Name="ErrorMsgRegEx" Type="Edm.String" Nullable="true" MaxLength="300" Unicode="true" FixedLength="false" />
+        <Property Name="ValidExtensions" Type="Edm.String" Nullable="true" MaxLength="300" Unicode="true" FixedLength="false" />
+        <Property Name="ErrorExtensions" Type="Edm.String" Nullable="true" MaxLength="300" Unicode="true" FixedLength="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <NavigationProperty Name="Fields" Relationship="STPC.DynamicForms.Web.Models.PageFieldType_Fields" FromRole="PageFieldType_Fields_Source" ToRole="PageFieldType_Fields_Target" />
+      </EntityType>
+      <EntityType Name="ObjectPermissions">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="TableName" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="ObjectName" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="Permission" Type="Edm.String" Nullable="true" MaxLength="10" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="Role" Relationship="STPC.DynamicForms.Web.Models.ObjectPermissions_Role" FromRole="ObjectPermissions_Role_Source" ToRole="ObjectPermissions_Role_Target" />
+      </EntityType>
+      <EntityType Name="Request">
+        <Key>
+          <PropertyRef Name="RequestId" />
+        </Key>
+        <Property Name="RequestId" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Created" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Updated" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="FormId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="WorkFlowState" Type="Edm.Guid" Nullable="true" />
+        <Property Name="PageFlowState" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="PageFlowId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="CreatedBy" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="UpdatedBy" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="AssignedTo" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+      </EntityType>
+      <EntityType Name="MenuItem">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Controller" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="Action" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="Message" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="DisplayOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ParentMenuItemUid" Type="Edm.Guid" Nullable="true" />
+        <Property Name="FormUid" Type="Edm.Guid" Nullable="true" />
+        <Property Name="FormState" Type="Edm.Guid" Nullable="true" />
+        <Property Name="Parameters" Type="Edm.String" Nullable="true" MaxLength="1024" Unicode="true" FixedLength="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Childs" Relationship="STPC.DynamicForms.Web.Models.MenuItem_Childs" FromRole="MenuItem_Childs_Source" ToRole="MenuItem_Childs_Target" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.MenuItem_AplicationName" FromRole="MenuItem_AplicationName_Source" ToRole="MenuItem_AplicationName_Target" />
+      </EntityType>
+      <EntityType Name="AuthenticationAudit">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="UserName" Type="Edm.String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="EventTime" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="WorkStation" Type="Edm.String" Nullable="false" MaxLength="256" Unicode="true" FixedLength="false" />
+      </EntityType>
+      <EntityType Name="DefaultForm">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="LastModifiedBy" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Modified" Type="Edm.DateTime" Nullable="true" />
+        <NavigationProperty Name="Role" Relationship="STPC.DynamicForms.Web.Models.DefaultForm_Role" FromRole="DefaultForm_Role_Source" ToRole="DefaultForm_Role_Target" />
+        <NavigationProperty Name="Hierarchy" Relationship="STPC.DynamicForms.Web.Models.DefaultForm_Hierarchy" FromRole="DefaultForm_Hierarchy_Source" ToRole="DefaultForm_Hierarchy_Target" />
+        <NavigationProperty Name="Form" Relationship="STPC.DynamicForms.Web.Models.DefaultForm_Form" FromRole="DefaultForm_Form_Source" ToRole="DefaultForm_Form_Target" />
+      </EntityType>
+      <EntityType Name="ForbiddenPassword">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="LastModifiedBy" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="LastModified" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="ForbiddenText" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+      </EntityType>
+      <EntityType Name="FormPageResponse">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <NavigationProperty Name="FormPage" Relationship="STPC.DynamicForms.Web.Models.FormPageResponse_FormPage" FromRole="FormPageResponse_FormPage_Source" ToRole="FormPageResponse_FormPage_Target" />
+        <NavigationProperty Name="FormResponse" Relationship="STPC.DynamicForms.Web.Models.FormPageResponse_FormResponse" FromRole="FormPageResponse_FormResponse_Source" ToRole="FormPageResponse_FormResponse_Target" />
+      </EntityType>
+      <EntityType Name="FormResponse">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <NavigationProperty Name="FormSpec" Relationship="STPC.DynamicForms.Web.Models.FormResponse_FormSpec" FromRole="FormResponse_FormSpec_Source" ToRole="FormResponse_FormSpec_Target" />
+      </EntityType>
+      <EntityType Name="HierarchyNodeType">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="NodeType" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="TableName" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="AplicationNameId" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="AplicationName" Relationship="STPC.DynamicForms.Web.Models.HierarchyNodeType_AplicationName" FromRole="HierarchyNodeType_AplicationName_Source" ToRole="HierarchyNodeType_AplicationName_Target" />
+      </EntityType>
+      <EntityType Name="MenuItemRole">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="RoleName" Type="Edm.String" Nullable="true" MaxLength="255" Unicode="true" FixedLength="false" />
+        <Property Name="MenuItemUid" Type="Edm.Guid" Nullable="false" />
+      </EntityType>
+      <EntityType Name="NodeTypeDetail">
+        <Key>
+          <PropertyRef Name="NodeTypeDetailId" />
+        </Key>
+        <Property Name="NodeTypeDetailId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="PageFieldTypeId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="FieldName" Type="Edm.String" Nullable="true" MaxLength="30" Unicode="true" FixedLength="false" />
+        <Property Name="FieldPrompt" Type="Edm.String" Nullable="true" MaxLength="1500" Unicode="true" FixedLength="false" />
+        <Property Name="IsRequired" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="OptionsCategoryName" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="MaxSize" Type="Edm.String" Nullable="true" MaxLength="16" Unicode="true" FixedLength="false" />
+        <Property Name="MinSize" Type="Edm.String" Nullable="true" MaxLength="16" Unicode="true" FixedLength="false" />
+        <Property Name="SortOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Style" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="HierarchyNodeType" Relationship="STPC.DynamicForms.Web.Models.NodeTypeDetail_HierarchyNodeType" FromRole="NodeTypeDetail_HierarchyNodeType_Source" ToRole="NodeTypeDetail_HierarchyNodeType_Target" />
+        <NavigationProperty Name="FieldType" Relationship="STPC.DynamicForms.Web.Models.NodeTypeDetail_FieldType" FromRole="NodeTypeDetail_FieldType_Source" ToRole="NodeTypeDetail_FieldType_Target" />
+      </EntityType>
+      <EntityType Name="PageResponseItem">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="ResponseStr" Type="Edm.String" Nullable="true" MaxLength="300" Unicode="true" FixedLength="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <NavigationProperty Name="PageResponse" Relationship="STPC.DynamicForms.Web.Models.PageResponseItem_PageResponse" FromRole="PageResponseItem_PageResponse_Source" ToRole="PageResponseItem_PageResponse_Target" />
+        <NavigationProperty Name="PageItem" Relationship="STPC.DynamicForms.Web.Models.PageResponseItem_PageItem" FromRole="PageResponseItem_PageItem_Source" ToRole="PageResponseItem_PageItem_Target" />
+      </EntityType>
+      <EntityType Name="PageStrategy">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="PageId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="StrategyId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="HasTrigger" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="TriggerFieldUid" Type="Edm.Guid" Nullable="true" />
+        <Property Name="HasResponse" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="ResponseFieldUid" Type="Edm.Guid" Nullable="true" />
+        <NavigationProperty Name="StrategyParametersList" Relationship="STPC.DynamicForms.Web.Models.PageStrategy_StrategyParametersList" FromRole="PageStrategy_StrategyParametersList_Source" ToRole="PageStrategy_StrategyParametersList_Target" />
+      </EntityType>
+      <EntityType Name="StrategyParameter">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="PageStrategyUid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="PageFieldId" Type="Edm.Guid" Nullable="true" />
+        <Property Name="FieldType" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="ParameterType" Type="Edm.String" Nullable="true" MaxLength="64" Unicode="true" FixedLength="false" />
+        <Property Name="ParameterName" Type="Edm.String" Nullable="true" MaxLength="128" Unicode="true" FixedLength="false" />
+      </EntityType>
+      <EntityType Name="PageTemplate">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="512" Unicode="true" FixedLength="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+        <NavigationProperty Name="PanelTemplates" Relationship="STPC.DynamicForms.Web.Models.PageTemplate_PanelTemplates" FromRole="PageTemplate_PanelTemplates_Source" ToRole="PageTemplate_PanelTemplates_Target" />
+      </EntityType>
+      <EntityType Name="PanelTemplate">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Columns" Type="Edm.Int32" Nullable="false" />
+        <Property Name="SortOrder" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Timestamp" Type="Edm.DateTime" Nullable="false" />
+      </EntityType>
+      <EntityType Name="PasswordHistory">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="LastModifiedBy" Type="Edm.String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+        <Property Name="LastModified" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Password" Type="Edm.String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+      </EntityType>
+      <EntityType Name="ResetQuestion">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Question" Type="Edm.String" Nullable="true" MaxLength="512" Unicode="true" FixedLength="false" />
+        <Property Name="IsActive" Type="Edm.Boolean" Nullable="false" />
+      </EntityType>
+      <EntityType Name="UserResetQuestion">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Answer" Type="Edm.String" Nullable="true" MaxLength="512" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="Question" Relationship="STPC.DynamicForms.Web.Models.UserResetQuestion_Question" FromRole="UserResetQuestion_Question_Source" ToRole="UserResetQuestion_Question_Target" />
+      </EntityType>
+      <EntityType Name="PageMathOperation">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="Expression" Type="Edm.String" Nullable="true" MaxLength="1050" Unicode="true" FixedLength="false" />
+        <Property Name="Trigger" Type="Edm.String" Nullable="true" MaxLength="256" Unicode="true" FixedLength="false" />
+        <Property Name="ResultField" Type="Edm.Guid" Nullable="false" />
+        <Property Name="PanelUid" Type="Edm.Guid" Nullable="false" />
+        <NavigationProperty Name="Panel" Relationship="STPC.DynamicForms.Web.Models.PageMathOperation_Panel" FromRole="PageMathOperation_Panel_Source" ToRole="PageMathOperation_Panel_Target" />
+      </EntityType>
+      <EntityType Name="StrategySettings">
+        <Key>
+          <PropertyRef Name="Uid" />
+        </Key>
+        <Property Name="Uid" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="StrategyID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="AttributeName" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Value" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="ValueType" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+      </EntityType>
+      <Association Name="Hierarchy_Parent">
+        <End Role="Hierarchy_Parent_Source" Type="STPC.DynamicForms.Web.Models.Hierarchy" Multiplicity="*" />
+        <End Role="Hierarchy_Parent_Target" Type="STPC.DynamicForms.Web.Models.Hierarchy" Multiplicity="0..1" />
+      </Association>
+      <Association Name="Option_Category">
+        <End Role="Option_Category_Source" Type="STPC.DynamicForms.Web.Models.Option" Multiplicity="*" />
+        <End Role="Option_Category_Target" Type="STPC.DynamicForms.Web.Models.Category" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="Option_Category_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="Option_Category_Source">
+            <PropertyRef Name="Category_Uid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Option_AplicationName">
+        <End Role="Option_AplicationName_Source" Type="STPC.DynamicForms.Web.Models.Option" Multiplicity="*" />
+        <End Role="Option_AplicationName_Target" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <ReferentialConstraint>
+          <Principal Role="Option_AplicationName_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="Option_AplicationName_Source">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Category_AplicationName">
+        <End Role="Category_AplicationName_Source" Type="STPC.DynamicForms.Web.Models.Category" Multiplicity="*" />
+        <End Role="Category_AplicationName_Target" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <ReferentialConstraint>
+          <Principal Role="Category_AplicationName_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="Category_AplicationName_Source">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="AplicationName_AdCampaign">
+        <End Role="AplicationName_AdCampaign_Source" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <End Role="AplicationName_AdCampaign_Target" Type="STPC.DynamicForms.Web.Models.AdCampaign" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="AplicationName_AdCampaign_Source">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="AplicationName_AdCampaign_Target">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="AplicationName_Hierarchy">
+        <End Role="AplicationName_Hierarchy_Source" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <End Role="AplicationName_Hierarchy_Target" Type="STPC.DynamicForms.Web.Models.Hierarchy" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="AplicationName_Hierarchy_Source">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="AplicationName_Hierarchy_Target">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Role_AplicationName">
+        <End Role="Role_AplicationName_Source" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="*" />
+        <End Role="Role_AplicationName_Target" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <ReferentialConstraint>
+          <Principal Role="Role_AplicationName_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="Role_AplicationName_Source">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="Report_Form">
+        <End Role="Report_Form_Source" Type="STPC.DynamicForms.Web.Models.Report" Multiplicity="*" />
+        <End Role="Report_Form_Target" Type="STPC.DynamicForms.Web.Models.Form" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+      </Association>
+      <Association Name="Report_AplicationName">
+        <End Role="Report_AplicationName_Source" Type="STPC.DynamicForms.Web.Models.Report" Multiplicity="*" />
+        <End Role="Report_AplicationName_Target" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <ReferentialConstraint>
+          <Principal Role="Report_AplicationName_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="Report_AplicationName_Source">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormPage_Form">
+        <End Role="FormPage_Form_Source" Type="STPC.DynamicForms.Web.Models.FormPage" Multiplicity="*" />
+        <End Role="FormPage_Form_Target" Type="STPC.DynamicForms.Web.Models.Form" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+      </Association>
+      <Association Name="PageEvent_FormPage">
+        <End Role="PageEvent_FormPage_Source" Type="STPC.DynamicForms.Web.Models.PageEvent" Multiplicity="*" />
+        <End Role="PageEvent_FormPage_Target" Type="STPC.DynamicForms.Web.Models.FormPage" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="PageEvent_FormPage_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="PageEvent_FormPage_Source">
+            <PropertyRef Name="FormPageUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormPageActions_FormPageActionsRolesList">
+        <End Role="FormPageActions_FormPageActionsRolesList_Source" Type="STPC.DynamicForms.Web.Models.FormPageActions" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="FormPageActions_FormPageActionsRolesList_Target" Type="STPC.DynamicForms.Web.Models.FormPageActionsRoles" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="FormPageActions_FormPageActionsRolesList_Source">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="FormPageActions_FormPageActionsRolesList_Target">
+            <PropertyRef Name="FormPageActionsUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormPageActionsByStates_FormPageActions">
+        <End Role="FormPageActionsByStates_FormPageActions_Source" Type="STPC.DynamicForms.Web.Models.FormPageActionsByStates" Multiplicity="*" />
+        <End Role="FormPageActionsByStates_FormPageActions_Target" Type="STPC.DynamicForms.Web.Models.FormPageActions" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="FormPageActionsByStates_FormPageActions_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="FormPageActionsByStates_FormPageActions_Source">
+            <PropertyRef Name="FormPageActionsUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormStates_FormPageActionsList">
+        <End Role="FormStates_FormPageActionsList_Source" Type="STPC.DynamicForms.Web.Models.FormStates" Multiplicity="0..1" />
+        <End Role="FormStates_FormPageActionsList_Target" Type="STPC.DynamicForms.Web.Models.FormPageActions" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="FormStates_FormPageActionsList_Source">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="FormStates_FormPageActionsList_Target">
+            <PropertyRef Name="FormStatesUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormStates_FormPageActionsByStatesList">
+        <End Role="FormStates_FormPageActionsByStatesList_Source" Type="STPC.DynamicForms.Web.Models.FormStates" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="FormStates_FormPageActionsByStatesList_Target" Type="STPC.DynamicForms.Web.Models.FormPageActionsByStates" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="FormStates_FormPageActionsByStatesList_Source">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="FormStates_FormPageActionsByStatesList_Target">
+            <PropertyRef Name="FormStatesUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormPageByStates_FormStates">
+        <End Role="FormPageByStates_FormStates_Source" Type="STPC.DynamicForms.Web.Models.FormPageByStates" Multiplicity="*" />
+        <End Role="FormPageByStates_FormStates_Target" Type="STPC.DynamicForms.Web.Models.FormStates" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="FormPageByStates_FormStates_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="FormPageByStates_FormStates_Source">
+            <PropertyRef Name="FormStatesUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormPageByStates_FormPage">
+        <End Role="FormPageByStates_FormPage_Source" Type="STPC.DynamicForms.Web.Models.FormPageByStates" Multiplicity="*" />
+        <End Role="FormPageByStates_FormPage_Target" Type="STPC.DynamicForms.Web.Models.FormPage" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="FormPageByStates_FormPage_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="FormPageByStates_FormPage_Source">
+            <PropertyRef Name="FormPageUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FormPage_PageActions">
+        <End Role="FormPage_PageActions_Source" Type="STPC.DynamicForms.Web.Models.FormPage" Multiplicity="0..1" />
+        <End Role="FormPage_PageActions_Target" Type="STPC.DynamicForms.Web.Models.FormPageActions" Multiplicity="*" />
+      </Association>
+      <Association Name="Panel_Page">
+        <End Role="Panel_Page_Source" Type="STPC.DynamicForms.Web.Models.Panel" Multiplicity="*" />
+        <End Role="Panel_Page_Target" Type="STPC.DynamicForms.Web.Models.FormPage" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+      </Association>
+      <Association Name="PageField_Panel">
+        <End Role="PageField_Panel_Source" Type="STPC.DynamicForms.Web.Models.PageField" Multiplicity="*" />
+        <End Role="PageField_Panel_Target" Type="STPC.DynamicForms.Web.Models.Panel" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="PageField_Panel_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="PageField_Panel_Source">
+            <PropertyRef Name="PanelUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="PageFieldType_Fields">
+        <End Role="PageFieldType_Fields_Source" Type="STPC.DynamicForms.Web.Models.PageFieldType" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="PageFieldType_Fields_Target" Type="STPC.DynamicForms.Web.Models.PageField" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="PageFieldType_Fields_Source">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="PageFieldType_Fields_Target">
+            <PropertyRef Name="FormFieldType_Uid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="PageField_ViewR">
+        <End Role="PageField_ViewR_Source" Type="STPC.DynamicForms.Web.Models.PageField" Multiplicity="0..1" />
+        <End Role="PageField_ViewR_Target" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="*" />
+      </Association>
+      <Association Name="PageField_EditR">
+        <End Role="PageField_EditR_Source" Type="STPC.DynamicForms.Web.Models.PageField" Multiplicity="0..1" />
+        <End Role="PageField_EditR_Target" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="*" />
+      </Association>
+      <Association Name="Role_ViewFields">
+        <End Role="Role_ViewFields_Source" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="0..1" />
+        <End Role="Role_ViewFields_Target" Type="STPC.DynamicForms.Web.Models.PageField" Multiplicity="*" />
+      </Association>
+      <Association Name="Role_EditFields">
+        <End Role="Role_EditFields_Source" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="0..1" />
+        <End Role="Role_EditFields_Target" Type="STPC.DynamicForms.Web.Models.PageField" Multiplicity="*" />
+      </Association>
+      <Association Name="Role_PerformanceIndicator">
+        <End Role="Role_PerformanceIndicator_Source" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="0..1" />
+        <End Role="Role_PerformanceIndicator_Target" Type="STPC.DynamicForms.Web.Models.PerformanceIndicator" Multiplicity="*" />
+      </Association>
+      <Association Name="ObjectPermissions_Role">
+        <End Role="ObjectPermissions_Role_Source" Type="STPC.DynamicForms.Web.Models.ObjectPermissions" Multiplicity="*" />
+        <End Role="ObjectPermissions_Role_Target" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="0..1" />
+      </Association>
+      <Association Name="PerformanceIndicator_Hierarchy">
+        <End Role="PerformanceIndicator_Hierarchy_Source" Type="STPC.DynamicForms.Web.Models.PerformanceIndicator" Multiplicity="*" />
+        <End Role="PerformanceIndicator_Hierarchy_Target" Type="STPC.DynamicForms.Web.Models.Hierarchy" Multiplicity="0..1" />
+      </Association>
+      <Association Name="PerformanceIndicator_AplicationName">
+        <End Role="PerformanceIndicator_AplicationName_Source" Type="STPC.DynamicForms.Web.Models.PerformanceIndicator" Multiplicity="*" />
+        <End Role="PerformanceIndicator_AplicationName_Target" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <ReferentialConstraint>
+          <Principal Role="PerformanceIndicator_AplicationName_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="PerformanceIndicator_AplicationName_Source">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="AplicationName_Request">
+        <End Role="AplicationName_Request_Source" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <End Role="AplicationName_Request_Target" Type="STPC.DynamicForms.Web.Models.Request" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="AplicationName_Request_Source">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="AplicationName_Request_Target">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="MenuItem_Childs">
+        <End Role="MenuItem_Childs_Source" Type="STPC.DynamicForms.Web.Models.MenuItem" Multiplicity="0..1" />
+        <End Role="MenuItem_Childs_Target" Type="STPC.DynamicForms.Web.Models.MenuItem" Multiplicity="*" />
+      </Association>
+      <Association Name="MenuItem_AplicationName">
+        <End Role="MenuItem_AplicationName_Source" Type="STPC.DynamicForms.Web.Models.MenuItem" Multiplicity="*" />
+        <End Role="MenuItem_AplicationName_Target" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <ReferentialConstraint>
+          <Principal Role="MenuItem_AplicationName_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="MenuItem_AplicationName_Source">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="AdCampaign_Hierarchy">
+        <End Role="AdCampaign_Hierarchy_Source" Type="STPC.DynamicForms.Web.Models.AdCampaign" Multiplicity="*" />
+        <End Role="AdCampaign_Hierarchy_Target" Type="STPC.DynamicForms.Web.Models.Hierarchy" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="AdCampaign_Hierarchy_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="AdCampaign_Hierarchy_Source">
+            <PropertyRef Name="Hierarchy_id" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="AdCampaign_HierarchyByCampaign">
+        <End Role="AdCampaign_HierarchyByCampaign_Source" Type="STPC.DynamicForms.Web.Models.AdCampaign" Multiplicity="0..1" />
+        <End Role="AdCampaign_HierarchyByCampaign_Target" Type="STPC.DynamicForms.Web.Models.Hierarchy" Multiplicity="*" />
+      </Association>
+      <Association Name="DefaultForm_Role">
+        <End Role="DefaultForm_Role_Source" Type="STPC.DynamicForms.Web.Models.DefaultForm" Multiplicity="*" />
+        <End Role="DefaultForm_Role_Target" Type="STPC.DynamicForms.Web.Models.Role" Multiplicity="0..1" />
+      </Association>
+      <Association Name="DefaultForm_Hierarchy">
+        <End Role="DefaultForm_Hierarchy_Source" Type="STPC.DynamicForms.Web.Models.DefaultForm" Multiplicity="*" />
+        <End Role="DefaultForm_Hierarchy_Target" Type="STPC.DynamicForms.Web.Models.Hierarchy" Multiplicity="0..1" />
+      </Association>
+      <Association Name="DefaultForm_Form">
+        <End Role="DefaultForm_Form_Source" Type="STPC.DynamicForms.Web.Models.DefaultForm" Multiplicity="*" />
+        <End Role="DefaultForm_Form_Target" Type="STPC.DynamicForms.Web.Models.Form" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+      </Association>
+      <Association Name="FormPageResponse_FormPage">
+        <End Role="FormPageResponse_FormPage_Source" Type="STPC.DynamicForms.Web.Models.FormPageResponse" Multiplicity="*" />
+        <End Role="FormPageResponse_FormPage_Target" Type="STPC.DynamicForms.Web.Models.FormPage" Multiplicity="0..1" />
+      </Association>
+      <Association Name="FormResponse_FormSpec">
+        <End Role="FormResponse_FormSpec_Source" Type="STPC.DynamicForms.Web.Models.FormResponse" Multiplicity="*" />
+        <End Role="FormResponse_FormSpec_Target" Type="STPC.DynamicForms.Web.Models.Form" Multiplicity="0..1" />
+      </Association>
+      <Association Name="FormPageResponse_FormResponse">
+        <End Role="FormPageResponse_FormResponse_Source" Type="STPC.DynamicForms.Web.Models.FormPageResponse" Multiplicity="*" />
+        <End Role="FormPageResponse_FormResponse_Target" Type="STPC.DynamicForms.Web.Models.FormResponse" Multiplicity="0..1" />
+      </Association>
+      <Association Name="HierarchyNodeType_AplicationName">
+        <End Role="HierarchyNodeType_AplicationName_Source" Type="STPC.DynamicForms.Web.Models.HierarchyNodeType" Multiplicity="*" />
+        <End Role="HierarchyNodeType_AplicationName_Target" Type="STPC.DynamicForms.Web.Models.AplicationName" Multiplicity="0..1" />
+        <ReferentialConstraint>
+          <Principal Role="HierarchyNodeType_AplicationName_Target">
+            <PropertyRef Name="Id" />
+          </Principal>
+          <Dependent Role="HierarchyNodeType_AplicationName_Source">
+            <PropertyRef Name="AplicationNameId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="NodeTypeDetail_HierarchyNodeType">
+        <End Role="NodeTypeDetail_HierarchyNodeType_Source" Type="STPC.DynamicForms.Web.Models.NodeTypeDetail" Multiplicity="*" />
+        <End Role="NodeTypeDetail_HierarchyNodeType_Target" Type="STPC.DynamicForms.Web.Models.HierarchyNodeType" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+      </Association>
+      <Association Name="NodeTypeDetail_FieldType">
+        <End Role="NodeTypeDetail_FieldType_Source" Type="STPC.DynamicForms.Web.Models.NodeTypeDetail" Multiplicity="*" />
+        <End Role="NodeTypeDetail_FieldType_Target" Type="STPC.DynamicForms.Web.Models.PageFieldType" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="NodeTypeDetail_FieldType_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="NodeTypeDetail_FieldType_Source">
+            <PropertyRef Name="PageFieldTypeId" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="PageResponseItem_PageResponse">
+        <End Role="PageResponseItem_PageResponse_Source" Type="STPC.DynamicForms.Web.Models.PageResponseItem" Multiplicity="*" />
+        <End Role="PageResponseItem_PageResponse_Target" Type="STPC.DynamicForms.Web.Models.FormPageResponse" Multiplicity="0..1" />
+      </Association>
+      <Association Name="PageResponseItem_PageItem">
+        <End Role="PageResponseItem_PageItem_Source" Type="STPC.DynamicForms.Web.Models.PageResponseItem" Multiplicity="*" />
+        <End Role="PageResponseItem_PageItem_Target" Type="STPC.DynamicForms.Web.Models.PageField" Multiplicity="0..1" />
+      </Association>
+      <Association Name="PageStrategy_StrategyParametersList">
+        <End Role="PageStrategy_StrategyParametersList_Source" Type="STPC.DynamicForms.Web.Models.PageStrategy" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="PageStrategy_StrategyParametersList_Target" Type="STPC.DynamicForms.Web.Models.StrategyParameter" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="PageStrategy_StrategyParametersList_Source">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="PageStrategy_StrategyParametersList_Target">
+            <PropertyRef Name="PageStrategyUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="PageTemplate_PanelTemplates">
+        <End Role="PageTemplate_PanelTemplates_Source" Type="STPC.DynamicForms.Web.Models.PageTemplate" Multiplicity="0..1" />
+        <End Role="PageTemplate_PanelTemplates_Target" Type="STPC.DynamicForms.Web.Models.PanelTemplate" Multiplicity="*" />
+      </Association>
+      <Association Name="UserResetQuestion_Question">
+        <End Role="UserResetQuestion_Question_Source" Type="STPC.DynamicForms.Web.Models.UserResetQuestion" Multiplicity="*" />
+        <End Role="UserResetQuestion_Question_Target" Type="STPC.DynamicForms.Web.Models.ResetQuestion" Multiplicity="0..1" />
+      </Association>
+      <Association Name="PageMathOperation_Panel">
+        <End Role="PageMathOperation_Panel_Source" Type="STPC.DynamicForms.Web.Models.PageMathOperation" Multiplicity="*" />
+        <End Role="PageMathOperation_Panel_Target" Type="STPC.DynamicForms.Web.Models.Panel" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="PageMathOperation_Panel_Target">
+            <PropertyRef Name="Uid" />
+          </Principal>
+          <Dependent Role="PageMathOperation_Panel_Source">
+            <PropertyRef Name="PanelUid" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+    </Schema>
+    <Schema Namespace="System.Data.Objects" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityContainer Name="STPC_FormsFormEntities" m:IsDefaultEntityContainer="true">
+        <FunctionImport Name="GetHierarchiesLevels" ReturnType="Collection(Edm.String)" m:HttpMethod="GET" />
+        <FunctionImport Name="GetHierarchiesLevelsByAplicatioName" ReturnType="Collection(Edm.String)" m:HttpMethod="GET">
+          <Parameter Name="aplicationNameId" Type="Edm.Int32" Mode="In" />
+        </FunctionImport>
+        <EntitySet Name="AdCampaign" EntityType="STPC.DynamicForms.Web.Models.AdCampaign" />
+        <EntitySet Name="Hierarchies" EntityType="STPC.DynamicForms.Web.Models.Hierarchy" />
+        <EntitySet Name="AplicationName" EntityType="STPC.DynamicForms.Web.Models.AplicationName" />
+        <EntitySet Name="Categories" EntityType="STPC.DynamicForms.Web.Models.Category" />
+        <EntitySet Name="Options" EntityType="STPC.DynamicForms.Web.Models.Option" />
+        <EntitySet Name="PerformanceIndicators" EntityType="STPC.DynamicForms.Web.Models.PerformanceIndicator" />
+        <EntitySet Name="Roles" EntityType="STPC.DynamicForms.Web.Models.Role" />
+        <EntitySet Name="PageFields" EntityType="STPC.DynamicForms.Web.Models.PageField" />
+        <EntitySet Name="Panels" EntityType="STPC.DynamicForms.Web.Models.Panel" />
+        <EntitySet Name="FormPages" EntityType="STPC.DynamicForms.Web.Models.FormPage" />
+        <EntitySet Name="Forms" EntityType="STPC.DynamicForms.Web.Models.Form" />
+        <EntitySet Name="Reports" EntityType="STPC.DynamicForms.Web.Models.Report" />
+        <EntitySet Name="PageEvent" EntityType="STPC.DynamicForms.Web.Models.PageEvent" />
+        <EntitySet Name="FormPageActions" EntityType="STPC.DynamicForms.Web.Models.FormPageActions" />
+        <EntitySet Name="FormPageActionsRoles" EntityType="STPC.DynamicForms.Web.Models.FormPageActionsRoles" />
+        <EntitySet Name="FormPageActionsByStates" EntityType="STPC.DynamicForms.Web.Models.FormPageActionsByStates" />
+        <EntitySet Name="FormStates" EntityType="STPC.DynamicForms.Web.Models.FormStates" />
+        <EntitySet Name="FormPageByStates" EntityType="STPC.DynamicForms.Web.Models.FormPageByStates" />
+        <EntitySet Name="PageFieldTypes" EntityType="STPC.DynamicForms.Web.Models.PageFieldType" />
+        <EntitySet Name="ObjectPermissions" EntityType="STPC.DynamicForms.Web.Models.ObjectPermissions" />
+        <EntitySet Name="Request" EntityType="STPC.DynamicForms.Web.Models.Request" />
+        <EntitySet Name="MenuItem" EntityType="STPC.DynamicForms.Web.Models.MenuItem" />
+        <EntitySet Name="AuthenticationAudit" EntityType="STPC.DynamicForms.Web.Models.AuthenticationAudit" />
+        <EntitySet Name="DefaultForms" EntityType="STPC.DynamicForms.Web.Models.DefaultForm" />
+        <EntitySet Name="ForbiddenPasswords" EntityType="STPC.DynamicForms.Web.Models.ForbiddenPassword" />
+        <EntitySet Name="FormPageResponses" EntityType="STPC.DynamicForms.Web.Models.FormPageResponse" />
+        <EntitySet Name="FormResponses" EntityType="STPC.DynamicForms.Web.Models.FormResponse" />
+        <EntitySet Name="HierarchyNodeTypes" EntityType="STPC.DynamicForms.Web.Models.HierarchyNodeType" />
+        <EntitySet Name="MenuItemRole" EntityType="STPC.DynamicForms.Web.Models.MenuItemRole" />
+        <EntitySet Name="NodeTypeDetail" EntityType="STPC.DynamicForms.Web.Models.NodeTypeDetail" />
+        <EntitySet Name="PageResponseItems" EntityType="STPC.DynamicForms.Web.Models.PageResponseItem" />
+        <EntitySet Name="PageStrategy" EntityType="STPC.DynamicForms.Web.Models.PageStrategy" />
+        <EntitySet Name="StrategyParameter" EntityType="STPC.DynamicForms.Web.Models.StrategyParameter" />
+        <EntitySet Name="PageTemplates" EntityType="STPC.DynamicForms.Web.Models.PageTemplate" />
+        <EntitySet Name="PanelTemplates" EntityType="STPC.DynamicForms.Web.Models.PanelTemplate" />
+        <EntitySet Name="PasswordHistory" EntityType="STPC.DynamicForms.Web.Models.PasswordHistory" />
+        <EntitySet Name="ResetQuestions" EntityType="STPC.DynamicForms.Web.Models.ResetQuestion" />
+        <EntitySet Name="UserResetQuestions" EntityType="STPC.DynamicForms.Web.Models.UserResetQuestion" />
+        <EntitySet Name="PageMathOperation" EntityType="STPC.DynamicForms.Web.Models.PageMathOperation" />
+        <EntitySet Name="StrategySettings" EntityType="STPC.DynamicForms.Web.Models.StrategySettings" />
+        <AssociationSet Name="Hierarchy_Parent" Association="STPC.DynamicForms.Web.Models.Hierarchy_Parent">
+          <End Role="Hierarchy_Parent_Source" EntitySet="Hierarchies" />
+          <End Role="Hierarchy_Parent_Target" EntitySet="Hierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="Option_Category" Association="STPC.DynamicForms.Web.Models.Option_Category">
+          <End Role="Option_Category_Source" EntitySet="Options" />
+          <End Role="Option_Category_Target" EntitySet="Categories" />
+        </AssociationSet>
+        <AssociationSet Name="Option_AplicationName" Association="STPC.DynamicForms.Web.Models.Option_AplicationName">
+          <End Role="Option_AplicationName_Source" EntitySet="Options" />
+          <End Role="Option_AplicationName_Target" EntitySet="AplicationName" />
+        </AssociationSet>
+        <AssociationSet Name="Category_AplicationName" Association="STPC.DynamicForms.Web.Models.Category_AplicationName">
+          <End Role="Category_AplicationName_Source" EntitySet="Categories" />
+          <End Role="Category_AplicationName_Target" EntitySet="AplicationName" />
+        </AssociationSet>
+        <AssociationSet Name="AplicationName_AdCampaign" Association="STPC.DynamicForms.Web.Models.AplicationName_AdCampaign">
+          <End Role="AplicationName_AdCampaign_Source" EntitySet="AplicationName" />
+          <End Role="AplicationName_AdCampaign_Target" EntitySet="AdCampaign" />
+        </AssociationSet>
+        <AssociationSet Name="AplicationName_Hierarchy" Association="STPC.DynamicForms.Web.Models.AplicationName_Hierarchy">
+          <End Role="AplicationName_Hierarchy_Source" EntitySet="AplicationName" />
+          <End Role="AplicationName_Hierarchy_Target" EntitySet="Hierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="Role_AplicationName" Association="STPC.DynamicForms.Web.Models.Role_AplicationName">
+          <End Role="Role_AplicationName_Source" EntitySet="Roles" />
+          <End Role="Role_AplicationName_Target" EntitySet="AplicationName" />
+        </AssociationSet>
+        <AssociationSet Name="Report_Form" Association="STPC.DynamicForms.Web.Models.Report_Form">
+          <End Role="Report_Form_Source" EntitySet="Reports" />
+          <End Role="Report_Form_Target" EntitySet="Forms" />
+        </AssociationSet>
+        <AssociationSet Name="Report_AplicationName" Association="STPC.DynamicForms.Web.Models.Report_AplicationName">
+          <End Role="Report_AplicationName_Source" EntitySet="Reports" />
+          <End Role="Report_AplicationName_Target" EntitySet="AplicationName" />
+        </AssociationSet>
+        <AssociationSet Name="FormPage_Form" Association="STPC.DynamicForms.Web.Models.FormPage_Form">
+          <End Role="FormPage_Form_Source" EntitySet="FormPages" />
+          <End Role="FormPage_Form_Target" EntitySet="Forms" />
+        </AssociationSet>
+        <AssociationSet Name="PageEvent_FormPage" Association="STPC.DynamicForms.Web.Models.PageEvent_FormPage">
+          <End Role="PageEvent_FormPage_Source" EntitySet="PageEvent" />
+          <End Role="PageEvent_FormPage_Target" EntitySet="FormPages" />
+        </AssociationSet>
+        <AssociationSet Name="FormPageActions_FormPageActionsRolesList" Association="STPC.DynamicForms.Web.Models.FormPageActions_FormPageActionsRolesList">
+          <End Role="FormPageActions_FormPageActionsRolesList_Source" EntitySet="FormPageActions" />
+          <End Role="FormPageActions_FormPageActionsRolesList_Target" EntitySet="FormPageActionsRoles" />
+        </AssociationSet>
+        <AssociationSet Name="FormPageActionsByStates_FormPageActions" Association="STPC.DynamicForms.Web.Models.FormPageActionsByStates_FormPageActions">
+          <End Role="FormPageActionsByStates_FormPageActions_Source" EntitySet="FormPageActionsByStates" />
+          <End Role="FormPageActionsByStates_FormPageActions_Target" EntitySet="FormPageActions" />
+        </AssociationSet>
+        <AssociationSet Name="FormStates_FormPageActionsList" Association="STPC.DynamicForms.Web.Models.FormStates_FormPageActionsList">
+          <End Role="FormStates_FormPageActionsList_Source" EntitySet="FormStates" />
+          <End Role="FormStates_FormPageActionsList_Target" EntitySet="FormPageActions" />
+        </AssociationSet>
+        <AssociationSet Name="FormStates_FormPageActionsByStatesList" Association="STPC.DynamicForms.Web.Models.FormStates_FormPageActionsByStatesList">
+          <End Role="FormStates_FormPageActionsByStatesList_Source" EntitySet="FormStates" />
+          <End Role="FormStates_FormPageActionsByStatesList_Target" EntitySet="FormPageActionsByStates" />
+        </AssociationSet>
+        <AssociationSet Name="FormPageByStates_FormStates" Association="STPC.DynamicForms.Web.Models.FormPageByStates_FormStates">
+          <End Role="FormPageByStates_FormStates_Source" EntitySet="FormPageByStates" />
+          <End Role="FormPageByStates_FormStates_Target" EntitySet="FormStates" />
+        </AssociationSet>
+        <AssociationSet Name="FormPageByStates_FormPage" Association="STPC.DynamicForms.Web.Models.FormPageByStates_FormPage">
+          <End Role="FormPageByStates_FormPage_Source" EntitySet="FormPageByStates" />
+          <End Role="FormPageByStates_FormPage_Target" EntitySet="FormPages" />
+        </AssociationSet>
+        <AssociationSet Name="FormPage_PageActions" Association="STPC.DynamicForms.Web.Models.FormPage_PageActions">
+          <End Role="FormPage_PageActions_Source" EntitySet="FormPages" />
+          <End Role="FormPage_PageActions_Target" EntitySet="FormPageActions" />
+        </AssociationSet>
+        <AssociationSet Name="Panel_Page" Association="STPC.DynamicForms.Web.Models.Panel_Page">
+          <End Role="Panel_Page_Source" EntitySet="Panels" />
+          <End Role="Panel_Page_Target" EntitySet="FormPages" />
+        </AssociationSet>
+        <AssociationSet Name="PageField_Panel" Association="STPC.DynamicForms.Web.Models.PageField_Panel">
+          <End Role="PageField_Panel_Source" EntitySet="PageFields" />
+          <End Role="PageField_Panel_Target" EntitySet="Panels" />
+        </AssociationSet>
+        <AssociationSet Name="PageFieldType_Fields" Association="STPC.DynamicForms.Web.Models.PageFieldType_Fields">
+          <End Role="PageFieldType_Fields_Source" EntitySet="PageFieldTypes" />
+          <End Role="PageFieldType_Fields_Target" EntitySet="PageFields" />
+        </AssociationSet>
+        <AssociationSet Name="PageField_ViewR" Association="STPC.DynamicForms.Web.Models.PageField_ViewR">
+          <End Role="PageField_ViewR_Source" EntitySet="PageFields" />
+          <End Role="PageField_ViewR_Target" EntitySet="Roles" />
+        </AssociationSet>
+        <AssociationSet Name="PageField_EditR" Association="STPC.DynamicForms.Web.Models.PageField_EditR">
+          <End Role="PageField_EditR_Source" EntitySet="PageFields" />
+          <End Role="PageField_EditR_Target" EntitySet="Roles" />
+        </AssociationSet>
+        <AssociationSet Name="Role_ViewFields" Association="STPC.DynamicForms.Web.Models.Role_ViewFields">
+          <End Role="Role_ViewFields_Source" EntitySet="Roles" />
+          <End Role="Role_ViewFields_Target" EntitySet="PageFields" />
+        </AssociationSet>
+        <AssociationSet Name="Role_EditFields" Association="STPC.DynamicForms.Web.Models.Role_EditFields">
+          <End Role="Role_EditFields_Source" EntitySet="Roles" />
+          <End Role="Role_EditFields_Target" EntitySet="PageFields" />
+        </AssociationSet>
+        <AssociationSet Name="Role_PerformanceIndicator" Association="STPC.DynamicForms.Web.Models.Role_PerformanceIndicator">
+          <End Role="Role_PerformanceIndicator_Source" EntitySet="Roles" />
+          <End Role="Role_PerformanceIndicator_Target" EntitySet="PerformanceIndicators" />
+        </AssociationSet>
+        <AssociationSet Name="ObjectPermissions_Role" Association="STPC.DynamicForms.Web.Models.ObjectPermissions_Role">
+          <End Role="ObjectPermissions_Role_Source" EntitySet="ObjectPermissions" />
+          <End Role="ObjectPermissions_Role_Target" EntitySet="Roles" />
+        </AssociationSet>
+        <AssociationSet Name="PerformanceIndicator_Hierarchy" Association="STPC.DynamicForms.Web.Models.PerformanceIndicator_Hierarchy">
+          <End Role="PerformanceIndicator_Hierarchy_Source" EntitySet="PerformanceIndicators" />
+          <End Role="PerformanceIndicator_Hierarchy_Target" EntitySet="Hierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="PerformanceIndicator_AplicationName" Association="STPC.DynamicForms.Web.Models.PerformanceIndicator_AplicationName">
+          <End Role="PerformanceIndicator_AplicationName_Source" EntitySet="PerformanceIndicators" />
+          <End Role="PerformanceIndicator_AplicationName_Target" EntitySet="AplicationName" />
+        </AssociationSet>
+        <AssociationSet Name="AplicationName_Request" Association="STPC.DynamicForms.Web.Models.AplicationName_Request">
+          <End Role="AplicationName_Request_Source" EntitySet="AplicationName" />
+          <End Role="AplicationName_Request_Target" EntitySet="Request" />
+        </AssociationSet>
+        <AssociationSet Name="MenuItem_Childs" Association="STPC.DynamicForms.Web.Models.MenuItem_Childs">
+          <End Role="MenuItem_Childs_Source" EntitySet="MenuItem" />
+          <End Role="MenuItem_Childs_Target" EntitySet="MenuItem" />
+        </AssociationSet>
+        <AssociationSet Name="MenuItem_AplicationName" Association="STPC.DynamicForms.Web.Models.MenuItem_AplicationName">
+          <End Role="MenuItem_AplicationName_Source" EntitySet="MenuItem" />
+          <End Role="MenuItem_AplicationName_Target" EntitySet="AplicationName" />
+        </AssociationSet>
+        <AssociationSet Name="AdCampaign_Hierarchy" Association="STPC.DynamicForms.Web.Models.AdCampaign_Hierarchy">
+          <End Role="AdCampaign_Hierarchy_Source" EntitySet="AdCampaign" />
+          <End Role="AdCampaign_Hierarchy_Target" EntitySet="Hierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="AdCampaign_HierarchyByCampaign" Association="STPC.DynamicForms.Web.Models.AdCampaign_HierarchyByCampaign">
+          <End Role="AdCampaign_HierarchyByCampaign_Source" EntitySet="AdCampaign" />
+          <End Role="AdCampaign_HierarchyByCampaign_Target" EntitySet="Hierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="DefaultForm_Role" Association="STPC.DynamicForms.Web.Models.DefaultForm_Role">
+          <End Role="DefaultForm_Role_Source" EntitySet="DefaultForms" />
+          <End Role="DefaultForm_Role_Target" EntitySet="Roles" />
+        </AssociationSet>
+        <AssociationSet Name="DefaultForm_Hierarchy" Association="STPC.DynamicForms.Web.Models.DefaultForm_Hierarchy">
+          <End Role="DefaultForm_Hierarchy_Source" EntitySet="DefaultForms" />
+          <End Role="DefaultForm_Hierarchy_Target" EntitySet="Hierarchies" />
+        </AssociationSet>
+        <AssociationSet Name="DefaultForm_Form" Association="STPC.DynamicForms.Web.Models.DefaultForm_Form">
+          <End Role="DefaultForm_Form_Source" EntitySet="DefaultForms" />
+          <End Role="DefaultForm_Form_Target" EntitySet="Forms" />
+        </AssociationSet>
+        <AssociationSet Name="FormPageResponse_FormPage" Association="STPC.DynamicForms.Web.Models.FormPageResponse_FormPage">
+          <End Role="FormPageResponse_FormPage_Source" EntitySet="FormPageResponses" />
+          <End Role="FormPageResponse_FormPage_Target" EntitySet="FormPages" />
+        </AssociationSet>
+        <AssociationSet Name="FormResponse_FormSpec" Association="STPC.DynamicForms.Web.Models.FormResponse_FormSpec">
+          <End Role="FormResponse_FormSpec_Source" EntitySet="FormResponses" />
+          <End Role="FormResponse_FormSpec_Target" EntitySet="Forms" />
+        </AssociationSet>
+        <AssociationSet Name="FormPageResponse_FormResponse" Association="STPC.DynamicForms.Web.Models.FormPageResponse_FormResponse">
+          <End Role="FormPageResponse_FormResponse_Source" EntitySet="FormPageResponses" />
+          <End Role="FormPageResponse_FormResponse_Target" EntitySet="FormResponses" />
+        </AssociationSet>
+        <AssociationSet Name="HierarchyNodeType_AplicationName" Association="STPC.DynamicForms.Web.Models.HierarchyNodeType_AplicationName">
+          <End Role="HierarchyNodeType_AplicationName_Source" EntitySet="HierarchyNodeTypes" />
+          <End Role="HierarchyNodeType_AplicationName_Target" EntitySet="AplicationName" />
+        </AssociationSet>
+        <AssociationSet Name="NodeTypeDetail_HierarchyNodeType" Association="STPC.DynamicForms.Web.Models.NodeTypeDetail_HierarchyNodeType">
+          <End Role="NodeTypeDetail_HierarchyNodeType_Source" EntitySet="NodeTypeDetail" />
+          <End Role="NodeTypeDetail_HierarchyNodeType_Target" EntitySet="HierarchyNodeTypes" />
+        </AssociationSet>
+        <AssociationSet Name="NodeTypeDetail_FieldType" Association="STPC.DynamicForms.Web.Models.NodeTypeDetail_FieldType">
+          <End Role="NodeTypeDetail_FieldType_Source" EntitySet="NodeTypeDetail" />
+          <End Role="NodeTypeDetail_FieldType_Target" EntitySet="PageFieldTypes" />
+        </AssociationSet>
+        <AssociationSet Name="PageResponseItem_PageResponse" Association="STPC.DynamicForms.Web.Models.PageResponseItem_PageResponse">
+          <End Role="PageResponseItem_PageResponse_Source" EntitySet="PageResponseItems" />
+          <End Role="PageResponseItem_PageResponse_Target" EntitySet="FormPageResponses" />
+        </AssociationSet>
+        <AssociationSet Name="PageResponseItem_PageItem" Association="STPC.DynamicForms.Web.Models.PageResponseItem_PageItem">
+          <End Role="PageResponseItem_PageItem_Source" EntitySet="PageResponseItems" />
+          <End Role="PageResponseItem_PageItem_Target" EntitySet="PageFields" />
+        </AssociationSet>
+        <AssociationSet Name="PageStrategy_StrategyParametersList" Association="STPC.DynamicForms.Web.Models.PageStrategy_StrategyParametersList">
+          <End Role="PageStrategy_StrategyParametersList_Source" EntitySet="PageStrategy" />
+          <End Role="PageStrategy_StrategyParametersList_Target" EntitySet="StrategyParameter" />
+        </AssociationSet>
+        <AssociationSet Name="PageTemplate_PanelTemplates" Association="STPC.DynamicForms.Web.Models.PageTemplate_PanelTemplates">
+          <End Role="PageTemplate_PanelTemplates_Source" EntitySet="PageTemplates" />
+          <End Role="PageTemplate_PanelTemplates_Target" EntitySet="PanelTemplates" />
+        </AssociationSet>
+        <AssociationSet Name="UserResetQuestion_Question" Association="STPC.DynamicForms.Web.Models.UserResetQuestion_Question">
+          <End Role="UserResetQuestion_Question_Source" EntitySet="UserResetQuestions" />
+          <End Role="UserResetQuestion_Question_Target" EntitySet="ResetQuestions" />
+        </AssociationSet>
+        <AssociationSet Name="PageMathOperation_Panel" Association="STPC.DynamicForms.Web.Models.PageMathOperation_Panel">
+          <End Role="PageMathOperation_Panel_Source" EntitySet="PageMathOperation" />
+          <End Role="PageMathOperation_Panel_Target" EntitySet="Panels" />
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

@@ -1,0 +1,19 @@
+﻿@model ICollection<STPC.DynamicForms.Web.Services.Entities.Hierarchy>
+@{
+    ViewBag.Title = "Jerarquias";
+ 
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+}
+@using (Ajax.BeginForm("GetIndex", "Hierarchies", null,
+                new AjaxOptions { UpdateTargetId = "CustomerForm" },
+                new { id = "EditCustomerProfileForm2" }))
+{
+    <div id="CustomerForm">
+        @{Html.RenderPartial("_List");}
+    </div>
+}
+
+

@@ -1,0 +1,294 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.PageMathOperation>
+@{
+    ViewBag.Title = "Index";
+             
+}
+@Html.AntiForgeryToken()
+@Html.Hidden("pageId", (Guid)ViewBag.Data_FormPageId)
+
+
+<span class="ui-button-text" id="goToCreate" onclick="getCreatePageMathOperation('@ViewBag.Data_FormPageId')">Configurar campos calculados</span>
+
+
+<table id="TheTable" class="resultados" summary="Sus páginas" style="width: 100%">
+    <tr class="nodrop nodrag">
+        <th>Expresión</th>
+
+        <th>Campo resultado</th>
+        <th>Acciones</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Expression
+            </td>
+
+
+            <td>
+                @ViewData["ResultField" + item.ResultField]
+            </td>
+            <td>
+
+                @*@Html.ActionLink(" ", "Edit", new { id = item.Uid, idPage = (Guid)ViewBag.Data_FormPageId }, new { @class = "decorated  BotonEdit", title = "Editar" })*@
+                <a onclick="getEditPageMathOperation('@item.Uid','@ViewBag.Data_FormPageId')">
+                    <img src="@Url.Content("~/Content/images/editar.gif")" title="Configurar campos calculados" alt="Editar"/></a>
+
+                <span  data-key="@item.Uid" title="Borrar Formulario" onclick="deletePage('@item.Uid');" style="CURSOR: pointer;">
+                    <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnCancel"/></span>
+            </td>
+        </tr>
+    }
+</table>
+
+
+<span class="ui-button-text decorated" id="btnBackToPages" onclick="getPages('@ViewBag.Data_FormId')">Volver a la lista de páginas</span>
+
+
+<script type="text/javascript">
+
+    $("#goToCreate").button()
+    function getCreatePageMathOperation(id) {
+
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/PageMathOperation/getCreate/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'idPage': id
+                },
+                dataType: "html",
+                success: function (evt) {
+                    $('#right-column').html
+
+                    if ($('div#NewPageDialog').length > 0) {
+                        $('#NewPageDialog').remove();
+                    }
+                    $('#right-column').html(evt);
+                    $.getScript("../redips-drag-min.js",
+                        function (data, textStatus, jqxhr) {
+                            console.log(data);
+                        });
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+    }
+    function getEditPageMathOperation(id, idPage) {
+
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+         
+            $.ajax({
+                type: "POST",
+                url: "/PageMathOperation/GetEdit/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id, 'idPage': idPage
+                },
+                dataType: "html",
+                success: function (evt) {
+                    $('#right-column').html
+
+                    if ($('div#NewPageDialog').length > 0) {
+                        $('#NewPageDialog').remove();
+                    }
+                    $('#right-column').html(evt);
+                    $.getScript("../redips-drag-min.js",
+                        function (data, textStatus, jqxhr) {
+                            console.log(data);
+                        });
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+    }
+    function deletePage(key) {
+        blockScreen("Un momento por favor....");
+        if (confirm("¿Esta seguro de borrar este registro?")) {
+            $.post("/PageMathOperation/Delete", { id: key },
+                     function (data) {
+                         if (data.Success == true) {
+
+                             updateSuccess(data)
+                             $.unblockUI();
+                         }
+                         else alert("Delete failed");
+                     }, "json");
+        }
+    }
+
+    function CreateIndicator() {
+
+
+        var ajaxSubmitOptions = {
+
+            beforeSubmit: showRequest,  // pre-submit callback 
+            success: showResponse,  // post-submit callback 
+            error: function (response, status, err) {
+                // This option doesn't catch any of the error below, 
+                // everything is always 'OK' a.k.a 200
+                if (response.status == 400) {
+                    alert("Sorry, this is bad request!");
+                }
+                if (response.status == 601) {
+                    sessionTimedOut();
+                }
+            }
+        }
+
+        $("#updateModelForm").ajaxSubmit(ajaxSubmitOptions);
+        return false;
+        //        updateSuccess();
+    }
+
+    function EditIndicator() {
+
+
+        var ajaxSubmitOptions = {
+
+            beforeSubmit: showRequest,  // pre-submit callback 
+            success: showResponse,  // post-submit callback 
+            error: function (response, status, err) {
+                // This option doesn't catch any of the error below, 
+                // everything is always 'OK' a.k.a 200
+                if (response.status == 400) {
+                    alert("Sorry, this is bad request!");
+                }
+                if (response.status == 601) {
+                    sessionTimedOut();
+                }
+            }
+        }
+
+        $("#updateModelEditForm").ajaxSubmit(ajaxSubmitOptions);
+        return false;
+        //        updateSuccess();
+    }
+    // pre-submit callback 
+    function showRequest(formData, jqForm, options) {
+
+        var queryString = $.param(formData);
+
+        return true;
+    }
+
+    // post-submit callback 
+    function showResponse(responseText, statusText, xhr, $form) {
+        updateSuccess();
+
+    }
+
+
+    $(function () {
+        $(".NewIndicatorLink").button();
+        $(".decorated").button();
+        $('#modalContent').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+
+                    CreateIndicator();
+
+                }
+            }
+        });
+
+        $(".NewIndicatorLink").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#modalContent');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModelForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+    goToCreate
+    $(function () {
+        $(".EditIndicatorLink").button();
+        $(".decorated").button();
+        $('#EditIndicator').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    EditIndicator();
+                }
+            }
+        });
+
+        $(".EditIndicatorLink").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#EditIndicator');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModelEditForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+    function updateSuccess(data) {
+
+        $("#PageMathOperationListForm").submit();
+
+        $('#modalContent').dialog("close");
+        $('#EditIndicator').dialog("close");
+
+    }
+
+
+
+
+</script>
+
+

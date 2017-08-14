@@ -1,0 +1,184 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasica_GridSimuladorCuotasFNC>
+
+<input type="hidden" id="inRequestIdFNC" value="@ViewBag.RequestId"/>
+
+@{
+    var grid = new WebGrid(ajaxUpdateContainerId: "contenedor-gridFNC", rowsPerPage: ViewBag.PageSize, canPage: true);
+    grid.Bind(Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+    }
+<div id="contenedor-gridFNC">
+@{
+
+    IEnumerable<WebGridColumn> cols =
+        new List<WebGridColumn> {
+                new WebGridColumn{
+                    Header="Producto",
+                    Format = @<text>
+                                <input type="hidden" id="inIDFNC" value="@item.F_Id" class="edit" />
+                                <span class="display"><label id="lblProductoFNC">@item.F_varProducto</label></span>
+                                <div style="display:none;">
+                                        <label class="SumValorCuota">@item.F_monValorCuotaFnc</label>
+                                        <label class="SumValorObligacion">@item.F_monValorObligacionFnc</label>
+                                        <label class="SumValorSaldo">@item.F_monSaldo</label>
+
+                                </div>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Nro Obligacion",
+                    Format = @<text>
+                                <span class="display"><label id="lblObligacionFNC">@item.F_varNumeroObligacionFnc</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Valor Cuota", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrcuotaFNC">@String.Format("{0:C}",item.F_monValorCuotaFnc)</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Valor Obligacion", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrObligacionFNC">@String.Format("{0:C}",item.F_monValorObligacionFnc)</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Saldo", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrSaldoFNC">@String.Format("{0:C}",item.F_monSaldo)</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Plazo", 
+                    Format = @<text>
+                                <span class="display"><label id="lblPlazoFNC">@item.F_varPlazo</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Forma de Pago", 
+                    Format = @<text>
+                                <span class="display"><label id="lblFormaPagoFNC">@item.F_varFormapago</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Proximo Pago", 
+                    Format = @<text>
+                                <span class="display"><label id="lblProximoPagoFNC">@item.F_varProximoPago</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Tipo", 
+                    Format = @<text>
+                                <span class="display"><label id="lblTipoFNC">@item.F_varTipo</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{Header="Seleccionar",
+                    Format = @<text>
+    <div style="display:@ViewBag.EditRoles">
+    <input type="checkbox" id="inSelectFNC" class="SelectFNC" @((@item.F_bitSeleccionado ? "checked" : ""))/></div>
+                            </text>, Style="col1Width"
+
+                }
+                
+            };
+}
+<div class="test" style="overflow: scroll; width: 900px">
+    <div style="width: 1100px">
+@grid.GetHtml(columns: cols, tableStyle: "webgrid-table",
+    headerStyle: "webgrid-header",
+    rowStyle: "webgrid-row-style",
+    alternatingRowStyle: "webgrid-alternating-row",
+    selectedRowStyle: "webgrid-selected-row",
+    footerStyle: "webgrid-footer", mode: WebGridPagerModes.All, fillEmptyRows: false, htmlAttributes: new { id = "contenedor-gridFNC" })
+    <br />
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        
+        $('.SelectFNC').on("click", function () {
+
+            var requestid = $('#inRequestIdFNC').val();
+            var tr = $(this).parents('tr:first');
+            var id = tr.find("#inIDFNC").val();
+            var chkSelect = tr.find("#inSelectFNC").prop('checked');
+            var isSuccess = -1;
+
+            var Registro =
+            {
+                "F_Id": id,
+                "F_RequestId": requestid,
+                "F_bitSeleccionado": chkSelect
+            };
+            blockScreen("Un momento por favor....");
+            $.ajax({
+
+                url: '/GridDetail/FNCUpdateSelect/',
+
+                data: JSON.stringify(Registro),
+
+                type: 'POST',
+
+                contentType: 'application/json; charset=utf-8',
+
+                success: function (result) {
+                    isSuccess = result;
+
+                },
+                error: function (result) {
+                    isSuccess = result;
+                }
+
+            }).done(function () {
+                if (isSuccess != "-1")
+                {                                     //Successfully saved
+                    $('#STPC_DFi_c25fdd03-8875-4ea2-8d08-a26b8011c9f2').val(isSuccess);
+                    $('#STPC_DFi_62a002f7-ab46-43d7-9e69-4c5117af84f7').val(isSuccess);
+                    
+                    $.unblockUI();
+                }
+                else {                                                      //Data Error
+                    alert("Error. Por favor, revise los datos" + "\n" + isSuccess);
+                    $.unblockUI();
+                }
+            });
+
+        });
+
+        function updateGridFNC(e) {
+            e.preventDefault();
+            blockScreen("Un momento por favor....");
+            var page = $(this).text();
+            var requestid = $('#inRequestIdFNC').val();
+
+            var url = "/GridDetail/FNCIndex?requestId=" + requestid + "&page=" + page;
+            var $container = $("#contenedor-gridFNC");
+            $container.load(url);
+            $.unblockUI();
+
+        };
+        $('#contenedor-gridFNC tfoot tr a').removeAttr('onclick').live('click', updateGridFNC);
+
+
+        var totalValorCuota = 0;
+        var totalValorObligacion = 0;
+        var totalValorSaldo = 0;
+
+        $('#contenedor-gridFNC .SumValorCuota').each(function () {
+            totalValorCuota = totalValorCuota + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-gridFNC .SumValorObligacion').each(function () {
+            totalValorObligacion = totalValorObligacion + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-gridFNC .SumValorSaldo').each(function () {
+            totalValorSaldo = totalValorSaldo + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-gridFNC tbody').append('<tr><td colspan="2"><b>TOTALES</b></td><td><b>$' + totalValorCuota.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td><b>$' + totalValorObligacion.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td><b>$' + totalValorSaldo.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td colspan="5"><b></b></td></tr>');
+
+    });
+</script>
+</div>

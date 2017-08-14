@@ -1,0 +1,230 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.CategoriesViewModel
+@{
+    ViewBag.Title = "Categorias";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.form.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+
+
+
+<h2>Categorias</h2>
+
+<div id="Categories">
+    @{Html.RenderPartial("_CategoriesList", Model.Categories);}
+    <button id="NewCategory">
+        Crear una categoria</button>
+    <button id="EditCategory">
+        Editar una categoria</button>
+    <button id="DeleteCategory">
+        Eliminar categoria</button>
+
+
+</div>
+@if (ViewBag.IsSingleTenant == 1)
+{
+    @Html.Hidden("CategoryName", (string)@ViewBag.categoryname)
+    <table>
+        <tr>
+            <td>
+                <label for="parent">Empresa</label></td>
+            <td>
+
+                @Html.DropDownList("ddlAplicationName",
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Ver todas las opciones---",
+            new { style = "width:200px" })
+
+            </td>
+        </tr>
+    </table>
+}
+<div id="Options">
+
+    @*@{Html.RenderAction("Options", Model.Current);}*@
+</div>
+<div id="NewCategoryForm" title="Crear una nueva categoria">
+    <p class="validateTips">
+        Debe ingresar todos los datos.
+    </p>
+    <form>
+        <fieldset>
+            <legend></legend>
+            <table>
+                <tr>
+                    <td>
+                        <label for="name">Nombre</label>
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="parent">Dependencia</label></td>
+                    <td>
+                        @Html.DropDownList("ddlDependency",
+            new SelectList((IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.Category>)ViewBag.Category, "Uid", "Name"), "---Seleccione la categoria---",
+            new { style = "width:200px" })
+                    </td>
+                </tr>
+                @* <tr>
+                    <td>
+                        <label for="parent">Nombre instancia</label></td>
+                    <td>
+                        @Html.DropDownList("ddlAplicationName",
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Seleccione el nombre de la aplicación---",
+            new { style = "width:200px" })
+                    </td>
+                </tr>*@
+            </table>
+
+
+
+        </fieldset>
+    </form>
+</div>
+
+<div id="DialogEditCategory" title="Editar categoria" style="display: none; width: 800px">
+</div>
+<div id="EditOption" title="Editar Opción" style="display: none; width: 800px">
+</div>
+@section BottomAssets {
+    <script src="@Url.Content("~/Scripts/Categories/Categories_Index.js")" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+    
+
+
+    $(document).ready(function () {
+
+
+
+        $("#NewCategory").click(function () {
+            $.getJSON("@Url.Action("LoadCategories", "Categories")",
+                   function (carData) {
+
+                       var select = $("#ddlDependency");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: "",
+                           text: "---Seleccione la dependencia---"
+                       }));
+                       $.each(carData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text
+
+                           }));
+                       });
+
+
+                   });
+        });
+
+    });
+    $(function () {
+        $('#DialogEditCategory').dialog({
+            autoOpen: false,
+            width: 650,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Validar": function () {
+                    var name = $("#nameCat").val();
+
+                    $.post("/Categories/Edit_category",
+                        {
+                            Name: name,
+                            Dependency: $("#ddlDependencyEdit").val(),
+                            Uid: $("#catId").val(),
+                            aplicationName: $("#AplicationName_Id").val()
+
+                        },
+                        function (data) {
+                            if (data.Success == true) {
+                                window.location.reload(false);
+                            }
+                            else alert(data.name);
+                        }, "json");
+                    $(this).dialog("close");
+
+                },
+                "Cancelar": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+        $("#EditCategory")
+               .button().click(function () {
+
+
+                   var dialogDiv = $('#DialogEditCategory');
+                   $.ajax({
+                       type: "GET",
+                       url: "/Categories/Edit_category/",
+                       data: {
+                           'id': $("#CategoriesList").val()
+                       },
+
+                       success: function (data) {
+                           if (data.Success != false) {
+                               dialogDiv.html(data);
+                               var $form = $("#updateModelCategory");
+                               $form.unbind();
+                               $form.data("validator", null);
+                               $.validator.unobtrusive.parse(document);
+                               $form.validate($form.data("unobtrusiveValidation").options);
+                               dialogDiv.dialog('open');
+                           }
+                           else {
+                               alert(data.ErrorMessage)
+                           }
+                       }
+                   });
+                   return false;
+               });
+    });
+
+
+
+    $("#ddlDependency").change(function () {
+        console.log($(this).val())
+
+        if ($(this).val() != "") {
+            $("#ddlAplicationName").prop("disabled", true);
+        }
+        else {
+            $("#ddlAplicationName").prop("disabled", false);
+        }
+        $.getJSON("@Url.Action("LoadDependenciaByCategorie", "Categories")", { IdCategoria: $(this).val() },
+                   function (carData) {
+                       var select = $("#ddlAplicationName");
+                       select.empty();
+
+                       console.log($("#idOptionParent").val())
+                       $.each(carData, function (index, itemData) {
+                           if (carData)
+                               select.append($('<option/>', {
+                                   value: itemData.Value,
+                                   selected: true,
+                                   text: itemData.Text,
+                                   selected: true
+
+                               }));
+                       });
+
+                   });
+    });
+
+
+    function updateSuccessCategory(data) {
+
+        $('#DialogEditCategory').dialog("close");
+        window.location.reload(false);
+
+    }
+
+</script>

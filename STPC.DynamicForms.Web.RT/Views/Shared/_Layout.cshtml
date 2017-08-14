@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/webgrid.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/minified/jquery.ui.button.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/minified/jquery.ui.core.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/minified/jquery.ui.dialog.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.8.2.min.js")" type="text/javascript"></script>
+
+    <script src="@Url.Content("~/Scripts/LiSimAbcGeneralJs.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.9.0.min.js")" type="text/javascript"></script>
+    <link href="~/abcico.ico" rel="shortcut icon" type="image/x-icon" />
+    @RenderSection("HeadAssets", required: false)
+</head>
+<body>
+    <div>
+        <img src="@Url.Content("~/Content/logo.gif")" alt="LiSim Abc" width="200" height="100"/>
+        @Html.ActionLink("Home >", "Index", "Home")
+    </div>
+    @RenderBody()
+    <div id="ajaxloading">
+        Cargando...
+    </div>
+</body>
+
+@RenderSection("BottomAssets", required: false)
+</html>
+<script>
+
+    function DetectBrowserExit() {
+        alert('Execute task which do you want before exit');
+    }
+
+    window.onbeforeunload = function () { DetectBrowserExit(); }
+</script>

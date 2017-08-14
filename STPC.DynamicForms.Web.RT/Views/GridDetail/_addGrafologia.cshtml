@@ -1,0 +1,32 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasicaAnalista_GridGrafologia
+
+<table id="InformacionBasicaAnalista_GridGrafologia" class="webgrid-table">
+    <tr>
+        <td class="col2Width">
+            <div class="MvcFieldWrapper" id="inNombreSoporte_wrapper">
+                <label class="STPC_DynamicFieldPrompt" for="inNombreSoporte"></label>
+                <input class="tooltip" id="inNombreSoporte" name="inNombreSoporte" onclick="ModalFileUpload(this, 4000, '*.png,*.jpg,*.jpeg,*.bmp,*.pdf,*.xls,*.xlsx,*.xlsb', '');" title="" type="button" value="Cargar Archivo">
+                <a id="UriFile_inNombreSoporte" target="_blank" tabindex="1" text="" value="" style="visibility: visible;">@Model.F_varNombreSoporte</a>
+                <a id="UriFileDelete_inNombreSoporte" target="_blank" tabindex="1" text="" value="" style="visibility: visible;">@Model.F_varNombreSoporte</a>
+                <input id="hidden_inNombreSoporte" name="inNombreSoporte" type="text"  style="visibility : hidden;"/>
+            </div>
+        </td>
+
+        <td class="col2Width">
+
+            @Html.DropDownList("value",  (IEnumerable<SelectListItem>)ViewBag.listResult, "---Seleccione---", new{ @id="inResultado", @required="true", @class="basico1_select", @tooltip="true", @data_val="true", @data_val_required="* Campo requerido", @Width="100%"})
+            @Html.ValidationMessageFor(m=>m.F_varResultado )
+
+        </td>
+        <td class="col2Width">
+            @Html.TextBoxFor(m=>m.F_varObservacion, new {@id="inObservacion", @class="basico1_input", required = "true", maxlength="50", tooltip="true", data_val="true", data_val_required="* Campo requerido" })
+            @Html.ValidationMessageFor(m=>m.F_varObservacion)
+        </td>
+
+        <td class="col2Width">
+                <input type="button" value="Guardar" class="inssave-btn" />
+                <input type="button" value="Cancelar" class="cancelinssave-btn" />
+        </td>
+    </tr>
+
+</table>

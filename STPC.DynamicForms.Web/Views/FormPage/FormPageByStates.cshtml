@@ -1,0 +1,76 @@
+﻿@model List<STPC.DynamicForms.Web.Services.Entities.FormPageByStates>
+@{
+    ViewBag.Title = "Estados por página";
+
+  
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div id="Acciones">
+    @Html.ActionLink("Configurar nuevo estado", "Create", new { idPage = (Guid)ViewBag.Data_FormPageId }, new { @class = "decorated NewLink", title = "Nuevo" })
+    <table id="TheTable" class="resultados" summary="Sus páginas" style="width: 100%">
+        <tr class="nodrop nodrag">
+            <th>Página</th>
+            <th>Estado</th>
+             <th>Acciones</th>
+        </tr>
+
+
+        @foreach (var item in Model)
+        {
+            
+            <tr>
+            <td>
+                @item.FormPage.Description
+            </td>
+            <td>
+                @item.FormState.StateName
+            </td>            
+            <td>
+                 <span  data-key="@item.Uid" title="Borrar Formulario" onclick="deletePage('@item.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnCancel"/></span>
+            </td>
+        </tr>
+        }
+    </table>
+</div>
+<div id="modalAddActions"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".NewLink").button();
+        $(".decorated").button();
+        $('#modalContent').dialog({
+            autoOpen: false,
+            width: 650,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    $("#updateModeloForm").submit();
+                },
+                "Finalizar": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".NewLink").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#modalContent');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModeloForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+  
+</script>

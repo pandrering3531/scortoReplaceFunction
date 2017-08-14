@@ -1,0 +1,46 @@
+﻿
+@{
+    ViewBag.Title = "Configuración de campos";
+    
+}
+<div id="migas">
+    <p>Controles configurados </p>
+</div>
+@using (Ajax.BeginForm("GetIndex", "ControlEvents", null,
+                new AjaxOptions { UpdateTargetId = "CustomerForm", OnSuccess = "RefreshTable", OnFailure = "OnFailure" },
+                new { id = "EditCustomerProfileForm2" }))
+{
+    @Html.Hidden("Data_FormPageId", (Guid)ViewBag.Data_FormPageId)
+    <div id="CustomerForm">
+        @{Html.RenderPartial("_Index");}
+    </div>
+   
+
+    @Html.Hidden("Data_FormPageName", (string)ViewBag.Data_FormPageName)
+    @Html.Hidden("Data_FormId", (Guid)ViewBag.Data_FormId)
+    <span class="ui-button-text" id="btnBackToPages" onclick="getPages('@ViewBag.Data_FormId')">Volver a la lista de páginas</span>
+    //@Html.ActionLink("Volver a la lista de páginas", "Edit", "Form", new { id = ViewBag.Data_FormId }, new { @class = "decorated" })
+
+
+}
+<div id="modalContent" title="Configurar eventos de control" style="display: none; width: 800px">
+</div>
+<div id="EditIEvent" title="Editar eventos de control" style="display: none; width: 800px">
+</div>
+
+<script type="text/javascript">
+
+
+    function RefreshTable(data) 
+    {
+        $.unblockUI();
+    }
+    function OnFailure(ajaxContext) {
+        var response = ajaxContext.get_response();
+        var statusCode = response.get_statusCode();
+        alert('Failure');
+     
+        
+    }
+
+</script>

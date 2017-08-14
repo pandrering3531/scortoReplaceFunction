@@ -1,0 +1,181 @@
+﻿@model ICollection<STPC.DynamicForms.Web.RT.Services.Entities.Hierarchy>
+@{
+    ViewBag.Title = "Buscar solicitudes";
+    <script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+}
+
+
+
+<div class="Busquedasolicitudes">
+    <style>
+        
+
+        .Busquedasolicitudes {
+            color: #7C7C7C;
+            font-size: 13px;
+        }
+    </style>
+    <table id="tblParameters">
+
+
+        @Html.Hidden("NodeSelected", null, new { id = "txtNode" })
+        <tr>
+            <td>Número de solicitud
+            </td>
+            <td>
+                @Html.TextBox("NumeroSolicitud", null, new { id = "txtNumeroSolicitud", @class = "CustomInteger" })
+            </td>
+        </tr>
+        <tr>
+            <td>Estado de solicitud
+            </td>
+            <td>
+                @Html.DropDownList("StateForm",
+            new SelectList((IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.FormStates>)ViewBag.FormStates, "Uid", "StateName"), "---Seleccione estado de la solicitud---",
+            new { style = "width:154px", id = "ddlStateForm" })
+            </td>
+        </tr>
+        <tr>
+            <td>Fecha Creación 
+            </td>
+        </tr>
+        <tr>
+            <td class="solicitud1">Desde 
+            </td>
+            <td>
+                @Html.TextBox("FechaSolicitudInicio", null, new { id = "txtFechaCreacionIni", @Class = "jQueryCalendarInput" })
+            </td>
+            <td class="solicitud1">Hasta                
+            </td>
+            <td>
+                @Html.TextBox("FechaSolicitudFin", null, new { id = "txtFechaCreacionEnd", @Class = "jQueryCalendarInput" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Fecha de actualización
+        </tr>
+        <tr>
+            <td class="solicitud1">Desde
+            </td>
+            <td>
+                @Html.TextBox("FechaSolicitudInicio", null, new { id = "txtFechaActualizacionIni", @Class = "jQueryCalendarInput" })
+
+            </td>
+            <td class="solicitud1">
+                @Html.Label("Hasta")
+
+            </td>
+            <td>
+                @Html.TextBox("FechaSolicitudFin", null, new { id = "txtFechaActualizacionEnd", @Class = "jQueryCalendarInput" })
+            </td>
+        </tr>
+        <tr>
+            <td>Usuario creación
+            </td>
+            <td>
+                @Html.DropDownList("CreatedBy", new SelectList(ViewBag.LisUsers as System.Collections.IEnumerable, "Username", "GivenName"), "---Seleccione usuario---", new { style = "width:154px", id = "CreatedBy" })
+                @*@Html.TextBox("CreatedBy", null, new { id = "CreatedBy" })*@
+            </td>
+        </tr>
+
+        <tr>
+            <td>Usuario actualización
+            </td>
+            <td>
+                @Html.DropDownList("UpdatedBy", new SelectList(ViewBag.LisUsers as System.Collections.IEnumerable, "Username", "GivenName"), "---Seleccione usuario---", new { style = "width:154px", id = "UpdatedBy" })
+                @* @Html.TextBox("UpdatedBy", null, new { id = "UpdatedBy" })*@
+            </td>
+        </tr>
+        <tr>
+            <td>Seleccionar jerarquias
+            </td>
+            <td>
+                <button id="NewCategory">
+                    Ver jerarquía</button>
+
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="3">
+                @Html.TextBox("Jerarquia", null, new { id = "txtJerarquia", style = "width:400px", disabled = "disabled" })
+
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+<br />
+<br />
+<div id="tblParametros2">
+    <fieldset>
+        <legend><b>Parámetros por tipo de solicitud</b>
+        </legend>
+        <br />
+
+        <table>
+            <tr>
+                <td style="width: 70px">Tipo solicitud
+                </td>
+                <td>
+                    @Html.DropDownList("Tipo solicitud", new SelectList(ViewBag.lisFormsType as System.Collections.IEnumerable, "Uid", "Name"), "---Seleccione el tipo de solicitud", new { style = "width:215px; margin-right:5px;", id = "ddlRequestType" })
+                </td>
+
+                <td>
+                    <button id="btnLoadParameters">Ver parámetros consulta</button>
+                </td>
+            </tr>
+
+        </table>
+    </fieldset>
+    <div id="NewCategoryForm" title="Seleccionar jerarquía">
+
+        <form>
+            @{Html.RenderPartial("Hierarchies", Model);}
+        </form>
+    </div>
+
+    <form id="arraydiffid">
+        <div id="DivFieldsPage" title="Seleccione los campos">
+        </div>
+    </form>
+
+    <button id="StarQuery">
+        Ejecutar consulta</button>
+</div>
+
+<div id="detailsDiv">
+</div>
+
+<div id="result">
+</div>
+@section BottomAssets {
+    <script src="@Url.Content("~/Scripts/Request/RequestQuery.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>    
+   
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$(".CustomInteger").numeric(false, function () { this.focus(); });    
+        $('.CustomCurrency').numeric(false, function () { this.value = ""; this.focus(); });
+        //setWarningTimeOut()
+
+        $('.jQueryCalendarInput').bind('copy paste', function (e) {
+            e.preventDefault();
+        });
+
+        $('.jQueryCalendarInput').keypress(function (event) { event.preventDefault(); });
+
+
+    });
+    //function applyFormatCurrency(sender) {
+    //    $(sender).formatCurrency({
+    //        roundToDecimalPlace: 0, negativeFormat: '-%s%n'
+    //    });
+    //}
+ 
+</script>

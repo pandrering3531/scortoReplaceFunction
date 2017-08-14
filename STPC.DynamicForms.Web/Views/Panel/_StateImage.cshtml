@@ -1,0 +1,31 @@
+﻿@model STPC.DynamicForms.Web.Models.FormFieldViewModel
+@using STPC.DynamicForms.Web.Helpers
+
+@if (Model != null)
+{
+  <div class="FormField">
+    @using (Html.BeginCollectionItem("formfields"))
+    {   
+      <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 8px 8px 8px 8px;">
+        <legend></legend>
+        <table>
+          @{Html.RenderPartial("_FieldsEditorImageTopRow", Model);}
+          
+          <tr>
+            <td>
+              <br />
+            </td>
+          </tr>          
+        </table>
+      </fieldset>
+      <br />
+    }
+  </div>
+  
+}
+
+@section BottomAssets {
+  <script type="text/javascript">
+    
+  </script>
+}

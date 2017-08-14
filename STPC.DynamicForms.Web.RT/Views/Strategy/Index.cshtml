@@ -1,0 +1,309 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.PageStrategy>
+@{
+    ViewBag.Title = "Index";
+    <script src="@Url.Content("~/Scripts/Strategy/Create.js")" type="text/javascript"></script>
+        
+      
+}
+
+<div id="migas">
+    <p>Estrategias Configuradas </p>
+</div>
+<div id="Estrategias">
+    <br />
+    <br />
+    <table id="TheTable" class="resultados" summary="Sus páginas">
+        <tr class="nodrop nodrag">
+            <th>Pagina</th>
+            <th>Estrategia</th>
+            <th>Acciones</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.PageId
+                </td>
+                <td>
+                    @item.StrategyId
+                </td>
+                <td>
+                    <span  data-key="@item.Uid" title="Editar estrategia" onclick="EditStrategy('@item.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/editar.gif")" alt="Editar" ID = "btnEdit"/>
+                    </span>
+
+                    <span  data-key="@item.Uid" title="Borrar estrategia" onclick="DeleteStrategy('@item.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnDelete"/>
+                    </span>
+
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<div id="Seleccionar">
+    <h2>Seleccionar Estrategia</h2>
+    @Html.DropDownList("PageStrategy",
+                        new SelectList((IEnumerable<SelectListItem>)ViewBag.StrategiesSelect, "Value", "Text"), new { @class = "text ui-widget-content ui-corner-all", id = "ddlStrategy" })
+    <button id="NewStrategy" onclick="NewStrategyDialog();">Agregar nueva estrategia</button>
+    <br />
+    <br />
+    <br />
+</div>
+<div id="modalContent" title="Configurar Estrategias" style="display: none;">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmPage", enctype = "multipart/form-data" }))
+    {  
+         
+        <div id="modalContent2"></div>
+    }
+</div>
+
+@Html.Hidden("Data_FormPageName", (string)ViewBag.Data_FormPageName)
+@Html.Hidden("Data_FormPageId", (Guid)ViewBag.Data_FormPageId)
+@Html.Hidden("Data_FormId", (Guid)ViewBag.Data_FormId)
+
+<span class="ui-button-text" id="btnBackToPages" onclick="getPages('@ViewBag.Data_FormId')">Volver a la lista de páginas</span>
+
+
+<script type="text/javascript">
+
+    function NewStrategyDialog() {
+        var StrategyId = $("#ddlStrategy").val();
+        var id = $("#Data_FormPageId").val();
+        blockScreen("Un momento por favor....");
+        if (StrategyId != 0 && id != '') {
+            $.ajax({
+                type: "GET",
+                url: "/Strategy/Details/",
+                data: {
+                    'StrategyId': StrategyId,
+                    'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+
+                    ShowParameters(evt);
+                    $.unblockUI();
+                },
+                error: function (req, status, error) {
+                    alert("Error!Occured" + error);
+                    $.unblockUI();
+                }
+            });
+        }
+
+        else {
+            alert('Debe seleccionar una estrategia.');
+        }
+    }
+
+    function ShowParameters(evt) {
+        $('#modalContent2').html(evt);
+        //$("#modalContent").dialog({ bgiframe: true, height: 250, width: 480, modal: true, resizable: false });
+
+        $('#modalContent').dialog({
+            bgiframe: true,
+            resizable: false,
+            modal: true,
+            height: 280,
+            width: 480,
+            closeOnEscape: true,
+            overlay: { backgroundColor: "#000", opacity: 0.5 },
+            buttons: {
+                "Cancelar": function () {
+                    $(this).dialog("close");
+                },
+
+                "Guardar": function () {
+                    //alert('aqui');
+                    SaveStrategy();
+
+                },
+            },
+        });
+    }
+
+    function SaveStrategy() {
+        var form = $("#frmPage");
+        var a = form.serializeArray();
+        var pageName = $("#Data_FormPageName").val();
+        var FormPageId = $("#Data_FormPageId").val();
+        var FormId = $("#Data_FormId").val();
+        var StrategyId = $("#Data_StrategyId").val();
+        blockScreen("Un momento por favor....");
+        $.ajax({
+            type: 'POST',
+            url: '/Strategy/Create',
+            data: {
+                'campos': a
+            },
+            dataType: 'json',
+            success: function (result) {
+                var pageUid = $("#Data_FormPageId").val();
+                getStrategies(pageUid)
+                if ($('div#modalContent').length > 0) {
+                    console.log($('div#modalContent').length)
+                    $('#modalContent').remove();
+                }
+            },
+            error: function (req, status, error) {
+                alert("Error: " + error);
+                $.unblockUI();
+            }
+
+        });
+        $("#modalContent").dialog('close');
+    }
+
+    function EditStrategy(key) {
+        blockScreen("Un momento por favor....");
+        if (key != 0 && key != '') {
+            $.ajax({
+                type: "GET",
+                url: "/Strategy/Edit/",
+                data: {
+                    'Uid': key
+                },
+                dataType: "html",
+                success: function (evt) {
+                    //alert('evt' + evt);                   
+                    ShowEdit(evt);
+                    $.unblockUI();
+                },
+                error: function (req, status, error) {
+                    alert("Error!Occured" + error);
+                    $.unblockUI();
+                }
+            });
+        }
+
+        else {
+            alert('Debe seleccionar una estrategia.');
+        }
+    }
+
+    function ShowEdit(evt) {
+        $('#modalContent2').html(evt);
+        //$("#modalContent").dialog({ bgiframe: true, height: 250, width: 480, modal: true, resizable: false });
+
+        $('#modalContent').dialog({
+            bgiframe: true,
+            resizable: false,
+            modal: true,
+            height: 280,
+            width: 480,
+            closeOnEscape: true,
+            overlay: { backgroundColor: "#000", opacity: 0.5 },
+            buttons: {
+                "Cancelar": function () {
+                    $(this).dialog("close");
+                },
+
+                "Guardar": function () {
+                    //alert('aqui');
+                    SaveEditStrategy();
+                },
+            },
+        });
+    }
+
+    function SaveEditStrategy() {
+        var form = $("#frmPage");
+        var a = form.serializeArray();
+        var pageName = $("#Data_FormPageName").val();
+        var FormPageId = $("#Data_FormPageId").val();
+        var FormId = $("#Data_FormId").val();
+        var StrategyId = $("#Data_StrategyId").val();
+        var EditKey = $("#EditKey").val();
+        blockScreen("Un momento por favor....");
+        $.ajax({
+            type: 'POST',
+            url: '/Strategy/Edit',
+            data: {
+                'EditKey': EditKey,
+                'campos': a
+            },
+            dataType: 'json',
+            success: function (result) {
+                var pageUid = $("#Data_FormPageId").val();
+                getStrategies(pageUid)
+                if ($('div#modalContent').length > 0) {
+                    console.log($('div#modalContent').length)
+                    $('#modalContent').remove();
+                }
+                $.unblockUI();
+            },
+            error: function (req, status, error) {
+                alert("Error: " + error);
+                $.unblockUI();
+            }
+        });
+        $("#modalContent").dialog('close');
+    }
+
+    function DeleteStrategy(key) {
+        if (confirm("¿Seguro de borrar esta estrategia?")) {
+            blockScreen("Un momento por favor....");
+            $.post("/Strategy/Delete", { pageStrategyUid: key },
+                     function (data) {
+                         if (data.Success == true) {
+
+                             var pageUid = $("#Data_FormPageId").val();
+                             getStrategies(pageUid)
+                         }
+                         else alert("Delete failed");
+                     }, "json");
+        }
+    }
+
+    function switchParatemerType(sender) {
+        var parameterName = sender;
+        var comboName = "ddlParameterType_ParamName:" + parameterName;
+        var fieldList = "fieldList_ParamName:" + parameterName;
+        var txtManualValue = "txtManualValue_ParamName:" + parameterName;
+
+        var SelectedItem = document.getElementById(comboName).value;
+
+        switch (SelectedItem) {
+            case "Campo Formulario":
+                document.getElementById(fieldList).removeAttribute("disabled");
+                document.getElementById(txtManualValue).setAttribute("disabled", "disabled");
+                break;
+
+            case "Valor Manual":
+                document.getElementById(fieldList).setAttribute("disabled", "disabled");
+                document.getElementById(txtManualValue).removeAttribute("disabled");
+                break;
+        }
+    }
+
+    function onTriggerchanged(sender) {
+        console.log('onTriggerchanged')
+        if ($(sender).is(":checked")) {
+            console.log(":checked")
+            //document.getElementById("ddlTriggerField").removeAttribute("disabled");
+            $("#ddlTriggerField").prop("disabled", false)
+        }
+        else {
+            console.log(":unchecked")
+            document.getElementById("ddlTriggerField").setAttribute("disabled", "disabled")
+        }
+    }
+
+    function onResponsechanged(sender) {
+        if ($(sender).is(":checked")) {
+            document.getElementById("ddlResponseField").removeAttribute("disabled");
+        }
+
+        else {
+            document.getElementById("ddlResponseField").setAttribute("disabled", "disabled")
+        }
+    }
+
+    //$(".CustomInteger").numeric(false, function () { this.focus(); });    
+    $('.CustomCurrency').numeric(false, function () { this.value = ""; this.focus(); })
+
+   
+
+</script>

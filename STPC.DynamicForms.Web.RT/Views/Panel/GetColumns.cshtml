@@ -1,0 +1,194 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.FormViewModel
+@{
+    ViewBag.Title = "Columnas de panel";
+    
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+
+}
+@Html.AntiForgeryToken()
+<div id="migas">
+    <p>Columnas del panel: @Model.panel.Name</p>
+</div>
+@Html.Hidden("panelId", @Model.panel.Uid.ToString())
+<div id="divPermisos">
+    <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 5px 5px 5px 5px;" id="ViewRoles">
+        <legend>Permisos ver</legend>
+        <br />
+        @foreach (var rol in Model.SelectedViewRoles)
+        {
+            var arr = rol.Split(',');
+            @Html.CheckBox(arr[0], bool.Parse(arr[1]), new { @style = "display: inline" })
+            @arr[0]<br />
+        }
+    </fieldset>
+    <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 5px 5px 5px 5px;" id="EditRoles">
+        <legend>Puede editar</legend>
+        <br />
+        @foreach (var rol in Model.SelectedEditRoles)
+        {
+            var arr = rol.Split(',');
+            @Html.CheckBox(arr[0], bool.Parse(arr[1]), new { @style = "display: inline" })
+            @arr[0]<br />
+        }
+    </fieldset>
+    <span class="ui-button-text" id="GuardarPermisos">Actualizar permisos</span>
+    
+    
+</div>
+<div id="Columnas">
+        <br />
+        <br />
+        <table id="TheTable" class="resultados" summary="Sus páginas">
+            <tr>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+            @for (int i = 1; i <= Model.panel.Columns; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.Label("", "Columna " + i.ToString())
+                    </td>
+                    <td>
+                        <a onclick="getControls('@Model.panel.Uid',@i)">
+                            <img src="@Url.Content("~/Content/images/editar.gif")" title="Editar" alt="Editar"/></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+<span class="ui-button-text" id="backToPanels" onclick="backToPanels('@Model.panel.Page.Uid')">Volver a la lista de paneles</span>
+<br />
+<br />
+@section BottomAssets 
+  {
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+}
+
+
+<script type="text/javascript">
+
+    function backToPanels(id) {
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Panel/ListPanels/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+                    $('#right-column').html
+
+                    if ($('div#NewPageDialog').length > 0) {
+                        console.log($('div#NewPageDialog').length)
+                        $('#NewPageDialog').remove();
+                    }
+                    $('#right-column').html(evt);
+
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+    }
+
+    $("#GuardarPermisos").button().click(function () {
+        console.log("Permisos");
+        var checkboxViewRoles = [];
+        $('#ViewRoles input[type=checkbox]:checked').map(function () {
+            checkboxViewRoles.push($(this).attr('name'));
+        });
+        var checkboxEditRoles = [];
+        $('#EditRoles input[type=checkbox]:checked').map(function () {
+            checkboxEditRoles.push($(this).attr('name'));
+        });
+        blockScreen("Un momento por favor....");
+        $.ajax({
+            type: "POST",
+            url: "/Panel/UpdateRolesPanel/",
+            data: {
+                'EditRoles': checkboxEditRoles.toString(), 'ViewRoles': checkboxViewRoles.toString(), 'idPanel': $("#panelId").attr('value')
+            },
+            dataType: "html",
+            success: function (evt) {
+                $.unblockUI();
+                alert('Actualización realizada con éxito.')
+            },
+            error: function (result, status, error) {
+                $.unblockUI();
+                if (result.responseText == "EndSesion") {
+                    var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                    location.href = urlSite
+                }
+                else {
+                    alert("Error al cargar la pagina: " + result.responseText);
+                }
+
+            }
+        });
+    });
+    function getControls(id, colunmNumber) {
+
+        try {
+
+            blockScreen("Un momento por favor....");
+            $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+                var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+                $('input[name="__RequestVerificationToken"]').val(tokenValue);
+                console.log(id + ' ' + colunmNumber)
+                $.ajax({
+                    type: "POST",
+                    url: "/Panel/ListControls/",
+                    data: {
+                        '__RequestVerificationToken': tokenValue, 'id': id, 'colunmNumber': colunmNumber
+                    },
+                    dataType: "html",
+                    success: function (evt) {
+                        $('#right-column').html
+
+                        if ($('div#NewPageDialog').length > 0) {
+                            console.log($('div#NewPageDialog').length)
+                            $('#NewPageDialog').remove();
+                        }
+                        $('#right-column').html(evt);
+
+
+                        $.unblockUI();
+                        //$("#EditCustomerProfileForm").submit();
+                    },
+                    error: function (result, status, error) {
+                        $.unblockUI();
+                        if (result.responseText == "EndSesion") {
+                            var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                            location.href = urlSite
+                        }
+                        else {
+                            alert("Error al cargar la pagina: " + result.responseText);
+                        }
+
+                    }
+                });
+            });
+        }
+
+        catch (e) {
+            alert(e.message)
+        }
+    }
+</script>

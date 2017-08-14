@@ -1,0 +1,43 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.PageEvent>
+@{
+ 
+}
+
+<section>
+    Registros encontrados: @Model.Count
+</section>
+<table id="table_events_redis" class="resultados " summary="Sus páginas" style="width: 95%">
+    <thead>
+        <tr class="nodrop nodrag">
+            <th>Control que ejecuta</th>
+            <th>Control o Panel a inactivar</th>
+            <th>Valor</th>
+            <th>Evento</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.SourceField
+                </td>
+                <td>
+                    @item.ListenerField
+                </td>
+                <td>
+                    @item.FieldValue
+                </td>
+                <td>
+                    @item.EventType
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+

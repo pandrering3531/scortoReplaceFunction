@@ -1,0 +1,135 @@
+﻿@model List<STPC.DynamicForms.Web.Services.Entities.PageEvent>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+ @Html.ActionLink("Configurar nuevo evento", "Create", new { idPage = (Guid)ViewBag.Data_FormPageId }, new { @class = "decorated NewLinkEvent", title = "Nuevo" })
+<table id="TheTable" class="resultados" summary="Sus páginas">
+    <tr class="nodrop nodrag">
+        <th>Control que ejecuta</th>
+        <th>Control o Panel a inactivar</th>
+        <th>Valor</th>
+        <th>Evento</th>
+        <th>Acciones</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.SourceField
+            </td>
+            <td>
+                @ViewData["listenerControlName" + item.Uid]
+            </td>
+            <td>
+                @ViewData["selectCategoryOptions" + item.Uid]
+            </td>
+            <td>
+                @item.EventType
+            </td>
+            <td>
+                @Html.ActionLink(" ", "EditIEvent", new { id = item.Uid, idPage = (Guid)ViewBag.Data_FormPageId }, new { @class = "decorated EditLink BotonEdit", title = "Editar" })
+
+                 <span  data-key="@item.Uid" title="Borrar Formulario" onclick="deletePage('@item.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnCancel"/></span>
+            </td>
+        </tr>
+    }
+</table>
+
+<script type="text/javascript">
+    function deletePage(key) {
+        if (confirm("¿Seguro de borrar esta página?")) {
+            $.post("/ControlEvents/Delete", { id: key },
+                     function (data) {
+                         if (data.Success == true) {
+
+                             updateSuccess(data);
+                         }
+                         else alert("Delete failed");
+                     }, "json");
+        }
+    }
+    $(function () {
+        $(".NewLinkEvent").button();
+        $(".decorated").button();
+        $('#modalContent').dialog({
+            autoOpen: false,
+            width: 650,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    $("#updateModeloForm").submit();
+                },
+                "Finalizar": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".NewLinkEvent").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#modalContent');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModeloForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+
+    $(function () {
+        $(".EditLink").button();
+        $(".decorated").button();
+        $('#EditIEvent').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    $("#updateModelForm").submit();
+                }
+            }
+        });
+
+        $(".EditLink").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#EditIEvent');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModelEditForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                //$form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+    
+
+    function updateSuccess(data) {
+
+        $("#EditCustomerProfileForm2").submit();
+
+
+    }
+
+
+
+
+</script>
+
+

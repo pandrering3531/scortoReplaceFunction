@@ -1,0 +1,398 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.FormPage>
+@{
+    ViewBag.Title = "Páginas del formulario";
+    foreach (var page in Model)
+    {
+        ViewBag.GuidList = ViewBag.GuidList + page.Uid.ToString() + "/";
+    }
+    
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>        
+    <script src="@Url.Content("~/Scripts/TableDnD/jquery.tablednd.0.7.min.js")" type="text/javascript"></script>    
+        
+    <div id="NewPageDialog" title="Crear nueva página">
+        <p class="validateTips">Todos los campos son obligatorios.</p>
+        <form>
+            <h2>Nombres</h2>
+            <input type="text" name="PageName" id="PageName" class="text ui-widget-content ui-corner-all" />
+            <h2>Descripción</h2>
+            <input type="text" name="PageDescription" id="PageDescription" class="text ui-widget-content ui-corner-all" />
+            <h2>Estrategia</h2>
+            @Html.DropDownList("PageStrategy",
+                        new SelectList((IEnumerable<SelectListItem>)ViewBag.StrategiesSelect, "Value", "Text"), new { @class = "text ui-widget-content ui-corner-all" })
+        </form>
+    </div>
+    <script src="@Url.Content("~/Scripts/Strategy/Create.js")" type="text/javascript"></script>
+}
+@Html.AntiForgeryToken()
+
+<div id="migas">
+    <p>Páginas del formulario @ViewBag.FormName</p>
+</div>
+<div class="cols_home">
+    <button id="NewPage">Agregar nueva página</button>
+    
+    <br />
+    <br />
+    <br />
+    @{if (Model.Count() == 0)
+      { 
+        @Html.Hidden("NoItems", true)
+      }
+    }
+    <table id="TheTable" class="resultados" summary="Sus páginas">
+        <tbody>
+            <tr class="nodrop nodrag">
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Estrategia</th>
+                <th>Acciones</th>
+            </tr>
+        </tbody>
+        @foreach (var page in Model)
+        {
+            <tr class="classrow" id='@page.Uid' >
+                <td class="dragHandle">
+                    @page.Name
+                </td>
+                <td>
+                    @page.Description
+                </td>
+                <td>
+                    @page.StrategyID
+                </td>
+                <td>
+                    <a onclick="getPanels('@page.Uid')">
+                        <img src="@Url.Content("~/Content/images/editar.gif")" title="Editar" alt="Editar"/></a>
+
+                    <span  data-key="@page.Uid" title="Borrar Página" onclick="deletePage('@page.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnCancel"/></span>
+
+                    <a onclick="getActions('@page.Uid')">
+                        <img src="@Url.Content("~/Content/images/acciones.gif")" title="Acciones" alt="Acciones" ID = "btnActions"/></a>
+
+                    <a onclick="getStrategies('@page.Uid')">
+                        <img src="@Url.Content("~/Content/images/estrategia.gif")" title="Estrategias" alt="Estrategias" ID = "btnStrategy"/></a>
+
+                    <a onclick="getControlEvents('@page.Uid')">
+                        <img src="@Url.Content("~/Content/images/eventos.gif")" alt="Eventos" title="Eventos" ID = "btnConfigEvents"/></a>
+
+
+                    <a onclick="getFormPageByStates('@page.Uid')">
+                        <img src="@Url.Content("~/Content/images/editar.gif")" title="Agregar estado que inhabilita solicitud" alt="Editar"/></a>
+
+
+                    <a onclick="getPageMathOperation('@page.Uid')">
+                        <img src="@Url.Content("~/Content/images/editar.gif")" title="Configurar campos calculados" alt="Editar"/></a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div id="NothingToSeeHere">
+    <p>No hay páginas en este formulario, cree uno nuevo</p>
+</div>
+
+
+
+@Html.Hidden("FormId", (Guid)ViewBag.FormId)
+@Html.Hidden("GuidList", (string)ViewBag.GuidList)
+@Html.Hidden("arrayOrder", null, new { id = "txtArrayOrder" })
+@*@Html.ActionLink("Volver a la lista de formularios", "List", null, new { @class = "decorated", id = "btnReturn" })*@
+
+<span class="ui-button-text" id="backToPanels" onclick="getForms()">Volver a la lista de formularios</span>
+
+
+<br />
+<br />
+<br />
+@{Html.RenderPartial("~/Views/Shared/ModalConfirmation.ascx");}
+@section BottomAssets 
+  {
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/TableDnD/jquery.tablednd.0.7.min.js")" type="text/javascript"></script>
+
+}
+<script type="text/javascript">
+
+   
+    function getForms() {
+
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Form/ListPost/",
+                data: {
+                    '__RequestVerificationToken': tokenValue
+                },
+                dataType: "html",
+                success: function (evt) {
+                    //
+                    $('#right-column').html(evt);
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+
+    }
+    function getActions(id) {
+
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/FormPage/FormPageAction/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+                    $('#right-column').html
+
+                    if ($('div#NewPageDialog').length > 0) {
+                        console.log($('div#NewPageDialog').length)
+                        $('#NewPageDialog').remove();
+                    }
+                    $('#right-column').html(evt);
+
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+
+    }
+    function getStrategies(id) {
+
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Strategy/list/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+
+                    $('#right-column').html(evt);
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+
+    }
+
+    function getControlEvents(id) {
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/ControlEvents/list/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+
+                    $('#right-column').html(evt);
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+    }
+
+    function getFormPageByStates(id) {
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/FormPageByStates/list/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+
+                    $('#right-column').html(evt);
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+    }
+    function getPageMathOperation(id) {
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/PageMathOperation/list/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+
+                    $('#right-column').html(evt);
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+    }
+
+   
+
+    $(document).ready(function () {
+        // Initialise the table 
+        $("#TheTable").tableDnD({
+            onDragClass: "myDragClass",
+            onDrop: function (table, row) {
+                $('#txtArrayOrder').val($('#TheTable').tableDnDSerialize());
+                //alert($('#TheTable').tableDnDSerialize());
+            }
+        });
+        //------------------------------
+    });
+
+    $("#btnReturn")
+        .button()
+        .click(function () {
+            var iNewOrderList = $('#txtArrayOrder').val();
+            var iGuidList = $('#GuidList').val();
+
+            $.post("@Url.Action("SaveOrder", "Form")", {
+                iNewOrderList: iNewOrderList,
+                iGuidList: iGuidList
+            }
+              );
+        });
+
+        function getPanels(id) {
+
+            blockScreen("Un momento por favor....");
+            $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+                    var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+                    $('input[name="__RequestVerificationToken"]').val(tokenValue);
+                    $.ajax({
+                        type: "POST",
+                        url: "/Panel/ListPanels/",
+                        data: {
+                            '__RequestVerificationToken': tokenValue, 'id': id
+                        },
+                        dataType: "html",
+                        success: function (evt) {
+                            $('#right-column').html
+
+                            if ($('div#NewPageDialog').length > 0) {
+                                console.log($('div#NewPageDialog').length)
+                                $('#NewPageDialog').remove();
+                            }
+                            $('#right-column').html(evt);
+
+
+                            $.unblockUI();
+                            //$("#EditCustomerProfileForm").submit();
+                        },
+                        error: function (result, status, error) {
+                            $.unblockUI();
+                            if (result.responseText == "EndSesion") {
+                                var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                                location.href = urlSite
+                            }
+                            else {
+                                alert("Error al cargar la pagina: " + result.responseText);
+                            }
+
+                        }
+                    });
+                });
+
+            }
+</script>

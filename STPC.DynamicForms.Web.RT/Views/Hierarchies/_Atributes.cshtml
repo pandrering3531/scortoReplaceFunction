@@ -1,0 +1,82 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.NodeTypeDetail_Extended>
+@{
+
+    
+}
+
+<fieldset>
+    <legend>Atributos</legend>
+    @if (Model != null)
+    {
+        <table>
+
+            @foreach (var column in Model)
+            {
+                   
+                <tr>
+                    <td>
+                        @Html.Label(column.FieldPrompt)
+                    </td>
+                    @if (column.FieldType.FieldType == "TextBox" && column.FieldType.FieldTypeName != "Número")
+                    { 
+                        <td>
+                            @if (column.IsRequired)
+                            {
+                                @Html.TextBox("AT_" + column.FieldName, column.ValueField, new { required = "required", maxlength = column.MaxSize })
+                            }
+                            else
+                            {
+                                @Html.TextBox("AT_" + column.FieldName, column.ValueField, new { maxlength = column.MaxSize })
+                            }
+
+                        </td>
+                    }
+                    @if (column.FieldType.FieldType == "SelectList")
+                    { 
+                        <td>
+                            @if (column.IsRequired)
+                            {
+                                @Html.DropDownList("AT_" + column.FieldName, new SelectList(@ViewData[column.FieldName] as System.Collections.IEnumerable, "Value", "Text", column.ValueField),
+"---Seleccione categoria---", new { id = "AT_" + column.FieldName, @class = "chzn-select", style = "width:400px;", required = "required" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("AT_" + column.FieldName, new SelectList(@ViewData[column.FieldName] as System.Collections.IEnumerable, "Value", "Text", column.ValueField),
+"---Seleccione categoria---", new { id = "AT_" + column.FieldName, @class = "chzn-select", style = "width:400px;" })
+                            }
+                        </td>
+                    }
+                    @if (column.FieldType.FieldType == "Calendar")
+                    { 
+                        <td>
+                            @if (column.IsRequired)
+                            {
+                                @Html.TextBox("AT_" + column.FieldName, column.ValueField, new { @class = "jQueryCalendarInput", required = "required" })
+                            }
+                            else
+                            {
+                                @Html.TextBox("AT_" + column.FieldName, column.ValueField, new { @class = "jQueryCalendarInput", required = "required" })
+                            }
+                        </td>
+                    }
+                    @if (column.FieldType.FieldType == "TextBox" && column.FieldType.FieldTypeName == "Número")
+                    { 
+                        <td>
+                            @if (column.IsRequired)
+                            {
+                                @Html.TextBox("AT_" + column.FieldName, column.ValueField, new { required = "required", max = column.MaxSize, min = column.MinSize, @class = "CustomInteger" })
+                            }
+                            else
+                            {
+                                @Html.TextBox("AT_" + column.FieldName, column.ValueField, new { max = column.MaxSize, min = column.MinSize, @class = "CustomInteger" })
+                            }
+
+                        </td>
+                    }
+                </tr>
+            }
+        </table>
+    }
+</fieldset>
+
+

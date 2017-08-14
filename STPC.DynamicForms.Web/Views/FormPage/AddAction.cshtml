@@ -1,0 +1,31 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.Services.Entities.FormPageActions>
+@{
+   
+   
+}
+@using (Ajax.BeginForm("SaveAction", "FormPage", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccess"
+}, new { @id = "updateModeloForm" }))
+{  
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <br />
+    <br />
+    <table>
+
+        <tr>
+
+            <td>
+                @Html.Label("Nombre acción")
+            </td>
+            <td>@Html.DropDownList("fieldList",
+        new SelectList((IEnumerable<STPC.DynamicForms.Web.Services.Entities.FormPageActions>)Model, "Uid", "Name"),
+        "-- Seleccionar acción --",
+        new { @class = "text ui-widget-content ui-corner-all", id = "ddlAcciones" })</td>
+        </tr>
+    </table>
+    
+}

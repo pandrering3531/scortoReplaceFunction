@@ -1,0 +1,75 @@
+﻿    .edit-mode { }
+    .edit-btn { }
+    .ins-btn { }
+    .edit-user display-mode{}
+    .save-user edit-mode{}
+    .display-mode{}
+    .cancel-btn{}
+    .webgrid-table
+    {
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 11px;
+        font-weight: normal;
+        width: 100%;
+        display: table;
+        border-collapse: collapse;
+        border: solid 1px #C5C5C5;
+        background-color: white;
+    }
+    .webgrid-table td
+    {
+        border: 1px solid #C5C5C5;
+        padding: 3px 7px 2px;
+    }
+    .webgrid-header, .webgrid-header a
+    {
+        background-color: #E3E3E3;
+        color: black;
+        text-decoration:none;
+        font-weight:bold;
+        text-align:center;
+    }
+    .webgrid-footer
+    {
+    }
+    .webgrid-row-style
+    {
+        padding: 3px 7px 2px;
+    }
+    .webgrid-alternating-row
+    {
+        background-color: #F5F5F5;
+        padding: 3px 7px 2px;
+    }
+     .col1Width
+    {
+        width: 180px;
+    }
+     .col2Width
+    {
+        width: 20%;
+    }
+     .col3Width
+    {
+        width: 10px;
+    }
+
+    div.upload {
+	position: relative;
+	width: 80px;
+	height: 24px;
+	overflow:hidden;
+	background: transparent url(btn_upload.png) center center no-repeat;
+	clip:rect(0px, 80px, 24px, 0px );
+    }
+
+    div.upload input {
+	    position: absolute;
+	    right: 0px;
+	    top: 0px;
+	    margin:0;
+	    padding:0;
+	    filter: Alpha(Opacity=0);
+	    -moz-opacity: 0;
+	    opacity: 0;
+    }

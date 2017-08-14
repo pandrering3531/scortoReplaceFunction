@@ -1,0 +1,44 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.FormFieldViewModel
+@using STPC.DynamicForms.Web.RT.Helpers
+
+@if (Model != null)
+{
+  <div class="FormField">
+    @using (Html.BeginCollectionItem("formfields"))
+    {
+      <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 8px 8px 8px 8px;">
+        <legend></legend>
+        <table>
+          <tr>
+            <td style="width: 30%;">
+              @Html.HiddenFor(formfield => formfield.Uid)
+              @Html.Hidden("FieldUid", @Model.Uid)
+              @Html.Hidden("PanelUid", @Model.PanelUid)
+              @*@Html.Hidden("MaxSize", @Model.MaxSize)
+              @Html.Hidden("MaxSizeBD", Model.MaxSizeBD)*@
+              @Html.TextBoxFor(formfield => formfield.ControlTypeName, new { disabled = "disabled" })
+              @Html.HiddenFor(formfield => formfield.SelectedFormFieldType)
+            </td>
+              <td>
+                   @if (Model.ShowDelete)
+            { @Html.ActionLink("Eliminar campo", "DeleteFormField", new { formfieldUid = (Guid)@Model.Uid, panelUid = @Model.PanelUid }, new { @id = "deleteItem", @class = "decoratedButton" }) }
+
+              </td>
+          </tr>
+          <tr>
+            <td>
+               
+              <br />
+            </td>
+          </tr>
+        </table>
+      </fieldset>
+      <br />
+    }
+  </div>
+}
+
+@section BottomAssets {
+  <script type="text/javascript">
+  </script>
+}

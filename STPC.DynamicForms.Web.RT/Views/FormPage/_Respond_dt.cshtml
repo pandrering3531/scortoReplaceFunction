@@ -1,0 +1,31 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.Panel>
+<div>
+    @if (Model.Count() == 0)
+    { 
+        <h1>Este formulario no tiene paneles</h1>
+        @Html.Hidden("Paramsvalues", ViewData["Paramsvalues"]) 
+    }
+    else
+    {
+        @Html.Hidden("Paramsvalues", ViewData["Paramsvalues"]) 
+        
+        using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+        @Html.Hidden("FormUid", ViewData["FormUid"])
+        @Html.Hidden("FormPageUid", ViewData["FormPageUid"])
+        @Html.Hidden("PagePanel", ViewData["PagePanel"])
+
+            foreach (var panel in Model)
+            {
+                                
+        <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 8px 8px 8px 8px; padding: 5px 0px 5px 20px;">
+            <legend>@panel.Name</legend>
+            @{
+                Html.RenderAction("Respond_dt", "Panel", new { id = panel.Uid });
+            }
+        </fieldset>
+            }
+       
+        }
+    }
+</div>

@@ -1,0 +1,197 @@
+﻿@model List<STPC.DynamicForms.Web.Services.Entities.FormPageByStates>
+@{
+    ViewBag.Title = "Estados por página";
+
+  
+}
+
+
+<div id="Acciones">
+    @Html.ActionLink("Agregar estado", "Create", new { idPage = (Guid)ViewBag.Data_FormPageId }, new { @class = "decorated NewLinkFormPagesStates", title = "Nuevo" })
+    <table id="TheTable" class="resultados" summary="Sus páginas" style="width: 100%">
+        <tr class="nodrop nodrag">
+
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+
+
+        @foreach (var item in Model)
+        {
+            
+            <tr>
+
+                <td>
+                    @item.FormStates.StateName
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "Edit", new { id = item.Uid }, new { @class = "decorated EditLinkFormPagesStates BotonEdit", title = "Editar" })
+                    <span  data-key="@item.Uid" title="Borrar Formulario" onclick="deletePage('@item.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnCancel"/></span>
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div id="modalAddStatesByPage" title="Agregar estados de pagina" style="display: none; width: 800px">
+</div>
+<div id="EditStatesByPage" title="Editar estados de pagina" style="display: none; width: 800px">
+</div>
+
+<script type="text/javascript">
+    function deletePage(key) {
+        if (confirm("¿Seguro de borrar el registro?")) {
+            $.post("/FormPageByStates/Delete", { id: key },
+                     function (data) {
+                         if (data.Success == true) {
+
+                             CreateModeloFormPageByStates(data);
+                         }
+                         else alert("Delete failed");
+                     }, "json");
+        }
+    }
+
+    function CreateStateByPage() {
+
+
+        var ajaxSubmitOptions = {
+
+            beforeSubmit: showRequest,  // pre-submit callback 
+            success: showResponse,  // post-submit callback 
+            error: function (response, status, err) {
+                // This option doesn't catch any of the error below, 
+                // everything is always 'OK' a.k.a 200
+                if (response.status == 400) {
+                    alert("Sorry, this is bad request!");
+                }
+                if (response.status == 601) {
+                    sessionTimedOut();
+                }
+                if (response.status == 409) {
+                    alert("Ya se a asignado este estado a la página");
+                }
+            }
+        }
+
+        $("#CreateFormPageByStates").ajaxSubmit(ajaxSubmitOptions);
+        return false;
+        //        updateSuccess();
+    }
+
+    function EditStateByPage() {
+
+
+        var ajaxSubmitOptions = {
+
+            beforeSubmit: showRequest,  // pre-submit callback 
+            success: showResponse,  // post-submit callback 
+            error: function (response, status, err) {
+                // This option doesn't catch any of the error below, 
+                // everything is always 'OK' a.k.a 200
+                if (response.status == 400) {
+                    alert(response.responseText);
+                }
+                if (response.status == 601) {
+                    sessionTimedOut();
+                }
+            }
+        }
+
+        $("#EditFormPageByStates").ajaxSubmit(ajaxSubmitOptions);
+        return false;
+        //        updateSuccess();
+    }
+    // pre-submit callback 
+    function showRequest(formData, jqForm, options) {
+
+        var queryString = $.param(formData);
+
+        return true;
+    }
+
+    // post-submit callback 
+    function showResponse(responseText, statusText, xhr, $form) {
+        CreateModeloFormPageByStates();
+    }
+
+
+    $(function () {
+        $(".NewLinkFormPagesStates").button();
+        $(".decorated").button();
+        $('#modalAddStatesByPage').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+
+                    CreateStateByPage();
+
+                }
+            }
+        });
+
+        $(".NewLinkFormPagesStates").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#modalAddStatesByPage');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#CreateFormPageByStates");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+
+    $(function () {
+        $(".EditLinkFormPagesStates").button();
+        $(".decorated").button();
+        $('#EditStatesByPage').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    EditStateByPage();
+                }
+            }
+        });
+
+        $(".EditLinkFormPagesStates").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#EditStatesByPage');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#EditFormPageByStates");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+    function CreateModeloFormPageByStates(data) {
+
+        $("#IndexFormPageByStatesForm").submit();
+
+        $('#modalAddStatesByPage').dialog("close");
+        $('#EditStatesByPage').dialog("close");
+    }
+
+
+
+
+</script>

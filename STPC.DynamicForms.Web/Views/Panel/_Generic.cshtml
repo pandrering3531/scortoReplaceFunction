@@ -1,0 +1,47 @@
+﻿@model STPC.DynamicForms.Web.Models.FormFieldViewModel
+@using STPC.DynamicForms.Web.Helpers
+
+@if (Model != null)
+{
+  <div class="FormField">
+    @using (Html.BeginCollectionItem("formfields"))
+    {   
+      <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 8px 8px 8px 8px;">
+        <legend></legend>
+        <table>
+          @{Html.RenderPartial("_FieldsEditorCommonTopRow", Model);}
+          <tr>
+            <td class="field-options">Mensaje</td>
+            <td colspan="3">@Html.TextAreaFor(formfield => formfield.FormFieldPrompt)  @Html.ValidationMessageFor(formfield => formfield.FormFieldPrompt)</td>
+          </tr>
+          <tr>
+            <td>
+              <br />
+            </td>
+          </tr>
+          @*<tr>
+            <td class="field-options">Tamano maximo</td>
+            <td colspan="3">@Html.TextBoxFor(formfield => formfield.MaxSize)  @Html.ValidationMessageFor(formfield => formfield.MaxSize)</td>
+          </tr>*@
+        </table>
+      </fieldset>
+      <br />
+    }
+  </div>
+  @*
+  @Html.Hidden("MaxSizeBD", Model.MaxSizeBD)
+*@
+}
+
+@section BottomAssets {
+  <script type="text/javascript">
+    //alert('algo!!')
+    //function isNumericKey(e) {
+    //  if (window.event) { var charCode = window.event.keyCode; }
+    //  else if (e) { var charCode = e.which; }
+    //  else { return true; }
+    //  if (charCode > 31 && (charCode < 48 || charCode > 57)) { return false; }
+    //  return true;
+    //}
+  </script>
+}

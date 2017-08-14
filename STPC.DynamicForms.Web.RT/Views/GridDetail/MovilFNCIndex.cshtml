@@ -1,0 +1,146 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasica_GridSimuladorCuotasFNC>
+
+<input type="hidden" id="inRequestIdFNC" value="@ViewBag.RequestId"/>
+
+@{
+    var grid = new WebGrid(ajaxUpdateContainerId: "contenedor-gridFNCMovil", rowsPerPage: ViewBag.PageSize, canPage: true);
+    grid.Bind(Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+    }
+<div id="contenedor-gridFNCMovil">
+@{
+
+    IEnumerable<WebGridColumn> cols =
+        new List<WebGridColumn> {
+                new WebGridColumn{
+                    Header="Nro Obligacion",
+                    Format = @<text>
+                                <input type="hidden" id="inIDFNC" value="@item.F_Id" class="edit" />
+                                <div style="display:none;">
+                                        <label class="SumValorCuota">@item.F_monValorCuotaFnc</label>
+                                        <label class="SumValorObligacion">@item.F_monValorObligacionFnc</label>
+                                        <label class="SumValorSaldo">@item.F_monSaldo</label>
+
+                                </div>
+                                <span class="display"><label id="lblObligacionFNC">@item.F_varNumeroObligacionFnc</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Valor Cuota", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrcuotaFNC">@String.Format("{0:C}",item.F_monValorCuotaFnc)</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{
+                    Header="Valor Obligacion", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrObligacionFNC">@String.Format("{0:C}",item.F_monValorObligacionFnc)</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{Header="Seleccionar",
+                    Format = @<text>
+    <div style="display:@ViewBag.EditRoles">
+    <input type="checkbox" id="inSelectFNC" class="SelectFNC" @((@item.F_bitSeleccionado ? "checked" : ""))/></div>
+                            </text>, Style="col1Width"
+
+                }
+                
+            };
+}
+<div class="test" style="overflow: scroll; width: 900px">
+    <div style="width: 1100px">
+@grid.GetHtml(columns: cols, tableStyle: "webgrid-table",
+    headerStyle: "webgrid-header",
+    rowStyle: "webgrid-row-style",
+    alternatingRowStyle: "webgrid-alternating-row",
+    selectedRowStyle: "webgrid-selected-row",
+    footerStyle: "webgrid-footer", mode: WebGridPagerModes.All, fillEmptyRows: false, htmlAttributes: new { id = "contenedor-gridFNCMovil" })
+    <br />
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        
+        $('.SelectFNC').on("click", function () {
+
+            var requestid = $('#inRequestIdFNC').val();
+            var tr = $(this).parents('tr:first');
+            var id = tr.find("#inIDFNC").val();
+            var chkSelect = tr.find("#inSelectFNC").prop('checked');
+            var isSuccess = -1;
+
+            var Registro =
+            {
+                "F_Id": id,
+                "F_RequestId": requestid,
+                "F_bitSeleccionado": chkSelect
+            };
+            blockScreen("Un momento por favor....");
+            $.ajax({
+
+                url: '/GridDetail/MovilFNCUpdateSelect/',
+
+                data: JSON.stringify(Registro),
+
+                type: 'POST',
+
+                contentType: 'application/json; charset=utf-8',
+
+                success: function (result) {
+                    isSuccess = result;
+
+                },
+                error: function (result) {
+                    isSuccess = result;
+                }
+
+            }).done(function () {
+                if (isSuccess != "-1")
+                {                                     //Successfully saved
+                    $('#STPC_DFi_92f5a4cd-fa10-4573-be59-540ac258a6e6').val(isSuccess);
+                    $.unblockUI();
+                }
+                else {                                                      //Data Error
+                    alert("Error. Por favor, revise los datos" + "\n" + isSuccess);
+                    $.unblockUI();
+                }
+            });
+
+        });
+
+        function updategridFNCMovil(e) {
+            e.preventDefault();
+            blockScreen("Un momento por favor....");
+            var page = $(this).text();
+            var requestid = $('#inRequestIdFNC').val();
+
+            var url = "/GridDetail/MovilFNCIndex?requestId=" + requestid + "&page=" + page;
+            var $container = $("#contenedor-gridFNCMovil");
+            $container.load(url);
+            $.unblockUI();
+
+        };
+        $('#contenedor-gridFNCMovil tfoot tr a').removeAttr('onclick').live('click', updategridFNCMovil);
+
+
+        var totalValorCuota = 0;
+        var totalValorObligacion = 0;
+        var totalValorSaldo = 0;
+
+        $('#contenedor-gridFNCMovil .SumValorCuota').each(function () {
+            totalValorCuota = totalValorCuota + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-gridFNCMovil .SumValorObligacion').each(function () {
+            totalValorObligacion = totalValorObligacion + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-gridFNCMovil .SumValorSaldo').each(function () {
+            totalValorSaldo = totalValorSaldo + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-gridFNCMovil tbody').append('<tr><td><b>TOTALES</b></td><td><b>$' + totalValorCuota.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td><b>$' + totalValorObligacion.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td><b></b></td></tr>');
+
+    });
+</script>
+</div>

@@ -1,0 +1,151 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.PerformanceIndicator
+<script src="@Url.Content("~/Scripts/jquery.numeric.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Request/RequestQuery.js")" type="text/javascript"></script>
+
+
+@{
+    ViewBag.Title = "create";
+ 
+}
+
+@using (Ajax.BeginForm("Create", "PerformanceIndicator", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccess"
+}, new { @id = "updateModelForm" }))
+{
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+
+        <legend>Campaña</legend>
+
+        <table class="tableDialog">
+            <tr>
+                <td>Tipo Indicador
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.IndicatorType, new { @class = "performIndRadio" })
+                </td>
+            </tr>
+
+            <tr>
+                <td>Procedimiento
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Source)
+                </td>
+            </tr>
+            <tr>
+                <td>Valor Max. Violación
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.ViolationMaxvalue)
+                </td>
+            </tr>
+            <tr>
+                <td>Valor Min. Violación
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.ViolationMinvalue)
+                </td>
+            </tr>
+            <tr>
+                <td>Valor Max. Alarma
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.WarningMaxValue)
+                </td>
+            </tr>
+            <tr>
+                <td>Valor Min. Alarma
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.WarningMaxValue)
+                </td>
+            </tr>
+            @if (ViewBag.IsSingleTenant == 1)
+            {
+                <tr>
+                    <td>
+                        <label for="parent">Empresa</label></td>
+                    <td>
+                        @Html.DropDownListFor(e => e.AplicationNameId,
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Seleccione el nombre de la aplicación---",
+            new { style = "width:200px" })
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>Estado
+                </td>
+                <td>
+                    @Html.CheckBoxFor(e => e.Enabled)
+                </td>
+            </tr>
+            <tr>
+                <td>Asignación
+                </td>
+                <td>
+                    @Html.RadioButton("ApplyBy", "R", true, new { @class = "performIndRadio" }) Por Rol
+                     @Html.RadioButton("ApplyBy", "U", false, new { @class = "performIndRadio" }) Por Usuario
+                     @Html.RadioButton("ApplyBy", "H", false, new { @class = "performIndRadio" }) Por Herarquia
+                </td>
+            </tr>
+            <tr class="trRole">
+                <td>Rol
+                </td>
+                <td>
+                    @Html.DropDownListFor(e => e.Role.Rolename, new SelectList(@ViewBag.roles, "Rolename", "Rolename"), Model.Role != null ? Model.Role.Rolename : null)
+                </td>
+            </tr>
+            <tr class="trUser">
+                <td>Usuario
+                </td>
+                <td>
+                    @Html.DropDownListFor(e => e.LastModifiedBy, new SelectList(@ViewBag.Users, "Id", "Username"), Model.LastModifiedBy)
+                </td>
+            </tr>
+            <tr class="trHierarchy">
+                <td>Herarquia
+                </td>
+                <td>
+                    @Html.DropDownListFor(e => e.Hierarchy.Id, new SelectList(@ViewBag.Hierarchy, "Id", "Name"), Model.Hierarchy != null ? Model.Hierarchy.Id : 0)
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    @Html.Hidden("Id")
+   
+}
+
+
+<script type="text/javascript">
+
+    $(".trRole").hide();
+    $(".trUser").hide();
+    $(".trHierarchy").hide();
+
+
+    $('.performIndRadio').click(function () {
+        var transitionTime = 0;
+        if ($(this).val() == 'R') {
+            $(".trRole").show(transitionTime);
+            $(".trUser").hide(transitionTime);
+            $(".trHierarchy").hide(transitionTime);
+
+        }
+        else if ($(this).val() == 'U') {
+            $(".trRole").hide(transitionTime);
+            $(".trUser").show(transitionTime);
+            $(".trHierarchy").hide(transitionTime);
+        }
+        else if ($(this).val() == 'H') {
+            $(".trRole").hide(transitionTime);
+            $(".trUser").hide(transitionTime);
+            $(".trHierarchy").show(transitionTime);
+        }
+    });
+</script>

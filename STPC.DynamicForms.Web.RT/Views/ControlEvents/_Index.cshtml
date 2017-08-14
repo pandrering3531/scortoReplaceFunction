@@ -1,0 +1,176 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.PageEvent>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+ @Html.ActionLink("Configurar nuevo evento", "Create", new { idPage = (Guid)ViewBag.Data_FormPageId }, new { @class = "decorated NewLinkEvent", title = "Nuevo" })
+
+
+<table id="TheTable" class="resultados" summary="Sus páginas">
+    <tr class="nodrop nodrag">
+        <th>Control que ejecuta</th>
+        <th>Control o Panel a inactivar</th>
+        <th>Valor</th>
+        <th>Evento</th>
+        <th>Acciones</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.SourceField
+            </td>
+            <td>
+                @ViewData["listenerControlName" + item.Uid]
+            </td>
+            <td>
+                @ViewData["selectCategoryOptions" + item.Uid]
+            </td>
+            <td>
+                @item.EventType
+            </td>
+            <td>
+                @Html.ActionLink(" ", "EditIEvent", new { id = item.Uid, idPage = (Guid)ViewBag.Data_FormPageId }, new { @class = "decorated EditLink BotonEdit", title = "Editar" })
+
+                 <span  data-key="@item.Uid" title="Borrar Formulario" onclick="deletePage('@item.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnCancel"/></span>
+            </td>
+        </tr>
+    }
+</table>
+
+<script type="text/javascript">
+    function blockScreen(message) {
+        $.blockUI({
+            message: message,//'Validando usuario y contraseña',
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }
+        });
+    }
+
+   
+
+
+    $("#btnBackToPages").button();
+    function deletePage(key) {
+        if (confirm("¿Seguro de borrar este evento?")) {
+            $.post("/ControlEvents/Delete", { id: key },
+                     function (data) {
+                         if (data.Success == true) {
+
+                             updateSuccess(data);
+                         }
+                         else alert("Delete failed");
+                     }, "json");
+        }
+    }
+    $(function () {
+        $(".NewLinkEvent").button();
+        $(".decorated").button();
+        $('#modalContent').dialog({
+            autoOpen: false,
+            width: 650,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    blockScreen("Un momento por favor....");
+                    $("#updateModeloForm").submit();
+                  
+                },
+                "Finalizar": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".NewLinkEvent").click(function () {
+            blockScreen("Un momento por favor....");
+            linkObj = $(this);
+            var dialogDiv = $('#modalContent');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModeloForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+                $.unblockUI();
+            });
+            return false;
+        });
+    });
+
+
+    $(function () {
+        $(".EditLink").button();
+        $(".decorated").button();
+        $('#EditIEvent').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                   
+                    blockScreen("Un momento por favor....");
+                   
+                    if ($('div#EditIEvent').length > 1) {
+                        console.log($('div#EditIEvent').length)
+                        $('#EditIEvent').remove();
+                    }
+                    console.log('Submiting form')
+                    $("#updateModelForm").submit();
+                    console.log('Submited form')
+                   
+                },
+                "Finalizar": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $(".EditLink").click(function () {
+            blockScreen("Un momento por favor....");
+            linkObj = $(this);
+            var dialogDiv = $('#EditIEvent');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModelEditForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                //$form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+                event.preventDefault();
+                $.unblockUI();
+            });
+            return false;
+        });
+    });
+    
+
+    function updateSuccess(data) {
+        console.log('updatingSuccess')
+        $("#EditCustomerProfileForm2").submit();
+        console.log('updateSuccess')
+        $.unblockUI();
+    }
+
+
+
+
+</script>
+
+

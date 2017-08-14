@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://STPC.LiSim.Abc" elementFormDefault="qualified" targetNamespace="http://STPC.LiSim.Abc" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Request" nillable="true" type="tns:Request" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRequest" nillable="true" type="tns:ArrayOfRequest" />
+  <xs:complexType name="Request">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AssignedTo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Created" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="CreatedBy" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FormId" type="ser:guid" />
+      <xs:element minOccurs="0" name="PageFlowId" type="ser:guid" />
+      <xs:element minOccurs="0" name="PageFlowState" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="RequestId" type="xs:int" />
+      <xs:element minOccurs="0" name="Updated" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="UpdatedBy" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="WorkFlowState" nillable="true" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Request" nillable="true" type="tns:Request" />
+  <xs:complexType name="ArrayOfFormPageActions">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FormPageActions" nillable="true" type="tns:FormPageActions" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFormPageActions" nillable="true" type="tns:ArrayOfFormPageActions" />
+  <xs:complexType name="FormPageActions">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Caption" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="DisplayOrder" type="xs:int" />
+      <xs:element minOccurs="0" name="FailureMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="FormPageActionsByStatesList" nillable="true" type="tns:ArrayOfFormPageActionsByStates" />
+      <xs:element minOccurs="0" name="FormPageActionsRolesList" nillable="true" type="tns:ArrayOfFormPageActionsRoles" />
+      <xs:element minOccurs="0" name="FormStates" nillable="true" type="tns:FormStates" />
+      <xs:element minOccurs="0" name="FormStatesUid" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="GoToPageId" nillable="true" type="ser:guid" />
+      <xs:element minOccurs="0" name="IsAssociated" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IsExecuteStrategy" type="xs:boolean" />
+      <xs:element minOccurs="0" name="IsPrivateResource" type="xs:boolean" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="PageId" type="ser:guid" />
+      <xs:element minOccurs="0" name="Resource" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Save" type="xs:boolean" />
+      <xs:element minOccurs="0" name="SendHierarchyIdParam" type="xs:boolean" />
+      <xs:element minOccurs="0" name="SendRequestIdParam" type="xs:boolean" />
+      <xs:element minOccurs="0" name="SendUserParam" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ShowFailureMessage" type="xs:boolean" />
+      <xs:element minOccurs="0" name="ShowSuccessMessage" type="xs:boolean" />
+      <xs:element minOccurs="0" name="StrategyID" type="xs:int" />
+      <xs:element minOccurs="0" name="SuccessMessage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Uid" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FormPageActions" nillable="true" type="tns:FormPageActions" />
+  <xs:complexType name="ArrayOfFormPageActionsByStates">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FormPageActionsByStates" nillable="true" type="tns:FormPageActionsByStates" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFormPageActionsByStates" nillable="true" type="tns:ArrayOfFormPageActionsByStates" />
+  <xs:complexType name="FormPageActionsByStates">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FormPageActions" nillable="true" type="tns:FormPageActions" />
+      <xs:element minOccurs="0" name="FormPageActionsUid" type="ser:guid" />
+      <xs:element minOccurs="0" name="FormStates" nillable="true" type="tns:FormStates" />
+      <xs:element minOccurs="0" name="FormStatesUid" type="ser:guid" />
+      <xs:element minOccurs="0" name="Uid" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FormPageActionsByStates" nillable="true" type="tns:FormPageActionsByStates" />
+  <xs:complexType name="FormStates">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FormPageActionsByStatesList" nillable="true" type="tns:ArrayOfFormPageActionsByStates" />
+      <xs:element minOccurs="0" name="FormPageActionsList" nillable="true" type="tns:ArrayOfFormPageActions" />
+      <xs:element minOccurs="0" name="StateName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Uid" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FormStates" nillable="true" type="tns:FormStates" />
+  <xs:complexType name="ArrayOfFormPageActionsRoles">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FormPageActionsRoles" nillable="true" type="tns:FormPageActionsRoles" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFormPageActionsRoles" nillable="true" type="tns:ArrayOfFormPageActionsRoles" />
+  <xs:complexType name="FormPageActionsRoles">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="FormPageActionsUid" type="ser:guid" />
+      <xs:element minOccurs="0" name="Rolename" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Uid" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FormPageActionsRoles" nillable="true" type="tns:FormPageActionsRoles" />
+</xs:schema>

@@ -1,0 +1,109 @@
+﻿@model  STPC.DynamicForms.Core.MyViewModel
+@{
+    ViewBag.Title = "Mis Solicitudes";
+}
+<script src="@Url.Content("~/Scripts/jquery.toolTip.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/math.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Request/Request.js")" type="text/javascript"></script>
+
+
+@Html.Hidden("TotalPagePaged", (string)ViewBag.PageCount, new { id = "txtTotalPagePaged" })
+<div id="dvForm">
+
+    <table id="TheTable" class="resultados" summary="Sus páneles">
+        <thead>
+            <tr>
+                @if (Model != null)
+                {
+                    foreach (var item in Model.Columns)
+                    {
+                        if (@item.Name != "FormId" && @item.Name != "TotalCount" && @item.Name != "PageFlowId") 
+                        {
+                    <th>
+                        @item.Name
+                    </th>
+                        }
+
+                    }
+                }
+                <th>Ver</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (STPC.DynamicForms.Core.RowViewModel row in Model.Rows)
+                {
+                <tr>
+                    @foreach (STPC.DynamicForms.Core.CellValueViewModel cel in row.Values)
+                    {
+                        if (cel.ColumnName != "FormId" && cel.ColumnName != "TotalCount" && cel.ColumnName != "PageFlowId")
+                        {
+                        <td>
+                            @cel.Value
+                        </td>
+                        }
+                    }
+                    <td>
+
+                        @*<a href="@Url.Action("FormPageRespondView", "Form", new { FormId = row.Values[1].Value, requestId = row.Values[0].Value })"data-form-method="post">*@
+                        <a id=@row.Values[1].Value name=@row.Values[0].Value itemid=@row.Values[2].Value  class="GetRequest"  style="cursor: pointer;">
+
+
+                            <img src="@Url.Content("~/Content/images/pendiente_th.gif")"  alt="Contestar"/></a>
+
+                        @if (ViewData["ShowPrintButton"] == "1")
+                        {
+                            <a id=@row.Values[1].Value name=@row.Values[0].Value  onclick="GetReport('@row.Values[1].Value','@row.Values[0].Value')"  style="cursor: pointer;">
+
+                                <img src="@Url.Content("~/Content/images/imprimir.gif")"  alt="Contestar"/></a>
+                        }
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script type="text/javascript">
+    $(".GetRequest").click(function () {
+        try {
+            blockScreen("Un momento por favor...");
+            if ($(this).attr('id') != "")
+                $.ajax({
+                    type: "POST",
+                    url: "/form/formpagerespondview/",
+                    data: {
+                        'formid': $(this).attr('id'),
+                        'requestid': $(this).attr('name'),
+                        'PageFlowId': $(this).attr('itemid')
+                    },
+                    dataType: "html",
+                    success: function (evt) {
+
+                        $('#dvForm').html(evt);
+                        $('#paginatorOptions').empty();
+                        $('#tblParameters').empty()
+                        $('#tblParametros2').empty()
+
+                        $.unblockUI();
+
+                    },
+                    error: function (result) {
+
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                        $.unblockUI();
+                    }
+                });
+        }
+        catch (err) {
+            alert(err);
+        }
+    });
+
+</script>
+

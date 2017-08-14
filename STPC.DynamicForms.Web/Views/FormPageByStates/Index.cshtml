@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Configuración de estados por página";
+    <script src="@Url.Content("~/Scripts/jquery.form.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>    
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>    
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>
+    
+}
+<div id="migas">
+    <p>Estados configurados que inhabilitan la página</p>
+</div>
+@using (Ajax.BeginForm("GetIndex", "FormPageByStates", null,
+                new AjaxOptions { UpdateTargetId = "FormPageByStatesDiv" },
+                new { id = "IndexFormPageByStatesForm" }))
+{
+    @Html.Hidden("Data_FormPageId", (Guid)ViewBag.Data_FormPageId)
+    <div id="FormPageByStatesDiv">
+        @{Html.RenderPartial("_Index");}
+    </div>
+
+
+    @Html.Hidden("Data_FormPageName", (string)ViewBag.Data_FormPageName)
+    @Html.Hidden("Data_FormId", (Guid)ViewBag.Data_FormId)
+    @Html.ActionLink("Volver a la lista de páginas", "Edit", "Form", new { id = ViewBag.Data_FormId }, new { @class = "decorated" })
+
+}
+
+
+<script type="text/javascript">
+    
+</script>

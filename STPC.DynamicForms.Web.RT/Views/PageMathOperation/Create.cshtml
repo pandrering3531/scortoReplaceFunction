@@ -1,0 +1,284 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.PageMathOperation
+@{
+    <script src="@Url.Content("~/Scripts/jquery.form.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>    
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")" type="text/javascript"></script>    
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")" type="text/javascript"></script>       
+    <script src="@Url.Content("~/Scripts/redips-drag-min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/script.js")" type="text/javascript"></script>        
+}
+@using (Ajax.BeginForm("Create", "PageMathOperation", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccess"
+}, new { @id = "updateModelForm" }))
+{
+    @Html.ValidationSummary(true)
+        
+    @Html.Hidden("Id")
+    
+   
+}
+
+<div id="drag">
+    <!-- table1 -->
+
+    <table id="table1">
+        <colgroup>
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+        </colgroup>
+        <tbody>
+            <!-- clone 2 elements + last element -->
+            <tr>
+                <td>
+                    <div id="ar1" class="drag blue clone" title="(">(</div>
+                    <div id="ar2" class="drag blue clone" title=")">)</div>
+                </td>
+                <td>
+                    @foreach (var item in (IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.PageField>)ViewBag.fieldList)
+                    {
+                        <div id=@item.Uid class="drag orange clone" title=@item.Uid>@item.FormFieldName</div>
+                    }
+                </td>
+                <td>
+                    <div id="op1" class="drag blue clone" title="+">+</div>
+                    <div id="op2" class="drag blue clone" title=" - "> - </div>
+                    <div id="op3" class="drag blue clone" title="*">*</div>
+                    <div id="op4" class="drag blue clone" title="/">/</div>
+                    <div id="op5" class="drag blue clone" title="%">%</div>
+                    <div id="op6" class="drag blue clone" title="^">^</div>
+                </td>
+                <td>
+                    <div id="Constant" class="drag blue clone">
+                        <input type="text" class="clone constant"/>
+                    </div>
+                </td>
+                <td class="trash">Quitar</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="tableCampos">
+        <colgroup>
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+            <col width="100" />
+        </colgroup>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td id="lastCell"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="tableResultado">
+        <colgroup>
+            <col width="100" />
+
+        </colgroup>
+        <tbody>
+            <tr>
+                Campo resultado
+            </tr>
+            <tr>
+                <td id="lastCell"></td>
+            </tr>
+        </tbody>
+    </table>
+    
+
+    <span class="ui-button-text" id="btnReturn" >Guardar</span>
+
+    @Html.ActionLink("Cancelar", "Index", "PageMathOperation", new { id = ViewBag.Data_FormPageId }, new { @id = "btnReturnForm", @class = "decorated" })
+
+</div>
+<!-- jQuery dialog -->
+<div id="dialog" title="jQuery dialog">Seleccione una acción!</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        REDIPS.drag.init()
+    });
+
+    $(".decorated").button();
+    $("#btnReturn")
+            .button()
+            .click(function () {
+                blockScreen("Un momento por favor....");
+                var expretionResult = '';
+                var IdResult = '';
+                var tableCampos = $("#tableCampos tbody");
+                var tableResultado = $("#tableResultado tbody");
+
+                tableCampos.find('tr').each(function (key, val) {
+                    $(this).find('td div').each(function (key, val) {
+                        var $div = $(this);
+
+                        if ($div.children().length)
+                        {
+                            var $childDiv = $div.children();
+                            expretionResult += $childDiv.val();
+                        }
+                        else
+                            expretionResult += $div.attr('title');
+                    });
+                });
+
+                //Busca el campo resultado
+                tableResultado.find('tr').each(function (key, val) {
+                    $(this).find('td div').each(function (key, val) {
+                        var $div = $(this);
+                        IdResult += $div.attr('title');
+                    });
+                });
+
+                if (IdResult == '') {
+                    alert('No se ha configurado un campo resultado')
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/PageMathOperation/Create/",
+                        data: {
+                            'expretion': expretionResult,
+                            'resultField': IdResult,
+                            'panelUid': '@ViewBag.PanelId'
+                        },
+                        dataType: "html",
+                        success: function (evt) {
+                            var pageUid = '@ViewBag.Data_FormPageId';
+                            getPageMathOperation(pageUid);
+                        },
+                        error: function (req, status, error) {
+                            alert("Error!Occured" + error);
+
+                        }
+                    });
+                    }
+                return false;
+            });
+    function getPageMathOperation(id) {
+       
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/PageMathOperation/list/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+
+                    $('#right-column').html(evt);
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        $.unblockUI();
+                        alert("Error al cargar la pagina: " + result.responseText);
+
+                    }
+
+                }
+            });
+        });
+    }
+
+</script>

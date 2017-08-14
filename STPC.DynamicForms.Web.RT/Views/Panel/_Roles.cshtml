@@ -1,0 +1,7 @@
+﻿@model List<string>
+@foreach (var rol in Model)
+{
+  var arr = rol.Split(',');
+  @Html.CheckBox((string)ViewBag.Prefix + "_Rol_" + arr[0], bool.Parse(arr[1]), new { @style = "display: inline" })
+  @arr[0]<br />
+}

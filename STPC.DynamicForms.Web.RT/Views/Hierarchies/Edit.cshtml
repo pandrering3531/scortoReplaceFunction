@@ -1,0 +1,85 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.Hierarchy
+@{
+    <script src="@Url.Content("~/Scripts/Hierarchies/_List.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Hierarchies/Edit.js")" type="text/javascript"></script>
+}
+
+@using (Ajax.BeginForm("Edit", "Hierarchies", new AjaxOptions
+{
+    UpdateTargetId = "CustomerFormAttr",
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccessUpdate"
+}, new { @id = "updateJerarquiaFormEdit" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        <legend>Editar</legend>
+
+        @Html.HiddenFor(e => e.Id, new { id = "NodeIdEdit" })
+        @Html.Hidden("AddAttr", (object)@ViewBag.AddAttr)
+
+        <table class="tableDialog">
+            <tr>
+                <td>
+                    @Html.Label("Nombre")
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Name, new { id = "txtHierarchyNameEdit" })
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Nivel:")
+                </td>
+                <td>
+
+                    @Html.TextBoxFor(e => e.Level, new { disabled = "disabled" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("TipoNodo:")
+
+                </td>
+                <td>
+                    @Html.DropDownListFor(e => e.NodeType, new SelectList(@ViewBag.HierarchyNodeType, "Id", "NodeType"), "---Seleccione el tipo de nodo---", new { style = "width:200px", id = "ddlEditTipoNodo" })
+                </td>
+            </tr>
+            @if (ViewBag.IsSingleTenant == 1 && Model.Parent == null)
+            {
+                <tr>
+                    <td>
+                        <label for="parent">Empresa</label></td>
+                    <td>
+                        @Html.DropDownListFor(e => e.AplicationNameId,
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Seleccione el nombre de la aplicación---",
+            new { style = "width:200px" })
+                       
+                    </td>
+                </tr>
+            }
+        </table>
+
+    </fieldset>
+    
+    <div id="CustomerFormAttrEdit">
+        @if ((List<STPC.DynamicForms.Web.RT.Services.Entities.NodeTypeDetail_Extended>)ViewBag.modelQuery != null)
+        {
+            { Html.RenderPartial("_Atributes", (List<STPC.DynamicForms.Web.RT.Services.Entities.NodeTypeDetail_Extended>)ViewBag.modelQuery); }
+        }
+    </div>
+    <div id="CustomerFormAttr2Edit" style="display: inline-block; float: left; width: 100%">
+    </div>
+   
+}
+
+
+@section BottomAssets 
+  {
+    <script src="@Url.Content("~/Scripts/Hierarchies/List.js")" type="text/javascript"></script>
+
+
+}

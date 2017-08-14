@@ -1,0 +1,7 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.Category>
+<select size="20" id="CategoriesList">
+    @foreach (var item in Model)
+    { 
+        <option value="@item.Name">@item.Name</option>
+    }
+</select>

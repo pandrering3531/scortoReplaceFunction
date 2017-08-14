@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Buscador de Crédito";
+}
+
+<div id="dvForm">
+    <fieldset class="basico1">
+        <legend style="font-size: small">BUSCADOR DE CREDITO</legend>
+        <table style="width: 98%">
+            <tr>
+                <td style="width: 25%">Número de cédula
+                </td>
+                <td style="width: 25%">
+                    @Html.TextBox("NumeroCedula", null, new { id = "txtNumeroCedula", @class = "CustomInteger" })
+                </td>
+                <td style="width: 25%"></td>
+                <td style="width: 25%"></td>
+            </tr>
+            <tr>
+                <td style="width: 25%">Número de solicitud
+                </td>
+                <td style="width: 25%">
+                    @Html.TextBox("NumeroSolicitud", null, new { id = "txtNumeroSolicitud", @class = "CustomInteger" })
+                </td>
+                <td colspan="2" style="text-align: left;">
+                    <button id="btnEjecutarConsulta">Ejecutar consulta</button>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</div>
+<div id="detailsDiv">
+</div>
+
+<div id="result">
+</div>
+<div id="dvForm">
+    <br />
+    <input type="button" value="Cerrar formulario" onclick="location.href='@Url.Action("Index", "Home")    '" />
+</div>
+
+<script type="text/javascript">
+    $('#btnEjecutarConsulta').click(function () {
+
+        var NumRequest = $('#txtNumeroSolicitud').val();
+        var NumCedula = $('#txtNumeroCedula').val();
+        blockScreen("Un momento por favor....");
+        $.ajax({
+
+            url: '/Search/SearchContractPost?srNumRequest=' + NumRequest + '&srNumCedula=' + NumCedula,
+
+            type: 'POST',
+
+            contentType: 'application/json; charset=utf-8',
+            dataType: "html",
+
+            success: function (result) {
+                $('#detailsDiv').html(result);
+                $.unblockUI();
+            },
+            error: function (result) {
+                isSuccess = result;
+                $.unblockUI();
+            }
+        });
+
+    })
+
+</script>

@@ -1,0 +1,25 @@
+﻿@model ICollection<STPC.DynamicForms.Web.Common.Services.Users.User>
+
+@{
+    ViewBag.Title = "Usuarios";
+}
+<div id="migas">
+                    <p>Usuarios</p>
+                  	</div>
+@Html.ActionLink("Crear nuevo...", "Register", null, new { @class = "decoratedButton" })
+
+<div class="cols_home">
+<table class="resultados" summary="Usuarios registrados">
+<tr><th>Usuario</th><th>Nombre</th><th>Roles</th><th>Aprobado</th><th>Bloqueado</th><th>Jerarquia</th><th>Acciones</th></tr>
+@foreach(var user in Model) {
+    <tr style="text-align:center;">
+    <td>@user.Username</td>
+    <td>@user.GivenName @user.LastName</td>
+    <td>
+        @{foreach (string rol in Roles.GetRolesForUser(user.Username)) {<p> @rol.ToString()</p> }} </td>
+        <td>@Html.CheckBoxFor(r => user.IsApproved, new { @disabled = "disabled", @style = "display:inline;" })</td>
+        <td>@Html.CheckBoxFor(r => user.IsLockedOut, new { @disabled = "disabled", @style="display:inline;" })</td>
+        <td>@user.Hierarchy.Level | @user.Hierarchy.Name</td>
+    <td>@Html.ActionLink("Detalles", "Details", new { id = user.Username }, new { @class = "decoratedButton" })</td>
+    </tr>}</table>
+    </div>

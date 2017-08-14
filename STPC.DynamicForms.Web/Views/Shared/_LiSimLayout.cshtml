@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/jquery-ui-1.8.21.custom.css")" />
+    <link href="@Url.Content("~/Content/joinweb_style.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.8.2.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.numeric.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/LiSimAbcGeneralJs.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.9.0.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Currency/jquery.formatCurrency-1.4.0.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Currency/jquery.formatCurrency.es-CO.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.blockUI.js")" type="text/javascript"></script>
+    @RenderSection("HeadAssets", required: false)
+</head>
+<body>
+    <div id="container">
+		<div id="caja">
+		</div>
+        <div id="header-wrapper">
+            <div id="header2">
+                <div id="left-header">
+                    <a href="http://lisim-abcuat.cloudapp.net:1661/">
+                        <img src="@Url.Content("~/Content/images/Custom/Clientlogo.jpg")" width="168" height="155" border="0" /></a>
+                <div id="right-header"></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div id="content-wrapper">
+            <div id="content">
+                @RenderBody()
+                <div id="footer">
+                    <!--<img src="@Url.Content("~/Content/images/logo_pata.gif")" width="38" height="50" alt="Join" /><br />
+                    Copyright © @DateTime.Now.Year - LiSim SAS-->
+                </div>
+            </div>
+        </div>
+		<div id="bottom">
+		</div>
+		<div id="footer1">
+		<img src="@Url.Content("~/Content/images/Custom/Clientlogobottom.jpg")" alt="Join" /><br />
+		Copyright © @DateTime.Now.Year - Lilian Simbaqueba SAS<br />
+			  V. @typeof(STPC.DynamicForms.Web.Controllers.AccountController).Assembly.GetName().Version.ToString(3)
+		</div>
+    </div>
+</body>
+   
+    @RenderSection("BottomAssets", required: false)
+</html>

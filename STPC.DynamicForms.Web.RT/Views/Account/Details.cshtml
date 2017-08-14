@@ -1,0 +1,137 @@
+﻿@model STPC.DynamicForms.Web.Common.Services.Users.User
+@{
+    ViewBag.Title = "Detalles";
+}
+<h2>Detalles</h2>
+<fieldset>
+    <legend>Usuario</legend>
+    <table class="resultados">
+        <tr>
+            <th>Propiedad
+            </th>
+            <th>Valor
+            </th>
+        </tr>
+        <tr>
+            <td>Nombre de usuario
+            </td>
+            <td>@Html.DisplayFor(model => model.Username)
+            </td>
+        </tr>
+        <tr>
+            <td>Creación
+            </td>
+            <td>@Html.DisplayFor(model => model.CreationDate)
+            </td>
+        </tr>
+        <tr>
+            <td>Ultimo Ingreso
+            </td>
+            <td>@Html.DisplayFor(model => model.LastLoginDate)
+            </td>
+        </tr>
+        <tr>
+            <td>Nombres
+            </td>
+            <td>@Html.DisplayFor(model => model.GivenName)
+            </td>
+        </tr>
+        <tr>
+            <td>Apellidos
+            </td>
+            <td>@Html.DisplayFor(model => model.LastName)
+            </td>
+        </tr>
+        <tr>
+            <td>Dirección
+            </td>
+            <td>@Html.DisplayFor(model => model.Address)
+            </td>
+        </tr>
+        <tr>
+            <td>Email
+            </td>
+            <td>@Html.DisplayFor(model => model.Email)
+            </td>
+        </tr>
+        <tr>
+            <td>Teléfono Fijo
+            </td>
+            <td>@Html.DisplayFor(model => model.Phone_LandLine)
+            </td>
+        </tr>
+        <tr>
+            <td>Teléfono Movil
+            </td>
+            <td>@Html.DisplayFor(model => model.Phone_Mobile)
+            </td>
+        </tr>
+        <tr>
+            <td>Nivel de jerarquia
+            </td>
+            <td>@Html.DisplayFor(model => model.Hierarchy.Level)
+            </td>
+        </tr>
+        <tr>
+            <td>Localización en la jerarquia
+            </td>
+            <td>@Html.DisplayFor(model => model.Hierarchy.Name)
+            </td>
+        </tr>
+        <tr>
+            <td>Aprobado
+            </td>
+            <td>@Html.CheckBoxFor(model => model.IsApproved, new { @disabled = "disabled", @style = "display:inline;" })
+                @{if (!Model.IsApproved && ViewBag.LoggedUserIsAdmin)
+                  {
+                    <button id="approveme">
+                        Aprobar</button>}}
+            </td>
+        </tr>
+        <tr>
+            <td>Bloqueado
+            </td>
+            <td>@Html.CheckBoxFor(model => model.IsLockedOut, new { @disabled = "disabled", @style = "display:inline;" })
+                @{if (ViewBag.LoggedUserIsAdmin)
+                  {
+                    <button id="unlockme">Desbloquear</button>
+                    <button id="lockme">Bloquear</button>
+                  }}
+            </td>
+        </tr>
+        <tr>
+            <td>Roles
+            </td>
+            <td>
+                <ul>
+                    @{foreach (string rol in Roles.GetRolesForUser(Model.Username))
+                      {<li>@rol.ToString()</li> }}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>Inicio Vacaciones
+            </td>
+            <td>@Html.DisplayFor(model => model.Vacations_Start)
+            </td>
+        </tr>
+        <tr>
+            <td>Fin Vacaciones
+            </td>
+            <td>@Html.DisplayFor(model => model.Vacations_End)
+            </td>
+        </tr>
+    </table>
+</fieldset>
+<p>
+    @{if (ViewBag.LoggedUserIsAdmin)
+      {
+        @Html.ActionLink("Editar", "Edit", new { id = Model.Username }, new { @class = "decorated" })
+      }}
+
+    @Html.ActionLink("Volver al listado", "List", null, new { @class = "decorated" })
+
+</p>
+@Html.HiddenFor(u => u.Username)
+@section BottomAssets {
+    <script src="@Url.Content("~/Scripts/Accounts/Details.js")" type="text/javascript"></script>}

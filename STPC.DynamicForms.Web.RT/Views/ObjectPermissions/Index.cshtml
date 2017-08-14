@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Configurar permisos sobre objetos";
+    
+        
+}
+
+<div ng-controller="ObjectPermmisionsController">
+
+    <h2>Asignar permisos por objetos</h2>
+
+    <select id="colorsArraySel" ng-model="selectedOption" ng-options="o.Text for o in selecttableName" ng-change="GetList()">
+    </select>
+
+    <table class="resultados">
+        <tr>
+            <th>Tabla</th>
+            <th>Objeto</th>
+            <th>Permisos</th>
+            <th>Rol</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="e in data" ng-class-odd="'odd'" ng-class-even="'even'">
+
+            <td>{{e.TableName}}</td>
+            <td>{{e.ObjectName}}</td>
+            <td>{{e.Permission}}</td>
+            <td>{{e.Role.Rolename}}</td>
+            <td>
+                <img src="@Url.Content("~/Content/images/editar.gif")" title="Editar" alt="Editar" ng-click="alerta(e.Uid,e.Role.Rolename,e.ObjectName,e.TableName,e.Permission)" id="btnEdit"/></td>
+
+        </tr>
+    </table>
+
+    <div modal="showModal" close="cancel()">
+
+        <div class="modal-header">
+            <h4>Agregar permiso</h4>
+        </div>
+        <div class="modal-body">
+            <table class="modal-body">
+                <tr>
+
+                    <td>
+                        Nombre objeto
+                    </td>
+                    <td>
+                        <input type="text" disabled="disabled" ng-model="objectName" />
+                        
+                        <br />
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+
+                        <label>Permisos</label>
+                    </td>
+                    <td>
+                        <select id="ddlRoles" ng-model="selectedOptionRoles" ng-change="RoleChange()" ng-options="o.Rolename for o in selectableRoles  track by o.Rolename ">
+                            <option value="" >---Seleccione el rol---</option>
+                        </select>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label>Roles</label>
+                    </td>
+                    <td>
+                        <label for="rcLectura">Lectura:</label>
+                        <input id="rcLectura" type="checkbox" ng-model="checkboxModel.value1" value="R" />
+
+
+                        <label for="rdActualizar">Actualizar:</label>
+                        <input id="rdActualizar" type="checkbox" ng-model="checkboxModel.value2" value="U" />
+
+                        <label for="rdEliminar">Eliminar:</label>
+                        <input id="rdEliminar" type="checkbox" ng-model="checkboxModel.value3" value="D" />
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-success" ng-click="ok()">Aceptar</button>
+            <button class="btn" ng-click="cancel()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+

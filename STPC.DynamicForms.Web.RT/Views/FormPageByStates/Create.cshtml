@@ -1,0 +1,39 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.FormPageByStates
+@{
+}
+
+
+@using (Ajax.BeginForm("Create", "FormPageByStates", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "CreateModeloFormPageByStates"
+}, new { @id = "CreateFormPageByStates" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        @Html.Hidden("Data_FormPageId", (Guid)ViewBag.Data_FormPageId)
+        <legend></legend>
+        <table class="tableDialog">
+            <tr>
+                <td>
+
+                    @Html.Label("Estado:")
+                </td>
+                <td>                    
+                    @Html.DropDownList("State", new SelectList(@ViewBag.FormStates, "Uid", "StateName"), "---Seleccione el estado---", new { @class = "chzn-select", style = "width:200px", id = "ddlEvento" })
+                </td>
+            </tr>            
+        </table>
+
+    </fieldset>
+   
+   
+}
+<script type="text/javascript">
+
+  
+
+
+   
+</script>

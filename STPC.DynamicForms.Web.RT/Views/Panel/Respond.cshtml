@@ -1,0 +1,105 @@
+﻿@using STPC.DynamicForms.Core.Fields
+
+@foreach (var item in Model)
+{
+    if (item.panelType != "Detalle")
+    {
+        if (item.isDisabled)
+        {
+        <fieldset disabled class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+            <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+            <br />
+
+            @Html.Raw(item.RenderHtml(true, item.NumColumnsPanel))
+            <br />
+        </fieldset>  
+        }
+        if (item.isHiden)
+        {
+        <fieldset style="display: none !important;" class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+            <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+            <br />
+
+            @Html.Raw(item.RenderHtml(true, item.NumColumnsPanel))
+            <br />
+        </fieldset>  
+        }
+        if (!item.isDisabled && !item.isHiden)
+        {
+        <fieldset class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+            <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+            <br />
+
+            @Html.Raw(item.RenderHtml(true, item.NumColumnsPanel))
+            <br />
+        </fieldset>  
+        }
+    }
+    else
+    {
+        if (item.panelCaption == "CUOTAS ACTIVAS BE")
+        {
+        <fieldset class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+            <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+            <br />
+            <div id="CustomerForm">
+                    @{ Html.RenderAction("BEIndex", "GridDetail", new { requestId = ViewBag.RequestId, EditRol = item.panelEditRol }); }
+            </div>
+        </fieldset>
+        }
+        else
+        {
+            if (item.panelCaption == "CUOTAS RECOGIDAS FINCOMERCIO")
+            {
+            <fieldset class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+                <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+                <br />
+                <div id="CustomerFormFNC">
+                        @{ Html.RenderAction("FNCIndex", "GridDetail", new { requestId = ViewBag.RequestId, EditRol = item.panelEditRol }); }
+                </div>
+            </fieldset>
+            }
+            else
+            {
+                if (item.panelCaption == "DESEMBOLSO")
+                {
+                <fieldset class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+                    <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+                    <br />
+                    <div id="CustomerFormDesembolso">
+                            @{ Html.RenderAction("DesembolsoIndex", "GridDetail", new { requestId = ViewBag.RequestId, EditRol = item.panelEditRol }); }
+                    </div>
+                </fieldset>
+                }
+                else
+                {
+                    if (item.panelCaption == "CUOTAS RECOGIDAS FINCOMERCIO - MOVIL")
+                    {
+                    <fieldset class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+                        <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+                        <br />
+                        <div id="CustomerFormFNCMovil">
+                                @{ Html.RenderAction("MovilFNCIndex", "GridDetail", new { requestId = ViewBag.RequestId, EditRol = item.panelEditRol }); }
+                        </div>
+                    </fieldset>
+                    }
+                    
+                    else
+                    {
+                        if (item.panelCaption == "GRAFOLOGIA")
+                        {
+                        <fieldset class='@item.DivCssStyle' id="@("STPC_DFi_" + item.PanelId)">
+                            <legend style="font-size: small"><b>@item.panelCaption</b></legend>
+                            <br />
+                            <div id="CustomerFormFNCGrafologia">
+                                    @{ Html.RenderAction("GrafologiaIndex", "GridDetail", new { requestId = ViewBag.RequestId, EditRol = item.panelEditRol }); }
+                            </div>
+                        </fieldset>
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

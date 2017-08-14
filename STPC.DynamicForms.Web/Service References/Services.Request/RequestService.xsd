@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/STPC.DynamicForms.Core" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/STPC.DynamicForms.Core" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ArrayOfReportParameters">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ReportParameters" nillable="true" type="tns:ReportParameters" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfReportParameters" nillable="true" type="tns:ArrayOfReportParameters" />
+  <xs:complexType name="ReportParameters">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CaptionField" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NameField" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="NamePage" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ReportParameters" nillable="true" type="tns:ReportParameters" />
+  <xs:complexType name="MyViewModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Columns" nillable="true" type="tns:ArrayOfColumnViewModel" />
+      <xs:element minOccurs="0" name="Rows" nillable="true" type="tns:ArrayOfRowViewModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MyViewModel" nillable="true" type="tns:MyViewModel" />
+  <xs:complexType name="ArrayOfColumnViewModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ColumnViewModel" nillable="true" type="tns:ColumnViewModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfColumnViewModel" nillable="true" type="tns:ArrayOfColumnViewModel" />
+  <xs:complexType name="ColumnViewModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="dataType" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ColumnViewModel" nillable="true" type="tns:ColumnViewModel" />
+  <xs:complexType name="ArrayOfRowViewModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RowViewModel" nillable="true" type="tns:RowViewModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfRowViewModel" nillable="true" type="tns:ArrayOfRowViewModel" />
+  <xs:complexType name="RowViewModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Values" nillable="true" type="tns:ArrayOfCellValueViewModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="RowViewModel" nillable="true" type="tns:RowViewModel" />
+  <xs:complexType name="ArrayOfCellValueViewModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CellValueViewModel" nillable="true" type="tns:CellValueViewModel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCellValueViewModel" nillable="true" type="tns:ArrayOfCellValueViewModel" />
+  <xs:complexType name="CellValueViewModel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ColumnName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Index" type="xs:int" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CellValueViewModel" nillable="true" type="tns:CellValueViewModel" />
+  <xs:complexType name="ArrayOfValues">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Values" nillable="true" type="tns:Values" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfValues" nillable="true" type="tns:ArrayOfValues" />
+  <xs:complexType name="Values">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Values" nillable="true" type="tns:Values" />
+</xs:schema>

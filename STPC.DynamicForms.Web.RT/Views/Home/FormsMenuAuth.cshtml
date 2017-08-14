@@ -1,0 +1,333 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.MenuItem>
+<div class="menu-option">
+    <div class="title">
+    </div>
+    @Html.AntiForgeryToken()
+    @if (Model != null)
+    {
+        @paintMenu(Model, false)	
+    }
+
+</div>
+<script src="@Url.Content("~/Scripts/math.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/accounting.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/accounting.min.js")" type="text/javascript"></script>
+@*    --------------------------------- Pintar submenu  --------------------------------------*@
+
+@helper paintMenu(IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.MenuItem> items, bool isEven)
+{  
+    foreach (STPC.DynamicForms.Web.RT.Services.Entities.MenuItem item in items)
+    {
+        if (ViewBag.ViewLinkMenu == "1")
+        {
+            if (!string.IsNullOrEmpty(item.Action) && !string.IsNullOrEmpty(item.Controller))
+            {
+                if (item.Action == "MyRequest")
+                {
+    <div class="item">
+        <a class="formsMenu" onclick="CreateRequest('@item.FormUid')">
+            <li class="viñetablanca2">@item.Message</li>
+        </a>
+    </div>
+                }
+
+                if (item.Action == "RequestByState")
+                {
+    <div class="item">
+        <a href="@Url.Action(item.Action, item.Controller, new { GuidState = item.FormUid })"class="formsMenu">
+            <li class="viñetablanca2">@item.Message</li>
+        </a>
+    </div>
+                }
+
+                if (!string.IsNullOrEmpty(item.Parameters) && item.Action != "GetReport")
+                {
+    <div class="item">
+        <a  onclick="WorkList('@item.Uid','@item.Parameters',0) "class="formsMenu">
+            @if (isEven)
+            {<li class="viñetablanca2">@item.Message</li>}
+            else
+            {<li class="viñeta3">@item.Message</li>}
+        </a>
+    </div>
+                }
+                if (!string.IsNullOrEmpty(item.Parameters) && item.Action == "GetReport")
+                {
+    <div class="item">
+        <a onclick="GetReport('@item.Parameters')" class="formsMenu">
+            <li class="viñetablanca2">@item.Message</li>
+        </a>
+    </div>
+                }
+                if (!item.FormUid.HasValue && string.IsNullOrEmpty(item.Parameters) && !item.FormState.HasValue)
+                {
+    <div class="item">
+        @if (item.Controller!="Form")
+        {
+        <a href="@Url.Action(item.Action, item.Controller)"class="formsMenu">
+            <li class="viñeta3">@item.Message</li>
+        </a>
+        }
+        else
+        {
+        <a class="formsMenu">
+            <li class="viñeta3" onclick="getForms()">@item.Message</li>
+        </a>
+        }
+    </div>
+                }
+            }
+            else
+            {
+    <ul class="padre">
+        <a class="desplegable" href="#">
+            <li class="viñeta3 viñetablanca desplegable">@item.Message</li>
+        </a>
+        <ul class="request-list subnavegador viñeta3">
+            @paintMenu(item.Childs.OrderBy(d=>d.DisplayOrder), !isEven)
+        </ul>
+    </ul>
+            }
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(item.Action) && !string.IsNullOrEmpty(item.Controller))
+            {
+    <li>
+        @item.Message
+    </li>
+            }
+            else
+            {
+    <ul class="padre">
+        <a class="desplegable" href="#">
+            <li class="viñeta3 viñetablanca desplegable">@item.Message</li>
+        </a>
+        <ul class="request-list subnavegador viñeta3">
+            @paintMenu(item.Childs.OrderBy(d=>d.DisplayOrder), !isEven)
+        </ul>
+    </ul>
+            }
+        }
+    }
+}
+
+<div class="menu-option">
+    <div class="alert-title">
+        Alertas
+    </div>
+    <div id="chart">
+    </div>
+</div>
+<div id="dvFormReportMenu"></div>
+@*<script type="text/javascript" src="/Scripts/jquery-1.8.2.min.js"></script>*@
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">    // <![CDATA[
+
+    function getForms() {       
+
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Form/ListPost/",
+                data: {
+                    '__RequestVerificationToken': tokenValue
+                },
+                dataType: "html",
+                success: function (evt) {
+                    //
+                    $('#right-column').html(evt);
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+
+    }
+    function GetReport(param) {
+
+        blockScreen("Un momento por favor....");
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            url: "/FormPage/GetReport/",
+            data: {
+                'parameters': param
+            },
+            success: function (data) {
+                $('#dvFormReportMenu').html(data);
+                $("#dvFormReportMenu").dialogr();
+                $("#dvFormReportMenu").dialogr('open');
+                $.unblockUI();
+            }
+        });
+    }
+
+    function WorkList(itemId, parameters, source) {
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Request/RequestsByParamProcedurePost/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'itemId': itemId, 'parameters': parameters, 'source': source
+                },
+                dataType: "html",
+                success: function (evt) {
+                    //
+                    $('#right-column').html(evt);
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+    }
+
+    function CreateRequest(formUid) {
+        try {
+            blockScreen("Un momento por favor....");
+            $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+                var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+                $('input[name="__RequestVerificationToken"]').val(tokenValue);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Form/CreateRequest/",
+                    data: {
+                        '__RequestVerificationToken': tokenValue,
+                        'id': formUid
+                    },
+                    dataType: "html",
+                    success: function (evt) {
+                        //
+                        $('#right-column').html(evt);
+                        $.unblockUI();
+                        //$("#EditCustomerProfileForm").submit();
+                    },
+                    error: function (result, status, error) {
+                        $.unblockUI();
+                        if (result.responseText == "EndSesion") {
+                            var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                            location.href = urlSite
+                        }
+                        else {
+                            alert("Error al cargar la pagina: " + result.responseText);
+                        }
+
+                    }
+                });
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    function blockScreen(message) {
+        $.blockUI({
+            message: message,//'Validando usuario y contraseña',
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }
+        });
+    }
+
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.load('visualization', '1', { packages: ['gauge'] });
+    google.load('visualization', '1', { packages: ['table'] });
+
+    $(".formsMenu").click(function () {
+
+        //if ($(this)[0].innerHTML != "Inicio")
+        //blockScreen("un momento por favor...");
+    });
+
+    $(document).ready(function () {
+        //Busca Indicadores por usuaior rol etc..
+
+
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Home/GetIndicators/",
+                data: {
+                    '__RequestVerificationToken': tokenValue
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            google.setOnLoadCallback(drawBarChart(data[i].Source, data[i].IndicatorType, data[i].Id, data[i].WarningMinValue, data[i].WarningMaxValue, data[i].ViolationMinvalue, data[i].ViolationMaxvalue))
+                        }
+
+                    }
+                },
+            });
+        });
+        ////TODO VALIDAR TIPO DE GRÁFICA
+        //google.setOnLoadCallback(drawBarChart);
+    });
+
+    function drawChart() {
+
+        $.post('/Home/getPieChartData', {},
+
+        function (data) {
+            var tdata = new google.visualization.DataTable();
+
+            tdata.addColumn('string', data[0][0]);
+            tdata.addColumn('number', data[0][1]);
+
+            for (var i = 2; i < data.length; i++) {
+                tdata.addRow([data[i][0], parseInt(data[i][1])]);
+            }
+
+            var options = {
+                title: data[1][1],
+                //width: 400, height: 120,
+                redFrom: 10, redTo: 20,
+                yellowFrom: 21, yellowTo: 30,
+                minorTicks: 5
+            };
+
+            var chart = new google.visualization.Gauge(document.getElementById('chart'));
+            chart.draw(tdata, options);
+        });
+    }
+
+
+</script>

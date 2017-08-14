@@ -1,0 +1,138 @@
+﻿@model STPC.DynamicForms.Web.Services.Entities.Category
+@if (Model == null)
+{ 
+    <h2>Seleccione una categoria o cree una nueva</h2>
+}
+else
+{
+    if (Model.Options.Count() == 0)
+    { 
+    <h2>No hay opciones en esta categoria</h2>
+    }
+    <table id="OptionsList" class="resultados" summary="Opciones por categoria" @{if (Model.Options.Count() == 0)
+                                                                                  {<text>style="display:none"</text>}}>
+        <tr>
+            <th>Llave</th>
+            <th>Valor</th>
+            <th>Acciones</th>
+        </tr>
+        </><tbody>
+            @foreach (var item in Model.Options)
+            {<tr>
+                <td>@item.Key</td>
+                <td>@item.Value</td>
+                <td>
+                    <span class="ui-icon ui-icon-trash ui-state-default ui-corner-all" data-key="@item.Key" title="Borrar Opción" onclick="deleteme('@item.Key');"></span>
+                    @Html.ActionLink(" ", "Edit", new { id = item.Uid }, new { @class = "decorated EditLink ui-icon ui-icon-pencil ui-state-default ui-corner-all", title = "Editar Opción" })
+
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <button id="NewOption" data-categoryid="@Model.Name">Crear una nueva opción en esta categoria</button>
+    <div id="NewOptionForm" title="Crear opción nueva">
+        <p class="validateTips">Todos los campos son obligatorios.</p>
+        <form>
+            <table>
+                <tr>
+                    <td>
+                        <h2>Llave</h2>
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="Key" class="text ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <h2>Valor</h2>
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="Value" class="text ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <h2>Valor Dependencia</h2>
+                        <td>
+                            @Html.DropDownList("ddlDependencyOption",
+            new SelectList(Enumerable.Empty<SelectListItem>(), "text", "value"), "---Seleccione la dependencia---",
+            new { style = "width:200px" })
+                        </td>
+                </tr>
+            </table>
+
+        </form>
+    </div>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Categories/Options.js")"></script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#NewOption").click(function () {
+            $.getJSON("@Url.Action("LoadOptionsByIdOption", "Categories")", { IdCategoria: '@Model.Dependency' },
+                   function (carData) {
+                       var select = $("#ddlDependencyOption");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: "",
+                           text: "---Seleccione la dependencia---"
+                       }));
+                       $.each(carData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text
+
+                           }));
+                       });
+
+
+                   });
+        });
+    });
+
+
+    function UpdateOptionDataModel() {
+
+
+        var ajaxSubmitOptions = {
+
+            beforeSubmit: showRequest,  // pre-submit callback 
+            success: showResponse,  // post-submit callback 
+            error: function (response, status, err) {
+                // This option doesn't catch any of the error below, 
+                // everything is always 'OK' a.k.a 200
+                if (response.status == 400) {
+                    alert("Sorry, this is bad request!");
+                }
+                if (response.status == 601) {
+                    sessionTimedOut();
+                }
+            }
+        }
+
+        $("#updateModelEditForm").ajaxSubmit(ajaxSubmitOptions);
+        return false;
+    }
+
+    
+    // pre-submit callback 
+    function showRequest(formData, jqForm, options) {
+
+        var queryString = $.param(formData);
+
+        return true;
+    }
+
+    // post-submit callback 
+    function showResponse(responseText, statusText, xhr, $form) {
+        updateSuccess();
+    }
+
+    function updateSuccess(data) {
+        $("#Options").load("/Categories/Options/", { categoryname: $("#CategoriesList").val() });
+        $("#CategoriesForm").submit();
+        $('#EditOption').dialog("close");
+    }
+
+</script>
+
+

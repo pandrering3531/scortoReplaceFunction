@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c06eede6-3311-4bd3-9be1-fe5d3ea5223c" xmlns="urn:schemas-microsoft-com:xml-dataservicemap">
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:6615/FormsPersistenceService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.edmx" MetadataType="Edmx" ID="e7169207-4f7f-4898-836f-55d664b679c3" SourceId="1" SourceUrl="http://localhost:6615/FormsPersistenceService.svc" />
+  </Metadata>
+  <Extensions />
+  <Parameters />
+</ReferenceGroup>

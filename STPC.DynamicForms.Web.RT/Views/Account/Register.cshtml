@@ -1,0 +1,249 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.CreateUserViewModel
+@{
+    ViewBag.Title = "CreateUser";
+}
+<h2>Crear Usuario</h2>
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "align_center", id = "frmRegisterUser", autocomplete = "off" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend></legend>
+
+        <table class="tablaCreateUsers">
+            <tr>
+                <td class="editor-label">
+                    @Html.LabelFor(model => model.IDNumber)
+                </td>
+                <td class="editor-field">
+                    @Html.DropDownListFor(r => r.IDType, Model.IDTypes)
+                    @Html.EditorFor(model => model.IDNumber)
+                    @Html.ValidationMessageFor(model => model.IDNumber)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-label">
+                    @Html.LabelFor(model => model.User.Email)
+                </td>
+                <td class="editor-field">
+                    @Html.EditorFor(model => model.User.Email)
+                    @Html.ValidationMessageFor(model => model.User.Email)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-label">Nombres
+                </td>
+                <td class="editor-field">
+                    @Html.EditorFor(model => model.User.GivenName)
+                    @Html.ValidationMessageFor(model => model.User.GivenName)
+                </td>
+            </tr>
+            @if (@ViewBag.singleResetQuestionMode == "True")
+            {
+                <tr>
+                    <td class="editor-label">
+                        @Html.LabelFor(model => model.User.PasswordQuestion)
+                    </td>
+                    <td class="editor-field">
+                        @Html.EditorFor(model => model.User.PasswordQuestion)
+                        @Html.ValidationMessageFor(model => model.User.PasswordQuestion)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="editor-label">
+                        @Html.LabelFor(model => model.User.PasswordAnswer)
+                    </td>
+                    <td class="editor-field">
+                        @Html.EditorFor(model => model.User.PasswordAnswer)
+                        @Html.ValidationMessageFor(model => model.User.PasswordAnswer)
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td class="editor-label">Apellidos
+                </td>
+                <td class="editor-field">
+                    @Html.EditorFor(model => model.User.LastName)
+                    @Html.ValidationMessageFor(model => model.User.LastName)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-label">
+                    @Html.LabelFor(model => model.User.Password)
+                </td>
+                <td class="editor-field">
+                    @Html.EditorFor(model => model.User.Password)
+                    @Html.ValidationMessageFor(model => model.User.Password)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-label">Dirección
+                </td>
+                <td class="editor-field">
+                    @Html.EditorFor(model => model.User.Address, new { @class = "InvisibleControl" })
+                    @Html.ValidationMessageFor(model => model.User.Address)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-label">Teléfono
+                </td>
+                <td class="editor-field">
+                    @Html.EditorFor(model => model.User.Phone_LandLine)
+                    @Html.ValidationMessageFor(model => model.User.Phone_LandLine)
+                </td>
+            </tr>
+            <tr>
+                <td class="editor-label">Movil
+                </td>
+                <td class="editor-field">
+                    @Html.EditorFor(model => model.User.Phone_Mobile)
+                    @Html.ValidationMessageFor(model => model.User.Phone_Mobile)
+                </td>
+            </tr>
+            @if (ViewBag.IsSingleTenant == 1)
+            {
+                <tr>
+                    <td>
+                        <label for="parent">Empresa</label></td>
+                    <td>
+
+                        @Html.DropDownList("ddlAplicationName",
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Seleccione el nombre de la empresa---",
+            new { style = "width:200px" })
+
+                    </td>
+                </tr>
+            }
+            else
+            {
+                if (ViewBag.aplicationNameIdUser != null)
+                {
+                @Html.Hidden("ddlAplicationName", (int)ViewBag.aplicationNameIdUser)
+                }
+            }
+            <tr>
+                <td class="editor-label">Ubicación
+                </td>
+                <td class="editor-field">
+                    @Html.DropDownList("HierarchyLevelsSelect", Model.HierarchyLevels)
+                    @Html.DropDownListFor(r => r.HierarchyId, Model.Hierarchies)
+                    @Html.ValidationMessageFor(f => f.HierarchyId)
+                </td>
+            </tr>
+
+        </table>
+
+    </fieldset>
+    <fieldset>
+        <legend>Roles</legend>
+        @Html.Hidden("singleRoleMode", (string)@ViewBag.singleRoleMode)
+        <div class="editor-field">
+            <table>
+                @foreach (var rol in Model.AppRoles)
+                {
+                    string controlname = "Rol_" + rol;
+                    <tr>
+                        <td>
+                            @if (@ViewBag.singleRoleMode == "False")
+                            {
+                                <input type="checkbox" name="@controlname" id="@controlname" class="roleUser" />
+                            }
+                            else
+                            {
+                                <input type="radio" name="RoleName" id="@controlname" value="@controlname" class="roleUser" />
+                               
+                            }
+                        </td>
+                        <td>@rol
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </fieldset>
+    <p>
+        <input type="submit" value="Crear" class="decorated" />
+    </p>
+}@section BottomAssets {
+    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Accounts/CreateUser.js")" type="text/javascript"></script>}
+
+
+<script type="text/javascript">
+    jQuery("#frmRegisterUser").submit(function () {
+        console.log("submit")
+
+        if ($(".roleUser:checked").length == 0) {
+            alert("No se ha seleccionado un role para el usuario")
+            return false;
+        }
+
+
+    });
+
+    $(document).ready(function () {
+        var leveUser = $("#userLevel").val()
+        var idModel = $("#ddlAplicationName").val();
+
+        if (idModel == "") {
+            idModel = 0;
+        }
+
+        $.getJSON('/Account/GetHierarchyLevelByAplicationName', { AplicationNameid: idModel, levelUser: leveUser },
+                       function (carData) {
+                           var select = $("#HierarchyLevelsSelect");
+                           select.empty();
+                           select.append($('<option/>', {
+                               value: "",
+                               text: "---Seleccione el tipo de nodo---"
+                           }));
+                           $.each(carData, function (index, itemData) {
+                               select.append($('<option/>', {
+                                   value: itemData.Value,
+                                   text: itemData.Text,
+                                   selected: itemData.Selected
+
+                               }));
+                           });
+                           var valueLevel = select.val()
+                           loadHierarchy(valueLevel, $("#userHierarchy").val());
+
+                       });
+    })
+    $("#ddlAplicationName").change(function () {
+        var leveUser = $("#userLevel").val()
+        var idModel = $(this).val();
+
+        if (idModel == "") {
+            idModel = 0;
+        }
+
+        $.getJSON('/Account/GetHierarchyLevelByAplicationName', { AplicationNameid: idModel, levelUser: leveUser },
+                       function (carData) {
+
+                           var selectHierarchy = $("#HierarchyId");
+                           selectHierarchy.empty();
+                           selectHierarchy.append($('<option/>', {
+                               value: "",
+                               text: "---Seleccione la jerarquia---"
+                           }));
+
+                           var select = $("#HierarchyLevelsSelect");
+                           select.empty();
+                           select.append($('<option/>', {
+                               value: "",
+                               text: "---Seleccione el tipo de nodo---"
+                           }));
+                           $.each(carData, function (index, itemData) {
+                               select.append($('<option/>', {
+                                   value: itemData.Value,
+                                   text: itemData.Text,
+                                   selected: itemData.Selected
+
+                               }));
+                           });
+
+                       });
+    })
+
+</script>

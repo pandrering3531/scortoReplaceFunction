@@ -1,0 +1,32 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.TBL_Desembolso_FINCOMERCIOGrid
+
+<table id="Desembolso_FINCOMERCIOGrid" class="webgrid-table">
+    <tr>
+        <td class="col2Width">
+            @Html.DropDownList("value", (IEnumerable<SelectListItem>)ViewBag.listBanks, "---Seleccione---", new{ @id="inBanco", @class="basico1_select", @required="true", @tooltip="true", @data_val="true", @data_val_required="* Campo requerido", @Width="100%"})
+            @Html.ValidationMessageFor(m=>m.F_varBanco)
+        </td>
+
+        <td class="col2Width">
+
+            @Html.TextBoxFor(m=>m.F_varNumeroCuenta, new {@id="inNumeroCuenta", @class="basico1_input", required = "true", maxlength="10", tooltip="true", data_val="true", data_val_required="* Campo requerido" })
+            @Html.ValidationMessageFor(m=>m.F_varNumeroCuenta)
+
+        </td>
+
+        <td class="col2Width">
+
+            @Html.DropDownList("value",  (IEnumerable<SelectListItem>)ViewBag.listAccountType,  "---Seleccione---", new{ @id="inTipoCuenta", @required="true", @class="basico1_select", @tooltip="true", @data_val="true", @data_val_required="* Campo requerido", @Width="100%"})
+            @Html.ValidationMessageFor(m=>m.F_varTipoCuenta)
+
+        </td>
+
+        <td class="col2Width">
+                <input type="button" value="Guardar" class="inssave-btn" />
+                <input type="button" value="Cancelar" class="cancelinssave-btn" />
+        </td>
+        <td class="col2Width">
+</td>
+    </tr>
+
+</table>

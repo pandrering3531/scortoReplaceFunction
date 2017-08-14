@@ -1,0 +1,187 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.Hierarchy
+@{
+    
+}
+
+@using (Ajax.BeginForm("Create", "Hierarchies", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "CustomerFormAttr",
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccessCreate"
+}, new { @id = "updateJerarquiaFormNew" }))
+{
+    
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        <legend>Información del nodo</legend>
+        @Html.HiddenFor(e => e.Parent.Id)
+
+
+        <table class="tableDialog">
+            <tr>
+                <td>
+                    @Html.Label("Nombre")
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Name, new { id = "txtHierarchyName" })
+                </td>
+
+            </tr>
+            @if (String.IsNullOrEmpty(Model.Level))
+            {
+                <tr>
+
+                    <td>
+                        @Html.Label("Nivel:")
+                    </td>
+                    <td>
+
+                        @Html.TextBoxFor(e => e.Level)
+                    </td>
+
+                </tr>
+            }
+            else
+            {
+                @Html.HiddenFor(e => e.Level)
+            }
+
+            @if (ViewBag.IsSingleTenant == 1 && Model.Parent.Id == 0)
+            {
+                <tr>
+                    <td>
+                        <label for="parent">Empresa</label></td>
+                    <td>
+                        @Html.DropDownListFor(e => e.AplicationNameId,
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Seleccione el nombre de la aplicación---",
+            new { style = "width:200px" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("TipoNodo:")
+
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(e => e.NodeType, new SelectList(Enumerable.Empty<SelectListItem>(), "Id", "NodeType"), "---Seleccione el tipo de nodo---", new { style = "width:200px", id = "ddlNewTipoNodo" })
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @Html.Label("TipoNodo:")
+
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(e => e.NodeType, new SelectList(@ViewBag.HierarchyNodeType, "Id", "NodeType"), "---Seleccione el tipo de nodo---", new { style = "width:200px", id = "ddlNewTipoNodo" })
+                    </td>
+                </tr>
+            }
+        </table>
+
+    </fieldset>
+    @Html.Hidden("LevelChild")
+    @Html.HiddenFor(e => e.Level, new { disabled = "disabled" })
+    
+    <div id="CustomerFormAttr">
+        @if ((STPC.DynamicForms.Core.MyViewModel)ViewBag.modelQuery != null)
+        {
+            { Html.RenderPartial("_Atributes", (STPC.DynamicForms.Core.MyViewModel)ViewBag.modelQuery); }
+        }
+    </div>
+    <div id="CustomerFormAttr2">
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    $("#ddlNewTipoNodo").change(function () {
+
+        var selectText = $("#ddlNewTipoNodo option:selected").text();
+
+        $("#LevelChild").val(selectText);
+
+        $.ajax({
+            type: "POST",
+            url: "/Hierarchies/GetSchemaTable/",
+            data: {
+                'NodeType': $("#ddlNewTipoNodo").val(),
+                'NodeId': -1
+            },
+            dataType: "html",
+            success: function (evt) {
+
+                $('#CustomerFormAttr2').html(evt);
+            },
+            error: function (req, status, error) {
+                alert("Error!Occured" + error);
+
+            }
+        });
+    });
+
+
+    $("#AplicationNameId").change(function () {
+
+        var idModel = $(this).val();
+
+        if (idModel == "") {
+            idModel = 0;
+        }
+
+        $.getJSON("@Url.Action("GetNodeTypeByAplicationName", "Hierarchies")", { AplicationNameid: idModel },
+                       function (carData) {
+
+                           var select = $("#ddlNewTipoNodo");
+                           select.empty();
+                           select.append($('<option/>', {
+                               value: "",
+                               text: "---Seleccione el tipo de nodo---"
+                           }));
+                           $.each(carData, function (index, itemData) {
+                               select.append($('<option/>', {
+                                   value: itemData.Value,
+                                   text: itemData.Text
+
+                               }));
+                           });
+
+
+                       });
+
+
+    })
+
+    $(document).ready(function () {
+        var idModel = $("#AplicationNameId").val();
+
+        if (idModel == "") {
+            idModel = 0;
+        }
+        $.getJSON("@Url.Action("GetNodeTypeByAplicationName", "Hierarchies")", { AplicationNameid: idModel },
+                     function (carData) {
+
+                         var select = $("#ddlNewTipoNodo");
+                         select.empty();
+                         select.append($('<option/>', {
+                             value: "",
+                             text: "---Seleccione el tipo de nodo---"
+                         }));
+                         $.each(carData, function (index, itemData) {
+                             select.append($('<option/>', {
+                                 value: itemData.Value,
+                                 text: itemData.Text
+
+                             }));
+                         });
+
+
+                     });
+    });
+
+</script>

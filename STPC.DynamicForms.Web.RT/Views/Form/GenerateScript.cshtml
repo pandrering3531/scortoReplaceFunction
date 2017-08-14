@@ -1,0 +1,57 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.ScriptsViewModel
+@{
+  ViewBag.Title = "Generar Script";
+}
+
+<div id="migas">
+  <p>Script del formulario:  @ViewBag.FormName</p>
+</div>
+@Html.HiddenFor(e => e.uid, new { id = "txtUid" })
+
+<div>
+  <table style="height: auto; width: 100%">
+    <tr>
+      <td>
+        @*<button id="btnSave">Guardar</button>*@
+      </td>
+    </tr>
+    <tr>
+      <td>
+        @Html.TextAreaFor(e => e.Script, new { id = "txtScript", style = "width:100%", rows = "25" })
+      </td>
+
+    </tr>
+  </table>
+</div>
+@Html.Hidden("FormId", (Guid)ViewBag.FormId)
+@Html.ActionLink("Volver a la lista de formularios", "List", null, new { @class = "decorated" })
+
+@section BottomAssets 
+  {
+  <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+  <script>
+    $("#btnSave")
+        .button()
+        .click(function save_content_to_file(content, filename) {
+          var dlg = false;
+          with (document) {
+            ir = createElement('iframe');
+            ir.id = 'ifr';
+            ir.location = 'about.blank';
+            ir.style.display = 'none';
+            body.appendChild(ir);
+            with (getElementById('ifr').contentWindow.document) {
+              open("text/plain", "replace");
+              charset = "utf-8";
+              write(content);
+              close();
+              document.charset = "utf-8";
+              dlg = execCommand('SaveAs', false, filename);
+            }
+            body.removeChild(ir);
+          }
+          return dlg;
+        }
+        );
+  </script>
+}

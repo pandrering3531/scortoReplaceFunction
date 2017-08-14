@@ -1,0 +1,99 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.Category
+<script src="@Url.Content("~/Scripts/jquery.numeric.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Request/RequestQuery.js")" type="text/javascript"></script>
+
+
+@using (Ajax.BeginForm("Edit_category", "Categories", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccessCategory"
+}, new { @id = "updateModelCategory" }))
+{
+    <div id="NewCategoryForm" title="Crear una nueva categoria">
+        <p class="validateTips">
+            @Html.HiddenFor(e => e.Uid, new { id = "catId" })
+            Debe ingresar todos los datos.
+        </p>
+        <form>
+            <fieldset>
+                <legend></legend>
+                <table>
+                    <tr>
+                        <td>
+                            <label for="name">Nombre</label>
+                        </td>
+                        <td>
+                            <input type="text" name="name" id="nameCat" class="text ui-widget-content ui-corner-all" value="@Model.Name" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="parent">Dependencia</label></td>
+                        <td>
+                            @Html.DropDownList("ddlDependencyEdit",
+            new SelectList((IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.Category>)ViewBag.Category, "Uid", "Name", Model.Dependency), "---Seleccione la categoria---",
+            new { style = "width:200px" })
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label for="parent">Nombre instancia</label></td>
+                        <td>
+                            @Html.DropDownListFor(e => Model.AplicationName.Id,
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Seleccione el nombre de la aplicación---",
+            new { style = "width:200px" })
+                        </td>
+                    </tr>
+
+                </table>
+            </fieldset>
+        </form>
+    </div>         
+   
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var dependencie = '@Model.Dependency'
+        console.log(dependencie);
+        if (dependencie != "0") {
+            $("#AplicationName_Id").prop("disabled", true);
+        }
+        else {
+            $("#AplicationName_Id").prop("disabled", false);
+        }
+    });
+
+    $("#ddlDependencyEdit").change(function () {
+        console.log($(this).val())
+
+        if ($(this).val() != "") {
+            $("#AplicationName_Id").prop("disabled", true);
+        }
+        else {
+            $("#AplicationName_Id").prop("disabled", false);
+        }
+        $.getJSON("@Url.Action("LoadDependenciaByCategorie", "Categories")", { IdCategoria: $(this).val() },
+                   function (carData) {
+                       var select = $("#AplicationName_Id");
+                       select.empty();
+
+                       console.log($("#idOptionParent").val())
+                       $.each(carData, function (index, itemData) {
+                           if (carData)
+                               select.append($('<option/>', {
+                                   value: itemData.Value,
+                                   selected: true,
+                                   text: itemData.Text,
+                                   selected: true
+
+                               }));
+                       });
+
+                   });
+    });
+</script>

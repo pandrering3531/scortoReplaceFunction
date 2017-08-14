@@ -1,0 +1,66 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.MyViewModels
+@{
+    ViewBag.Title = "Cargue Masivo";
+}
+@using (Html.BeginForm("massiveLoad", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <table class="sinestilo">
+        <thead>
+            <tr>
+                <td>
+                    <h1>CARGUE MASIVO DE USUARIOS ABC</h1>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="tdCellData">
+                    <div>
+                        @if (Model != null)
+                        {
+                            @Html.Raw(Model.MSExcelTable) 
+                        }
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="tdCellData">
+                    <div>
+                        <table class="sinestilo">
+                            <tr>
+                                <td class="tdCellData">1-Por favor suba el Archivo a procesar</td>
+                                <td class="tdCellData">@Html.TextBoxFor(x => x.MyExcelFile, new { type = "file", @class = "fileup" })</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.ValidationMessageFor(x => x.MyExcelFile)</td>
+                            </tr>
+                            <tr>
+                                <td class="tdCellData">2-Presione el Boton Para procesar el archivo.</td>
+                                <td class="tdCellData">
+                                    <input type="submit" value="Cargar" name="Cargar" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tdCellData">3-Presione el boton para realizar el el cargue de los usarios que se encuentran validados de forma correcta.</td>
+                                <td class="tdCellData">
+                                    <input type="submit" id="Aceptar" value="Aceptar" name="Aceptar" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#Aceptar').on("click", function () {
+                $(".fileup").rules("remove", "required");
+            });
+        });
+
+    </script>
+}

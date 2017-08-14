@@ -1,0 +1,158 @@
+﻿@model  STPC.DynamicForms.Web.RT.Models.DetailRequestModel 
+@{
+    ViewBag.Title = "Detalle del Tramite";
+}
+<input type="hidden" id="inRequestId" value="@ViewBag.RequestId"/>
+<input type="hidden" id="inEstadoActual" value="@ViewBag.EstadoActual"/>
+<div id="dvForm">
+    <fieldset class="basico1">
+        <legend style="font-size: small">DETALLE DEL TRAMITE</legend>
+        <table style="width: 98%">
+            <tr>
+                <td style="width: 15%">Solicitante
+                </td>
+                <td style="width: 50%">
+                    <span style="font-weight: bold;">@Model.Solicitante</span>
+                </td>
+                <td style="width: 35%"></td>
+            </tr>
+            <tr>
+                <td style="width: 15%">Identificacion
+                </td>
+                <td style="width: 50%">
+                    <span style="font-weight: bold;">@Model.Identificacion</span>
+                </td>
+                <td style="width: 35%"></td>
+            </tr>
+            <tr>
+                <td style="width: 15%">Radicado
+                </td>
+                <td style="width: 50%">
+                    <span style="font-weight: bold;">@Model.Radicado</span>
+                </td>
+                <td style="width: 35%"></td>
+            </tr>
+            <tr>
+                <td style="width: 15%">Valor
+                </td>
+                <td style="width: 50%">
+                    <span style="font-weight: bold;">@Model.Valor</span>
+                </td>
+                <td style="width: 35%"></td>
+            </tr>
+            <tr>
+                <td style="width: 15%">Plazo
+                </td>
+                <td style="width: 50%">
+                    <span style="font-weight: bold;">@Model.Plazo</span>
+                </td>
+                <td style="width: 35%"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <br />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table class="webgrid-table">
+                        <tr>
+                            <th class="webgrid-header">Area</th>
+                            <th class="webgrid-header">Actividad</th>
+                            <th class="webgrid-header">Fecha</th>
+                            <th class="webgrid-header">Hora</th>
+                            <th class="webgrid-header">Usuario</th>
+                        </tr>
+                        @foreach (var Evento in Model.LogEventos)
+                        {
+                            <tr class="webgrid-row-style">
+                                <td>
+                                    @Evento.Area
+                                </td>
+                                <td>
+                                    @Evento.Actividad
+                                </td>
+                                <td>
+                                    @Evento.Fecha
+                                </td>
+                                <td>
+                                    @Evento.Hora
+                                </td>
+                                <td>
+                                    @Evento.Usuario
+                                </td>
+                            </tr>}
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        <br />
+
+        <div style="@(Model.ObservacionCapacidadPago != "" ? "display:block" : "display:none")">
+            <p style="font-size: 12px; font-weight: bold; color: #1665a0; margin-bottom: 5px;">CONCEPTO CAPACIDAD DE PAGO</p>
+            <table style="width: 98%">
+                <tr>
+                    <td style="width: 15%">Observacion Capacidad de Pago
+                    </td>
+                    <td style="width: 50%">
+                        <span style="font-weight: bold;">@Model.ObservacionCapacidadPago</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="@(Model.ObservacionAnalista != "" ? "display:block" : "display:none")">
+            <p style="font-size: 12px; font-weight: bold; color: #1665a0; margin-bottom: 5px;">CONCEPTO ANALISTA</p>
+            <table style="width: 98%">
+                <tr>
+                    <td style="width: 15%">Observacion Analista 
+                    </td>
+                    <td style="width: 50%">
+                        <span style="font-weight: bold;">@Model.ObservacionAnalista</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="@(Model.ObservacionCooordinador != "" ? "display:block" : "display:none")">
+            <p style="font-size: 12px; font-weight: bold; color: #1665a0; margin-bottom: 5px;">CONCEPTO COORDINADOR</p>
+            <table style="width: 98%">
+                <tr>
+                    <td style="width: 15%">Observacion Cooordinador
+                    </td>
+                    <td style="width: 50%">
+                        <span style="font-weight: bold;">@Model.ObservacionCooordinador</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="@(Model.ObservacionComite != "" ? "display:block" : "display:none")">
+            <p style="font-size: 12px; font-weight: bold; color: #1665a0; margin-bottom: 5px;">CONCEPTO COMITE</p>
+            <table style="width: 98%">
+                <tr>
+                    <td style="width: 15%">Observacion Comite
+                    </td>
+                    <td style="width: 50%">
+                        <span style="font-weight: bold;">@Model.ObservacionComite</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="@(Model.ObservacionVisacion != "" ? "display:block" : "display:none")">
+            <p style="font-size: 12px; font-weight: bold; color: #1665a0; margin-bottom: 5px;">CONCEPTO VISACION</p>
+            <table style="width: 98%">
+                <tr>
+                    <td style="width: 15%">Observacion Visacion
+                    </td>
+                    <td style="width: 50%">
+                        <span style="font-weight: bold;">@Model.ObservacionVisacion</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    </fieldset>
+</div>

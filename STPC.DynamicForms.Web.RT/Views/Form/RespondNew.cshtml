@@ -1,0 +1,356 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.Form
+@{
+    ViewBag.Title = Model.Name;
+}
+
+@if (Model.Pages.Count() == 0)
+{ 
+    <h1>Este formulario no tiene páginas</h1>
+}
+else
+{
+    <div id="FormPagesPaginator">
+        <div id="FormPageAnswers">
+
+            @*  @{
+    Html.RenderAction("RespondNew", "FormPage", new { pageId = ViewData["PageId"], requestId = ViewData["RequestId"] });                
+            }*@
+
+        </div>
+    </div>
+}
+
+@Html.Hidden("index", "content-list_" + @Model.Name.Replace(" ", "_"))
+@Html.Hidden("formId", @Model.Uid)
+
+@section BottomAssets {
+
+    <script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+
+
+}
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+        $('ul li').click(function (e) {
+            var $target = $(e.target);
+            if (!$target.is("li")) {
+
+
+                return;
+            }
+
+            var launch = $('a.launch', this);
+            if (launch.size() > 0) {
+                eval(launch[0].onclick());
+            }
+        });
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            blockScreen("Un momento por favor....");
+            $.ajax({
+                type: "POST",
+                url: "/FormPage/RespondNew/",
+                data: {
+                    '__RequestVerificationToken': tokenValue,
+                    'pageId': "@ViewData["PageId"]",
+                    'requestId': "@ViewData["RequestId"]",
+                },
+                dataType: "html",
+                success: function (evt) {
+                    //
+
+                    $('#FormPageAnswers').html(evt);
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+            });
+        });
+        //HideControlsAfterSave();
+
+        //setWarningTimeOut()
+    });
+
+
+    function disable(table_id) {
+        var inputs = document.getElementById(table_id).getElementsByTagName('input');
+        for (var i = 0; i < inputs.length; ++i) {
+            inputs[i].disabled = true;
+
+
+        }
+    }
+
+    function loadSubMenu(formId, index) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("FormPagesMenu", "Form")',
+            data: { id: formId, requestId: '@ViewData["RequestId"]' },
+            dataType: "html",
+            success: function (data) {
+                $('.' + index).replaceWith(data)
+
+            }
+
+        });
+    }
+    function myFunction(sender, idStrategy) {
+        $.getJSON("@Url.Action("GetStrategyResult", "FormPage")", { id: idStrategy, value: sender.value },
+                 function (result) {
+
+                     //alert(result);
+                     $("#ResultStrategy" + sender.name).text(result)
+                     //alert($("#ResultStrategy" + sender.name).val());
+
+                 });
+    }
+
+
+    var letras = "abcdefghyjklmnñopqrstuvwxyz";
+
+    function tiene_letras(texto) {
+        texto = texto.toLowerCase();
+        for (i = 0; i < texto.length; i++) {
+            if (letras.indexOf(texto.charAt(i), 0) != -1) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    
+
+
+    function HideChildControls(sender) {
+        $.ajax({
+            type: 'POST',
+            url: '/Strategy/GetChildControlByParent',
+            data: {
+                'ParentControl': sender
+            },
+            dataType: 'json',
+            success: function (result) {
+
+                for (x = 0; x < result.length; x++) {
+                    $('#STPC_DFi_' + result[x].Text + ' li').remove()
+                    $('#STPC_DFi_' + result[x].Text).append("<li style='display: inline;list-style-type: none;'><input type=hidden name=STPC_DFi_" + result[x].Text + " value=0></li>");
+                    HideChildControls(result[x].Text)
+                }
+            },
+            error: function (req, status, error) {
+                alert("Error: " + error);
+            }
+        });
+    }
+
+    function HideCheckControl(sender, ChildrenIdControl, FiedlValue) {
+
+
+        $.ajax({
+            type: 'POST',
+            url: '/Strategy/GetHiddenControls',
+            data: {
+                'UidControl': $(sender).attr('id'),
+                'valueControl': $(sender).val()
+            },
+            dataType: 'json',
+            success: function (result) {
+                if ($(sender).attr('checked')) {
+                    HideControlsById(result);
+
+                }
+                else {
+                    $(sender).removeClass("required");
+                    RestoreControls(result);
+                }
+
+            },
+            error: function (req, status, error) {
+                alert("Error: " + error);
+            }
+        });
+
+    }
+
+
+
+
+
+
+    
+
+    function LoadChildDropDownFromRadioList(DdlParentControl, ddlChildControl) {
+
+        var ParentControl = DdlParentControl[0].attributes["value"].value;
+        var selecteValueChildList = $("#" + ddlChildControl).val();
+
+        if (DdlParentControl[0].checked)
+
+            if (ParentControl != '') {
+                $(".btnAtions").attr("disabled", "disabled");
+                var select = $("#" + ddlChildControl);
+                select.empty();
+                select.append($('<option/>', {
+                    value: "",
+                    text: "Cargando..."
+                }));
+
+                $.getJSON("@Url.Action("GetItemOfChildSelect", "Strategy")", { ChildControl: ddlChildControl, Value: ParentControl },
+            function (carData) {
+
+
+                var select = $("#" + ddlChildControl);
+                select.empty();
+                select.append($('<option/>', {
+                    value: "",
+                    text: ""
+                }));
+
+                $.each(carData, function (index, itemData) {
+                    if (itemData.Value == selecteValueChildList)
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: true
+
+                        }));
+                    else
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: false
+
+                        }));
+                });
+                $(".btnAtions").removeAttr('disabled');
+                if ($("#" + ddlChildControl)[0].attributes.onchange != undefined) {
+                    var arg = $("#" + ddlChildControl)[0].attributes.onchange.nodeValue.split(",");
+                    var patron = "'"
+                    var ControlChildId = arg[1].replace(patron, '');
+                    var ControlChildId = ControlChildId.replace(patron, '');
+                    LoadChildDropDown($("#" + ddlChildControl)[0], ControlChildId, "");
+                    //LoadChildDropDownFromRadioList($(this)[0], ControlChildId)
+                }
+
+
+            });
+
+            }
+            else {
+                var select = $("#" + ddlChildControl);
+                select.empty();
+            }
+    }
+
+    function LoadChildDropDownFromCheckBoxList(DdlParentControl, ddlChildControl, valuesCheckeds) {
+        var isChecked = $(DdlParentControl).is(":checked");
+        var ParentControl = valuesCheckeds;
+        //if (isChecked == true)
+        //    var ParentControl = DdlParentControl.value;
+        //else
+        //    var ParentControl = '';
+        var selecteValueChildList = $("#" + ddlChildControl).val();
+
+        if (ParentControl != '') {
+            $(".btnAtions").attr("disabled", "disabled");
+            var select = $("#" + ddlChildControl);
+            select.empty();
+            select.append($('<option/>', {
+                value: "",
+                text: "Cargando..."
+            }));
+            var srValuesChecked = valuesCheckeds.toString();
+            //for (x = 0; x < valuesCheckeds.length; x++) {
+            //    srValuesChecked += valuesCheckeds[x] + ",";
+            //}
+            $.getJSON("@Url.Action("GetItemOfChildSelect", "Strategy")", { ChildControl: ddlChildControl, Value: srValuesChecked },
+            function (carData) {
+
+
+                var select = $("#" + ddlChildControl);
+                select.empty();
+                select.append($('<option/>', {
+                    value: "",
+                    text: ""
+                }));
+
+                $.each(carData, function (index, itemData) {
+                    if (itemData.Value == selecteValueChildList)
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: true
+
+                        }));
+                    else
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: false
+
+                        }));
+                });
+                $(".btnAtions").removeAttr('disabled');
+                if ($("#" + ddlChildControl)[0].attributes.onchange != undefined) {
+                    var arg = $("#" + ddlChildControl)[0].attributes.onchange.nodeValue.split(",");
+                    var patron = "'"
+                    var ControlChildId = arg[1].replace(patron, '');
+                    var ControlChildId = ControlChildId.replace(patron, '');
+                    LoadChildDropDown($("#" + ddlChildControl)[0], ControlChildId, "");
+                    //LoadChildDropDownFromRadioList($(this)[0], ControlChildId)
+                }
+
+
+            });
+
+        }
+        else {
+            var select = $("#" + ddlChildControl);
+            select.empty();
+            if ($("#" + ddlChildControl)[0].attributes.onchange != undefined) {
+                var arg = $("#" + ddlChildControl)[0].attributes.onchange.nodeValue.split(",");
+                var patron = "'"
+                var ControlChildId = arg[1].replace(patron, '');
+                var ControlChildId = ControlChildId.replace(patron, '');
+                LoadChildDropDown($("#" + ddlChildControl)[0], ControlChildId, "");
+            }
+        }
+    }
+
+
+
+
+
+
+
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = [8, 37, 39, 46];
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+
+    function textLimit(field, maxlen) {
+
+        var lines = $("#" + field.id).val().split(/\r\n|\r|\n/);
+
+        field.value = field.value.substring(0, maxlen - lines.length);
+        field.value = field.value.trim();
+    }
+
+</script>

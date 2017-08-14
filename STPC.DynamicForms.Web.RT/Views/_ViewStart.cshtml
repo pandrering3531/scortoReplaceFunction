@@ -1,0 +1,10 @@
+﻿@{
+    if (!this.User.Identity.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_LiSimLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LiSimAuthLayout.cshtml";
+    }
+}

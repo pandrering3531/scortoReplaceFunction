@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="1e27d6bc-d11d-496b-b3e6-799c4b4616a6" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>false</ReferenceAllAssemblies>
+    <ReferencedAssemblies>
+      <ReferencedAssembly AssemblyName="EntityFramework" />
+      <ReferencedAssembly AssemblyName="Microsoft.CSharp" />
+      <ReferencedAssembly AssemblyName="Microsoft.Data.Schema.Tools.Sql" />
+      <ReferencedAssembly AssemblyName="Microsoft.ReportViewer.WebForms" />
+      <ReferencedAssembly AssemblyName="Microsoft.Web.Infrastructure" />
+      <ReferencedAssembly AssemblyName="Microsoft.WindowsAzure.Configuration" />
+      <ReferencedAssembly AssemblyName="Microsoft.WindowsAzure.Diagnostics" />
+      <ReferencedAssembly AssemblyName="Microsoft.WindowsAzure.ServiceRuntime" />
+      <ReferencedAssembly AssemblyName="Microsoft.WindowsAzure.StorageClient" />
+      <ReferencedAssembly AssemblyName="mscorlib" />
+      <ReferencedAssembly AssemblyName="Recaptcha" />
+      <ReferencedAssembly AssemblyName="STPC.DynamicForms.Core" />
+      <ReferencedAssembly AssemblyName="STPC.DynamicForms.DecisionEngine" />
+      <ReferencedAssembly AssemblyName="STPC.DynamicForms.Infraestructure" />
+      <ReferencedAssembly AssemblyName="STPC.DynamicForms.Web.Common" />
+      <ReferencedAssembly AssemblyName="StructureMap" />
+      <ReferencedAssembly AssemblyName="System" />
+      <ReferencedAssembly AssemblyName="System.ComponentModel.DataAnnotations" />
+      <ReferencedAssembly AssemblyName="System.Configuration" />
+      <ReferencedAssembly AssemblyName="System.Core" />
+      <ReferencedAssembly AssemblyName="System.Data" />
+      <ReferencedAssembly AssemblyName="System.Data.DataSetExtensions" />
+      <ReferencedAssembly AssemblyName="System.Data.Entity" />
+      <ReferencedAssembly AssemblyName="System.Data.Services.Client" />
+      <ReferencedAssembly AssemblyName="System.Drawing" />
+      <ReferencedAssembly AssemblyName="System.EnterpriseServices" />
+      <ReferencedAssembly AssemblyName="System.Runtime.Serialization" />
+      <ReferencedAssembly AssemblyName="System.ServiceModel" />
+      <ReferencedAssembly AssemblyName="System.Web" />
+      <ReferencedAssembly AssemblyName="System.Web.Abstractions" />
+      <ReferencedAssembly AssemblyName="System.Web.ApplicationServices" />
+      <ReferencedAssembly AssemblyName="System.Web.DynamicData" />
+      <ReferencedAssembly AssemblyName="System.Web.Entity" />
+      <ReferencedAssembly AssemblyName="System.Web.Extensions" />
+      <ReferencedAssembly AssemblyName="System.Web.Helpers" />
+      <ReferencedAssembly AssemblyName="System.Web.Mvc" />
+      <ReferencedAssembly AssemblyName="System.Web.Razor" />
+      <ReferencedAssembly AssemblyName="System.Web.Routing" />
+      <ReferencedAssembly AssemblyName="System.Web.Services" />
+      <ReferencedAssembly AssemblyName="System.Web.WebPages" />
+      <ReferencedAssembly AssemblyName="System.Web.WebPages.Deployment" />
+      <ReferencedAssembly AssemblyName="System.Web.WebPages.Razor" />
+      <ReferencedAssembly AssemblyName="System.Xml" />
+      <ReferencedAssembly AssemblyName="WebActivator" />
+    </ReferencedAssemblies>
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:6615/RequestService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="RequestService.xsd" MetadataType="Schema" ID="dc32d412-e86a-4682-ac9a-51f8d222dd5e" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?xsd=xsd4" />
+    <MetadataFile FileName="RequestService1.xsd" MetadataType="Schema" ID="73bd5582-b532-4beb-8bdf-ead01daae495" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?xsd=xsd5" />
+    <MetadataFile FileName="RequestService61.xsd" MetadataType="Schema" ID="39c6b768-8e19-469d-b8c8-ae17f46cd551" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?xsd=xsd6" />
+    <MetadataFile FileName="RequestService2.xsd" MetadataType="Schema" ID="b011f402-3323-4da0-a7fe-56ab63d8b2c6" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?xsd=xsd0" />
+    <MetadataFile FileName="RequestService.disco" MetadataType="Disco" ID="4846da9a-51a3-44d0-a773-13669cd28ae5" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?disco" />
+    <MetadataFile FileName="RequestService3.xsd" MetadataType="Schema" ID="ff827013-34f1-47a3-bc95-eea549aa8b9d" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?xsd=xsd2" />
+    <MetadataFile FileName="RequestService4.xsd" MetadataType="Schema" ID="2c1f8279-8290-4e47-a66c-9f8a1efa18d2" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?xsd=xsd3" />
+    <MetadataFile FileName="RequestService5.xsd" MetadataType="Schema" ID="114f993d-7eeb-4932-b052-94e368d28979" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?xsd=xsd1" />
+    <MetadataFile FileName="RequestService.wsdl" MetadataType="Wsdl" ID="ca327e6e-fa68-4ebc-a340-70466b0cb492" SourceId="1" SourceUrl="http://localhost:6615/RequestService.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

@@ -1,0 +1,146 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.AdCampaign
+@{
+    <script src="@Url.Content("~/Scripts/jquery.numeric.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Request/RequestQuery.js")" type="text/javascript"></script>
+
+}
+
+
+
+@using (Ajax.BeginForm("Create", "Campaign", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccess"
+}, new { @id = "updateModeloForm" }))
+{
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+
+        <legend>Campaña</legend>
+
+        <table class="tableDialog">
+            <tr>
+                <td>Texto campaña
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Text)
+                </td>
+            </tr>
+            <tr>
+                <td>Imágen
+                </td>
+                <td>
+                    @*@Html.TextBoxFor(e => e.Image)*@
+                    <input type="file" id="IDbtnUpload" name="NAMEbtnUpload" onchange="getFileData(this);" />
+                </td>
+            </tr>
+            <tr>
+                <td>Fecha inicio campaña
+                </td>
+                <td>
+                    @Html.EditorFor(e => e.BeginDate, new { id = "txtBeginDate", @class = "jQueryCalendarInput" })
+                </td>
+            </tr>
+            <tr>
+                <td>Fecha fin campaña
+                </td>
+                <td>
+                    @Html.EditorFor(e => e.EndDate, new { id = "txtEndDate", @class = "jQueryCalendarInput" })
+                </td>
+            </tr>
+            <tr>
+                <td>Url Destino
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Url)
+                </td>
+            </tr>
+            <tr>
+                <td>Aplica a los nodos hijos
+                </td>
+                <td>
+                    @Html.CheckBoxFor(e => e.ApplyToChilds)
+                </td>
+            </tr>
+            @if (ViewBag.IsSingleTenant == 1)
+            {
+                <tr>
+                    <td>
+                        <label for="parent">Empresa</label></td>
+                    <td>
+                        @Html.DropDownListFor(e => e.AplicationNameId,
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Seleccione el nombre de la aplicación---",
+            new { style = "width:200px" })
+                    </td>
+                </tr>
+            }
+        </table>
+
+    </fieldset>
+    @Html.Hidden("txtPanelText")
+    @Html.Hidden("Jerarquia")
+
+}
+@*@Html.TextBox("Jerarquia", null, new { id = "txtJerarquia", style = "width:40px", disabled = "disabled" })*@
+<button id="NewCategory">
+    Ver jerarquía</button>
+<div id="NewCategoryForm" title="Seleccionar jerarquía">
+
+    <form>
+        @{Html.RenderPartial("Hierarchies", Model.HierarchyByCampaign);}
+    </form>
+</div>
+
+<script type="text/javascript">
+
+    function getFileData(myFile) {
+        var file = myFile.files[0];
+        var filename = file.name;
+        var filenameNormalize
+
+        var normalize = (function () {
+            var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç ",
+                to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc_",
+                mapping = {};
+
+            for (var i = 0, j = from.length; i < j; i++)
+                mapping[from.charAt(i)] = to.charAt(i);
+
+            return function (str) {
+                var ret = [];
+                for (var i = 0, j = str.length; i < j; i++) {
+                    var c = str.charAt(i);
+                    if (mapping.hasOwnProperty(str.charAt(i)))
+                        ret.push(mapping[c]);
+                    else
+                        ret.push(c);
+                }
+
+                return ret.join('');
+            }
+
+        })();
+
+        filenameNormalize = normalize(filename);
+
+        if (filenameNormalize != filename) {
+            alert("Nombre de archivo incorrecto");
+            $('input[type=file]').wrap('<form></form>').parent().trigger('reset').children().unwrap('<form></form>');
+        }
+    }
+
+
+    function NodeName(parentid) {
+
+        $.getJSON("/Campaign/GetchildrenCountAndLevelName", { id: parentid }, function (data) {
+            $('#Jerarquia').val(data);
+        });
+        $("#txtNode").val(parentid);
+        $("#NewCategoryForm").dialog("close");
+        $("#NewCategoryFormEdit").dialog("close");
+    }
+
+</script>

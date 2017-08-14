@@ -1,0 +1,163 @@
+﻿@model  STPC.DynamicForms.Core.MyViewModel
+@{
+    ViewBag.Title = "Listado de contratos";
+}
+
+@Html.Hidden("nameSp", (string)ViewBag.nameSp, new { id = "txtNameSp" })
+@Html.Hidden("fetch", (string)ViewBag.fetchCount, new { id = "txtfetch" })
+
+@*<div id="paginatorOptions">
+    <table id="tblOptionsPagination">
+        <tr style="width: 100%">
+            <td>
+                <input type="button" value="<<" id="btnFirst" />
+            </td>
+            <td>
+                <input type="button" value="<" id="btnPrevius" />
+            </td>
+            <td>
+                @Html.Label("Pagina")
+            </td>
+            <td>
+                <input type="text" value="1" id="txtPageNumber" style="width: 50px;" disabled="disabled" />
+            </td>
+            <td>
+                @Html.Label("De")
+            </td>
+            <td>
+                <input type="text" value="@ViewBag.PageCount" id="txtTotalPage" style="width: 50px;" disabled="disabled" />
+            </td>
+            <td>
+                <input type="button" value=">" id="btnNext" />
+            </td>
+            <td>
+                <input type="button" value=">>" id="btnLast" />
+            </td>
+            <td>Buscar
+            </td>
+            <td>
+                <input type="text" value="" id="txtSearchUser" />
+            </td>
+            <td>
+                <input type="button" value="..." id="btnBuscar" />
+            </td>
+        </tr>
+    </table>
+</div>*@
+
+<div id="dvForm">
+    <fieldset class="basico1">
+        <legend style="font-size: small">SOLICITUDES DEL TRAMITE</legend>
+        <div style="@(Model.Rows.Count > 0 ? "display:block" : "display:none")">
+            <table id="TheTable" class="resultados" style="width: 95%">
+                <thead>
+                    <tr>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.Columns)
+                            {
+                            <th>
+                                @item.Name
+                            </th>
+                            }
+                        }
+                        <th>Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (STPC.DynamicForms.Core.RowViewModel row in Model.Rows)
+                        {
+                        <tr>
+                            @foreach (STPC.DynamicForms.Core.CellValueViewModel cel in row.Values)
+                            {
+                                <td>
+                                    @if (cel.Index == 0)
+                                    {
+                                        <input type="hidden" id="inID" value="@cel.Value" class="edit"/>
+                                    }
+                                    @cel.Value
+                                </td>
+                            }
+                            <td>
+                                <input type="radio" id="inSelect" class="Select" onclick="javascript: singleRbtnSelect(this);" />
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div style="@(Model.Rows.Count == 0 ? "display:block" : "display:none")">
+            <label style="color: red;">No se encontraron coincidencias con los criterios de busqueda utilizados! Por favor intente nuevamente.</label>
+        </div>
+    </fieldset>
+</div>
+<div id="dvDetalleSol">
+</div>
+
+<script type="text/javascript">
+    function singleRbtnSelect(chb) {
+        $(chb).closest("table").find("input:radio").prop("checked", false);
+        $(chb).prop("checked", true);
+    }
+
+    $('.Select').on("click", function () {
+
+        var tr = $(this).parents('tr:first');
+        var id = tr.find("#inID").val();
+        blockScreen("Un momento por favor....");
+        $.ajax({
+            url: '/Search/DetailContractPost?srNumRequest=' + id,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            dataType: "html",
+            success: function (result) {
+                $('#dvDetalleSol').html(result);
+                $.unblockUI();
+            },
+            error: function (result) {
+                isSuccess = result;
+                $.unblockUI();
+            }
+        });
+
+        //blockScreen("Un momento por favor....");
+        //alert("Numero de solicitud " + id );
+        //$.ajax({
+
+        //    url: '/GridDetail/BEUpdateSelect/',
+
+        //    data: JSON.stringify(Registro),
+
+        //    type: 'POST',
+
+        //    contentType: 'application/json; charset=utf-8',
+
+        //    success: function (result) {
+        //        isSuccess = result;
+
+        //    },
+        //    error: function (result) {
+        //        isSuccess = result;
+        //    }
+
+        //}).done(function () {
+        //    if (isSuccess != "-1") {                                     //Successfully saved
+        //        //alert(isSuccess);
+        //        $('#STPC_DFi_090d4c46-6b9e-41f8-89f8-9a2995056a00').val(isSuccess);
+        //        $.unblockUI();
+        //    }
+        //    else {                                                      //Data Error
+        //        alert("Error. Por favor, revise los datos" + "\n" + isSuccess);
+        //        $.unblockUI();
+        //    }
+        //});
+
+    });
+
+
+</script>
+
+

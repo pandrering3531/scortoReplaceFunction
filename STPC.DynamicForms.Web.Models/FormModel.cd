@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="STPC.DynamicForms.Web.Models.Form">
+    <Position X="11.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAgABACAAwAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Form.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Pages" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.PageField">
+    <Position X="2.75" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>QACABBACSQAIQEFAAJICQIigIAAQAAQJhggAAAlAFAA=</HashCode>
+      <FileName>PageField.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FormFieldType" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ViewR" />
+      <Property Name="EditR" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.PageFieldType">
+    <Position X="0.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABABAAAAAAAEQABACAAAAAAwAAAAAAAAAAgAAhAQ=</HashCode>
+      <FileName>PageFieldType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.FormResponse">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAABACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FormResponse.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FormSpec" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.PageResponseItem">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAABACAAAAAAAAAAABAABAAAAAAAA=</HashCode>
+      <FileName>PageResponseItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PageResponse" />
+      <Property Name="PageItem" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.FormPage">
+    <Position X="8.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAARAIAAAAgAAAAABACAEQAAAAAAAABAAAAAAEAAAQ=</HashCode>
+      <FileName>FormPage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Form" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Panels" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.FormPageResponse">
+    <Position X="5.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAABACAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>FormPageResponse.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="FormPage" />
+      <Property Name="FormResponse" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.PageTemplate" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAABACAAQAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>PageTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.PanelTemplate" Collapsed="true">
+    <Position X="15.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAABACAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>PanelTemplate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.Panel">
+    <Position X="5.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAABAAACAA4ABAAABACAASAAAAAAAAAAQAAAAgAAAA=</HashCode>
+      <FileName>Panel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Page" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="PanelFields" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.Role">
+    <Position X="0.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACBAgAABQBAAAgAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Role.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.TBL_CapturaInformacionBasica_GridSimuladorCuotasBE">
+    <Position X="14.25" Y="1.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAEgAAAAAASQACAAAAAAAAAAAAABAAQAAAAAAA=</HashCode>
+      <FileName>TBL_CapturaInformacionBasica_GridSimuladorCuotasBE.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.TBL_CapturaInformacionBasica_GridSimuladorCuotasFNC">
+    <Position X="19.25" Y="1.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AACAAAwEgDAAAAACQCAAAAAAACAAAAAAAEAIACAAAAA=</HashCode>
+      <FileName>TBL_CapturaInformacionBasica_GridSimuladorCuotasFNC.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="STPC.DynamicForms.Web.Models.TBL_Desembolso_FINCOMERCIOGrid">
+    <Position X="24" Y="1.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAEgAAAAEAgAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TBL_Desembolso_FINCOMERCIOGrid.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

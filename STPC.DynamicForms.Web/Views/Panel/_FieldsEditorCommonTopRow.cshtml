@@ -1,0 +1,139 @@
+﻿@model STPC.DynamicForms.Web.Models.FormFieldViewModel
+@if (Model != null)
+{
+  
+        <tr>
+            <th class="field-options">Campo</th>
+            <th class="field-options">Tipo de Campo</th>
+            <th class="field-options">Acciones</th>
+        </tr>
+        <tr>
+            <td style="width: 40%;">
+                @Html.HiddenFor(formfield => formfield.Uid)
+                @Html.Hidden("FieldUid", @Model.Uid)
+                @Html.Hidden("PanelUid", @Model.PanelUid)
+                @*@if (Model.ControlTypeName.Equals("Texto") || Model.ControlTypeName.Equals("Hyperlink")
+        || Model.ControlTypeName.Equals("Area de texto") || Model.ControlTypeName.Equals("Literal")
+        || Model.ControlTypeName.Equals("Correo Electrónico") || Model.ControlTypeName.Equals("Solo Texto"))
+            {
+                @Html.Hidden("MaxSize", @Model.MaxSize)
+            }*@
+                @Html.Hidden("MaxSizeBD", Model.MaxSizeBD)
+                @Html.TextBoxFor(formfield => formfield.FormFieldName, new { required = "required" })
+                @Html.ValidationMessageFor(formfield => formfield.FormFieldName)
+            </td>
+            <td style="width: 30%;">
+                @(Html.DropDownListFor(formfield => formfield.SelectedFormFieldType,
+                                                        new SelectList(Model.FormFieldTypes, "Value", "Text",
+                                                                        Model.SelectedFormFieldType),
+                                                        new { disabled = "disabled" }))
+                @Html.HiddenFor(formfield => formfield.SelectedFormFieldType)
+                @Html.ValidationMessageFor(formfield => formfield.SelectedFormFieldType)
+
+
+            </td>
+            <td style="width: 30%;">
+                @*<input type="button" class="deleteItem, decoratedButton" value="Eliminar" />*@
+                @if (Model.ShowDelete)
+                { @Html.ActionLink("Eliminar campo", "DeleteFormField", new { formfieldUid = (Guid)@Model.Uid, panelUid = @Model.PanelUid }, new { @id = "deleteItem", @class = "decoratedButton" }) }
+
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <br />
+            </td>
+        </tr>
+        <tr>
+            <th class="field-options">Validacion</th>
+            <th class="field-options">Puede Ver</th>
+            <th class="field-options">Puede Editar</th>
+        </tr>
+
+        <td>
+            @Html.CheckBoxFor(formfield => formfield.IsRequired, new { @style = "display: inline" }) Requerido?
+  <br />
+            <br />
+            Utilizar motor de decisión
+        @Html.DropDownListFor(formfield => formfield.ValidationStrategyId, new SelectList((IEnumerable<SelectListItem>)ViewBag.StrategiesSelect, "Value", "Text", Model.ValidationStrategyId))
+            <br />
+            <br />
+            @if (Model.ControlTypeName.Equals("Número") || Model.ControlTypeName.Equals("Moneda"))
+            {
+                @Html.Label("Valor máximo: ");
+                <br />
+                @Html.TextBoxFor(formfield => formfield.MaxSize, new { @class = "class_max_size", maxlength = "19", onKeyPress = "return ValidNum();" })  
+                @Html.ValidationMessageFor(formfield => formfield.MaxSize)
+                <br />
+                @Html.Label("Valor mínimo: ");
+                <br />
+                @Html.TextBoxFor(formfield => formfield.MinSize, new { @class = "class_max_size", maxlength = "19", onKeyPress = "return ValidNum();" })  
+                @Html.ValidationMessageFor(formfield => formfield.MinSize)
+            }
+            else if (Model.ControlTypeName.Equals("Texto") || Model.ControlTypeName.Equals("Hyperlink")
+            || Model.ControlTypeName.Equals("Area de texto") || Model.ControlTypeName.Equals("Literal")
+            || Model.ControlTypeName.Equals("Correo Electrónico") || Model.ControlTypeName.Equals("Solo Texto"))
+            {
+                @Html.Label("Tamaño máximo: ");
+                <br />
+                @Html.TextBoxFor(formfield => formfield.MaxSize, new { @class = "class_max_size", maxlength = "19", onKeyPress = "return ValidNum();" })  
+                @Html.ValidationMessageFor(formfield => formfield.MaxSize)
+            }
+        </td>
+        <td>
+            @{
+            ViewBag.Prefix = "View";
+            Html.RenderPartial("_Roles", Model.SelectedViewRoles, ViewData);
+            }
+        </td>
+        <td>
+            @{
+            ViewBag.Prefix = "Edit";
+            Html.RenderPartial("_Roles", Model.SelectedEditRoles, ViewData);
+                <br />
+                <br />      
+            }
+        </td>
+        <tr>
+            <td class="field-options">
+                @Html.Label("Nombre estilo")
+            </td>
+            <td class="field-options">Mensaje ayuda
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.TextBoxFor(e => e.Style, new { text = @ViewBag.DefaultFieldStyle })
+                <br />
+                <br />
+                <br />
+            </td>
+            <td>
+                @Html.TextBoxFor(formfield => formfield.ToolTip)
+            </td>
+        </tr>
+        <tr>
+            <td class="field-options">
+                @Html.Label("Consultable")
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.RadioButtonFor(e => e.Queryable, true)Yes @Html.RadioButtonFor(e => e.Queryable, false)No
+             <br />
+                <br />
+                <br />
+            </td>
+        </tr>
+ 
+    <br />
+
+}
+@section BottomAssets 
+  {
+    <script src="@Url.Content("~/Scripts/tinymce/tiny_mce_jquery.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Panel/Delete.js")" type="text/javascript"></script>
+}

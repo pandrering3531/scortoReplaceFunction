@@ -1,0 +1,58 @@
+﻿@using STPC.DynamicForms.Core.Fields
+
+@using (Ajax.BeginForm("LoadFieldsByForm", "Request", FormMethod.Post, null))
+{
+    @Html.Raw(Model.RenderHtmlQuery(true)) //    @Html.Raw(Model.RenderHtml(true))
+    
+}
+@section BottomAssets {
+    <script src="@Url.Content("~/Scripts/Request/RequestQuery.js")" type="text/javascript"></script>}
+
+
+<script type="text/javascript">
+
+   // $(".CustomInteger").numeric(false, function () { this.value = ""; this.focus(); });  
+    $(".jQueryCalendarInput").datepicker({
+        dateFormat: "mm/dd/yy", changeMonth: true, yearRange: '-100:+0',
+        changeYear: true,
+        format: "mm/dd/yy",
+        buttonImage: "Content/Images/aprobado_th.gif",
+        buttonImageOnly: true
+    });
+    jQuery(document).ready(function () {
+       
+       //setWarningTimeOut()
+
+    });
+    $('.jQueryCalendarInput').keypress(function (event) { event.preventDefault(); });
+
+    jQuery('input').focusout(function () {
+        $(this).val($(this).val().trim())
+    });
+
+    //$('input').bind('copy paste', function (e) {
+    //    e.preventDefault();
+    //});
+
+    jQuery('.onlyText').keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z-0-9ñÑ]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str)) {
+            return true;
+        }
+
+        e.preventDefault();
+        return false;
+    });
+
+    //jQuery('.onlyText').keypress(function (e) {
+    //    var regex = new RegExp("^[0-9]+$");
+    //    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+    //    if (!regex.test(str)) {
+    //        return true;
+    //    }
+
+    //    e.preventDefault();
+    //    return false;
+    //});
+</script>

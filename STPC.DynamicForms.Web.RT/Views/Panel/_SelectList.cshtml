@@ -1,0 +1,75 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.FormFieldViewModel
+@using STPC.DynamicForms.Web.RT.Helpers
+
+<div class="FormField">
+    @using (Html.BeginCollectionItem("formfields"))
+    {
+        <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 8px 8px 8px 8px;">
+            <legend></legend>
+            <table>
+                @{Html.RenderPartial("_FieldsEditorCommonTopRow", Model);}
+                <tr>
+                    <td class="field-options">Mensaje</td>
+                    <td colspan="3">@Html.TextAreaFor(formfield => formfield.FormFieldPrompt)  @Html.ValidationMessageFor(formfield => formfield.FormFieldPrompt)</td>
+                </tr>
+                <tr>
+                    <td class="field-options">Mostrar opcion Vacia</td>
+                    <td colspan="3">@Html.RadioButtonFor(formfield => formfield.IsEmptyOption, true)Yes @Html.RadioButtonFor(formfield => formfield.IsEmptyOption, false)No</td>
+                </tr>
+                <tr>
+                    <td class="field-options">Texto de opcion Vacia</td>
+                    <td colspan="3">@Html.TextBoxFor(formfield => formfield.EmptyOption)</td>
+                </tr>
+                <tr>
+                    <td class="field-options">Opciones (Una por fila)</td>
+                    <td colspan="3">
+                        <input id="listaPredefinidas @Model.Uid" type="radio" name="OptionsMode @Model.Uid" value="list" 
+              @if (Model.OptionsMode == "list")
+              {
+                <text>checked="checked"</text>
+              } 
+              style="display:inline-block"/>Opciones a continuación una por linea<br />
+                        @Html.TextAreaFor(formfield => formfield.Options)
+                        @Html.ValidationMessageFor(formfield => formfield.Options)
+                        <br />
+                        <input id="listaCategorias @Model.Uid" type="radio" name="OptionsMode @Model.Uid" value="local" 
+              @if (Model.OptionsMode == "local")
+              {
+                <text>checked="checked"</text>
+              }
+               style="display:inline-block"/>Opciones predefinidas en categorias
+                        @Html.DropDownListFor(formfield => formfield.OptionsCategoryName,
+                        new SelectList((IEnumerable<SelectListItem>)ViewBag.CategoriesSelect, "Value", "Text", Model.OptionsCategoryName))
+                        <br />
+                        <input id="webServiceList @Model.Uid" type="radio" name="OptionsMode @Model.Uid" value="ws" 
+              @if (Model.OptionsMode == "ws")
+              {
+                <text>checked="checked"</text>
+              }
+               style="display:inline-block"/>Obtener opciones desde un webservice
+                    @Html.Label("URL")
+                        @Html.TextBoxFor(formfield => formfield.OptionsWebServiceUrl)
+                        <br />
+                        <input id="decisionEngineList @Model.Uid" type="radio" name="OptionsMode @Model.Uid" value="strat" 
+              @if (Model.OptionsMode == "strat")
+              {
+                <text>checked="checked"</text>
+              }
+               style="display:inline-block"/>Obtener opciones desde Motor Decisión
+                        @Html.DropDownList("Strategies", new SelectList((IEnumerable<SelectListItem>)ViewBag.StrategiesSelect, "Value", "Text", ViewData["OptionStrategyValue" + Model.Uid.ToString()]))
+                    </td>
+                </tr>
+                <tr>
+                    <td class="field-options">Permitir Multiple seleccion?</td>
+                    <td colspan="3">@Html.RadioButtonFor(formfield => formfield.IsMultipleSelect, true)Yes @Html.RadioButtonFor(formfield => formfield.IsMultipleSelect, false)No</td>
+                </tr>
+                <tr>
+                    <td class="field-options">Tamano de la lista (filas)</td>
+                    <td colspan="3">@Html.TextBoxFor(formfield => formfield.ListSize)  @Html.ValidationMessageFor(formfield => formfield.ListSize)</td>
+                </tr>
+            </table>
+        </fieldset>
+        <br />
+    }
+</div>
+

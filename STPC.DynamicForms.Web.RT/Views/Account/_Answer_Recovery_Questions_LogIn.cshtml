@@ -1,0 +1,56 @@
+﻿@model List<STPC.DynamicForms.Web.Common.Services.Users.ResetQuestion>
+@{
+    ViewBag.Title = "LiSim Abc";
+}
+
+
+
+@using (Ajax.BeginForm("Answer_Question", "Account", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccessQuestionsLogIn"
+}, new { @id = "AnswerSecurityFormLogIn" }))
+{
+    <table>
+        @Html.Hidden("HiddenuserName", (string)ViewBag.UserName)
+        @foreach (var item in Model)
+        {
+                
+            @Html.HiddenFor(e => item.Id)
+            @Html.HiddenFor(e => item.Question)
+            <tr>
+                <td>
+                    @item.Question
+                </td>
+                <td>
+                    @Html.Password("Respuesta", null, new { autocomplete = "off", @class = "txtRespuesta" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.unblockUI();
+    });
+    $(document).ajaxStart(function () {
+        blockScreen("Un momento por favor...");
+    });
+
+    function blockScreen(message) {
+        $.blockUI({
+            message: message,//'Validando usuario y contraseña',
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }
+        });
+    }
+</script>

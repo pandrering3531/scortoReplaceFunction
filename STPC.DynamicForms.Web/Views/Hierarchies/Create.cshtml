@@ -1,0 +1,93 @@
+﻿@model STPC.DynamicForms.Web.Services.Entities.Hierarchy
+@{
+    
+}
+
+@using (Ajax.BeginForm("Create", "Hierarchies", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "CustomerFormAttr",
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccessCreate"
+}, new { @id = "updateJerarquiaFormNew" }))
+{
+    
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        <legend>Información del nodo</legend>
+        @Html.HiddenFor(e => e.Parent.Id)
+        @Html.HiddenFor(e => e.Level)
+
+        <table class="tableDialog">
+            <tr>
+                <td>
+                    @Html.Label("Nombre")
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Name, new { id = "txtHierarchyName" })
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Nivel:")
+                </td>
+                <td>
+
+                    @Html.TextBoxFor(e => e.Level, new { disabled = "disabled" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("TipoNodo:")
+
+                </td>
+                <td>
+                    @Html.DropDownListFor(e => e.NodeType, new SelectList(@ViewBag.HierarchyNodeType, "Id", "NodeType"), "---Seleccione el tipo de nodo---", new { style = "width:200px", id = "ddlNewTipoNodo" })
+                </td>
+            </tr>
+
+        </table>
+
+    </fieldset>
+    
+    
+    <div id="CustomerFormAttr">
+        @if ((STPC.DynamicForms.Core.MyViewModel)ViewBag.modelQuery != null)
+        {
+            { Html.RenderPartial("_Atributes", (STPC.DynamicForms.Core.MyViewModel)ViewBag.modelQuery); }
+        }
+    </div>
+    <div id="CustomerFormAttr2">
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    $("#ddlNewTipoNodo").change(function () {
+
+        $.ajax({
+            type: "POST",
+            url: "/Hierarchies/GetSchemaTable/",
+            data: {
+                'NodeType': $("#ddlNewTipoNodo").val(),
+                'NodeId': -1
+            },
+            dataType: "html",
+            success: function (evt) {
+                //
+                $('#CustomerFormAttr2').html(evt);
+            },
+            error: function (req, status, error) {
+                alert("Error!Occured" + error);
+
+            }
+        });
+    });
+
+
+
+
+</script>

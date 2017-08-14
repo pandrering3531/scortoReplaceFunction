@@ -1,0 +1,1 @@
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="STPC.DynamicForms.Services.Global" Language="C#" %>

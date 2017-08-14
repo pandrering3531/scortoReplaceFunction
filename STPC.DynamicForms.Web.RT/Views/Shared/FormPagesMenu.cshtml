@@ -1,0 +1,14 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.Form
+<div class="item">@ViewData["RequestId"] - @Model.Name</div>
+<div class="content-sublist">
+    <ul>
+        @foreach (var formPages in Model.Pages)
+        {
+            <li>
+                <a href="@Url.Action("FormPageRespond", "Form", new { FormId = Model.Uid, PageId = formPages.Uid, requestId=ViewData["RequestId"] })">@formPages.Name</a>
+            </li>
+        
+        }
+    </ul>
+</div>
+

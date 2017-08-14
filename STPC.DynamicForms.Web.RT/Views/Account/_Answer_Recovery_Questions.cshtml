@@ -1,0 +1,37 @@
+﻿@model List<STPC.DynamicForms.Web.Common.Services.Users.ResetQuestion>
+@{
+    ViewBag.Title = "LiSim Abc";
+}
+
+@using (Ajax.BeginForm("Answer_Question", "Account", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccessQuestions"
+}, new { @id = "AnswerSecurityForm" }))
+{
+    <table>
+        @Html.Hidden("HiddenuserName", (string)ViewBag.UserName)
+        @foreach (var item in Model)
+        {
+                
+            @Html.HiddenFor(e => item.Id)
+            @Html.HiddenFor(e => item.Question)
+            <tr>
+                <td>
+                    @item.Question
+                </td>
+                <td>
+                    @Html.Password("Respuesta",null, new { autocomplete = "off" })
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+<script type="text/javascript">
+
+    
+
+
+</script>

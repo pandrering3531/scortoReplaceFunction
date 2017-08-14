@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="LoginUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="userName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoginUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoginUserResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStrategyList">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetStrategyListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStrategyListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Ticket" type="tns:Ticket" />
+      <s:complexType name="Ticket">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TicketId" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="GetPublicNameList">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetPublicNameListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPublicNameListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateApplicationByStrategyId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="strategyId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="parametersData" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateApplicationByStrategyIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateApplicationByStrategyIdResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateApplicationByPublicNameId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="publicNameId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="parametersData" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateApplicationByPublicNameIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateApplicationByPublicNameIdResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetApplicationStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="applicationID" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetApplicationStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetApplicationStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetApplicationResult">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="applicationID" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetApplicationResultResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetApplicationResultResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStrategySchema">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="strategyId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStrategySchemaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStrategySchemaResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStrategyExampleXML">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="strategyId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetStrategyExampleXMLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetStrategyExampleXMLResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="LoginUserSoapIn">
+    <wsdl:part name="parameters" element="tns:LoginUser" />
+  </wsdl:message>
+  <wsdl:message name="LoginUserSoapOut">
+    <wsdl:part name="parameters" element="tns:LoginUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategyListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStrategyList" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategyListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStrategyListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategyListTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:message name="GetPublicNameListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPublicNameList" />
+  </wsdl:message>
+  <wsdl:message name="GetPublicNameListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPublicNameListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPublicNameListTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:message name="CreateApplicationByStrategyIdSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateApplicationByStrategyId" />
+  </wsdl:message>
+  <wsdl:message name="CreateApplicationByStrategyIdSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateApplicationByStrategyIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateApplicationByStrategyIdTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:message name="CreateApplicationByPublicNameIdSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateApplicationByPublicNameId" />
+  </wsdl:message>
+  <wsdl:message name="CreateApplicationByPublicNameIdSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateApplicationByPublicNameIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateApplicationByPublicNameIdTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:message name="GetApplicationStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetApplicationStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetApplicationStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetApplicationStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetApplicationStatusTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:message name="GetApplicationResultSoapIn">
+    <wsdl:part name="parameters" element="tns:GetApplicationResult" />
+  </wsdl:message>
+  <wsdl:message name="GetApplicationResultSoapOut">
+    <wsdl:part name="parameters" element="tns:GetApplicationResultResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetApplicationResultTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategySchemaSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStrategySchema" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategySchemaSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStrategySchemaResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategySchemaTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategyExampleXMLSoapIn">
+    <wsdl:part name="parameters" element="tns:GetStrategyExampleXML" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategyExampleXMLSoapOut">
+    <wsdl:part name="parameters" element="tns:GetStrategyExampleXMLResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetStrategyExampleXMLTicket">
+    <wsdl:part name="Ticket" element="tns:Ticket" />
+  </wsdl:message>
+  <wsdl:portType name="ScoringServiceSoap">
+    <wsdl:operation name="LoginUser">
+      <wsdl:input message="tns:LoginUserSoapIn" />
+      <wsdl:output message="tns:LoginUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategyList">
+      <wsdl:input message="tns:GetStrategyListSoapIn" />
+      <wsdl:output message="tns:GetStrategyListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPublicNameList">
+      <wsdl:input message="tns:GetPublicNameListSoapIn" />
+      <wsdl:output message="tns:GetPublicNameListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateApplicationByStrategyId">
+      <wsdl:input message="tns:CreateApplicationByStrategyIdSoapIn" />
+      <wsdl:output message="tns:CreateApplicationByStrategyIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateApplicationByPublicNameId">
+      <wsdl:input message="tns:CreateApplicationByPublicNameIdSoapIn" />
+      <wsdl:output message="tns:CreateApplicationByPublicNameIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetApplicationStatus">
+      <wsdl:input message="tns:GetApplicationStatusSoapIn" />
+      <wsdl:output message="tns:GetApplicationStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetApplicationResult">
+      <wsdl:input message="tns:GetApplicationResultSoapIn" />
+      <wsdl:output message="tns:GetApplicationResultSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategySchema">
+      <wsdl:input message="tns:GetStrategySchemaSoapIn" />
+      <wsdl:output message="tns:GetStrategySchemaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategyExampleXML">
+      <wsdl:input message="tns:GetStrategyExampleXMLSoapIn" />
+      <wsdl:output message="tns:GetStrategyExampleXMLSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ScoringServiceSoap" type="tns:ScoringServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="LoginUser">
+      <soap:operation soapAction="http://tempuri.org/LoginUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategyList">
+      <soap:operation soapAction="http://tempuri.org/GetStrategyList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetStrategyListTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPublicNameList">
+      <soap:operation soapAction="http://tempuri.org/GetPublicNameList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetPublicNameListTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateApplicationByStrategyId">
+      <soap:operation soapAction="http://tempuri.org/CreateApplicationByStrategyId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CreateApplicationByStrategyIdTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateApplicationByPublicNameId">
+      <soap:operation soapAction="http://tempuri.org/CreateApplicationByPublicNameId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CreateApplicationByPublicNameIdTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetApplicationStatus">
+      <soap:operation soapAction="http://tempuri.org/GetApplicationStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetApplicationStatusTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetApplicationResult">
+      <soap:operation soapAction="http://tempuri.org/GetApplicationResult" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetApplicationResultTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategySchema">
+      <soap:operation soapAction="http://tempuri.org/GetStrategySchema" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetStrategySchemaTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategyExampleXML">
+      <soap:operation soapAction="http://tempuri.org/GetStrategyExampleXML" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetStrategyExampleXMLTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ScoringServiceSoap12" type="tns:ScoringServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="LoginUser">
+      <soap12:operation soapAction="http://tempuri.org/LoginUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategyList">
+      <soap12:operation soapAction="http://tempuri.org/GetStrategyList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetStrategyListTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPublicNameList">
+      <soap12:operation soapAction="http://tempuri.org/GetPublicNameList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetPublicNameListTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateApplicationByStrategyId">
+      <soap12:operation soapAction="http://tempuri.org/CreateApplicationByStrategyId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CreateApplicationByStrategyIdTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateApplicationByPublicNameId">
+      <soap12:operation soapAction="http://tempuri.org/CreateApplicationByPublicNameId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CreateApplicationByPublicNameIdTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetApplicationStatus">
+      <soap12:operation soapAction="http://tempuri.org/GetApplicationStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetApplicationStatusTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetApplicationResult">
+      <soap12:operation soapAction="http://tempuri.org/GetApplicationResult" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetApplicationResultTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategySchema">
+      <soap12:operation soapAction="http://tempuri.org/GetStrategySchema" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetStrategySchemaTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStrategyExampleXML">
+      <soap12:operation soapAction="http://tempuri.org/GetStrategyExampleXML" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetStrategyExampleXMLTicket" part="Ticket" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ScoringService">
+    <wsdl:port name="ScoringServiceSoap" binding="tns:ScoringServiceSoap">
+      <soap:address location="http://localhost/303/ScortoScoringServices/ScoringService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ScoringServiceSoap12" binding="tns:ScoringServiceSoap12">
+      <soap12:address location="http://localhost/303/ScortoScoringServices/ScoringService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

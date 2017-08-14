@@ -1,0 +1,35 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.Option>
+@{
+    
+}
+<section>
+    Registros encontrados: @Model.Count
+</section>
+<table id="table_optios_redis" class="resultados " summary="Sus páginas"  style="width:95% ">
+    <thead>
+        <tr>
+            <th>Clave</th>
+            <th>Valor</th>
+            <th>Categoria</th>
+        </tr>
+    </thead>
+    <tbody" >
+        @foreach (var item in Model)
+        {
+            
+            <tr  >
+                <td>
+                    @item.Key
+                </td>
+                <td>
+                    @item.Value
+                </td>
+                <td>
+                    @item.Category.Name
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+

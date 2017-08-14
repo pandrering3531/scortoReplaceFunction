@@ -1,0 +1,28 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.FormFieldViewModel
+@using STPC.DynamicForms.Web.RT.Helpers
+
+<div class="FormField">
+  @using (Html.BeginCollectionItem("formfields"))
+  {
+    <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 8px 8px 8px 8px;">
+      <legend></legend>
+      <table>
+        @{Html.RenderPartial("_FieldsEditorCommonTopRow", Model);}
+        <tr>
+          <td class="field-options">Mensaje</td>
+          <td colspan="3">@Html.TextAreaFor(formfield => formfield.FormFieldPrompt)  @Html.ValidationMessageFor(formfield => formfield.FormFieldPrompt)</td>
+        </tr>
+        <tr>
+          <td class="field-options">Filas</td>
+          <td colspan="3">@Html.TextBoxFor(formfield => formfield.Rows)  @Html.ValidationMessageFor(formfield => formfield.Rows)</td>
+        </tr>
+        <tr>
+          <td class="field-options">Columnas</td>
+          <td colspan="3">@Html.TextBoxFor(formfield => formfield.Cols)  @Html.ValidationMessageFor(formfield => formfield.Cols)</td>
+        </tr>
+      </table>
+    </fieldset>
+    <br />
+  }
+</div>
+

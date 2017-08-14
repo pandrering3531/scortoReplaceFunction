@@ -1,0 +1,291 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.LoginViewModel
+@{
+    Layout = "~/Views/Shared/_LiSimAuthLayout.cshtml";
+    ViewBag.Title = "Menu";
+    ViewBag.userModel = @Model;
+    
+}
+
+<h2>Elija la opción deseada</h2>
+
+ <div id="FormPageAnswers">
+      
+    </div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+
+        if ("@ViewData["IsLoadFormDefault"]" == "S") {
+            $('ul li').click(function (e) {
+                var $target = $(e.target);
+                if (!$target.is("li")) {
+
+
+                    return;
+                }
+
+                var launch = $('a.launch', this);
+                if (launch.size() > 0) {
+                    eval(launch[0].onclick());
+                }
+            });
+            $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+                var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+                $('input[name="__RequestVerificationToken"]').val(tokenValue);
+                blockScreen("Un momento por favor....");
+                $.ajax({
+                    type: "POST",
+                    url: "/FormPage/Respond/",
+                    data: {
+                        '__RequestVerificationToken': tokenValue,
+                        'pageId': "@ViewData["PageId"]",
+                        'requestId': "@ViewData["RequestId"]",
+                    },
+                    dataType: "html",
+                    success: function (evt) {
+                        //
+
+                        $('#FormPageAnswers').html(evt);
+                        $.unblockUI();
+                        //$("#EditCustomerProfileForm").submit();
+                    },
+                    error: function (result, status, error) {
+
+                        if (result.responseText == "EndSesion") {
+                            var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                            location.href = urlSite
+                        }
+                        else {
+                            alert("Error al cargar la pagina: " + result.responseText);
+                        }
+                        $.unblockUI();
+                    }
+                });
+            });
+
+        }
+       //setWarningTimeOut()
+       //HideControlsAfterSave();
+   });
+    
+    
+    
+
+    function LoadChildDropDownFromRadioList(DdlParentControl, ddlChildControl) {
+
+        var ParentControl = DdlParentControl[0].attributes["value"].value;
+        var selecteValueChildList = $("#" + ddlChildControl).val();
+
+        if (DdlParentControl[0].checked)
+
+            if (ParentControl != '') {
+                $(".btnAtions").attr("disabled", "disabled");
+                var select = $("#" + ddlChildControl);
+                select.empty();
+                select.append($('<option/>', {
+                    value: "",
+                    text: "Cargando..."
+                }));
+
+                $.getJSON("@Url.Action("GetItemOfChildSelect", "Strategy")", { ChildControl: ddlChildControl, Value: ParentControl },
+            function (carData) {
+
+
+                var select = $("#" + ddlChildControl);
+                select.empty();
+                select.append($('<option/>', {
+                    value: "",
+                    text: ""
+                }));
+
+                $.each(carData, function (index, itemData) {
+                    if (itemData.Value == selecteValueChildList)
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: true
+
+                        }));
+                    else
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: false
+
+                        }));
+                });
+                $(".btnAtions").removeAttr('disabled');
+                if ($("#" + ddlChildControl)[0].attributes.onchange != undefined) {
+                    var arg = $("#" + ddlChildControl)[0].attributes.onchange.nodeValue.split(",");
+                    var patron = "'"
+                    var ControlChildId = arg[1].replace(patron, '');
+                    var ControlChildId = ControlChildId.replace(patron, '');
+                    LoadChildDropDown($("#" + ddlChildControl)[0], ControlChildId, "");
+                    //LoadChildDropDownFromRadioList($(this)[0], ControlChildId)
+                }
+
+
+            });
+
+            }
+            else {
+                var select = $("#" + ddlChildControl);
+                select.empty();
+            }
+    }
+
+    function LoadChildDropDownFromCheckBoxList(DdlParentControl, ddlChildControl, valuesCheckeds) {
+        var isChecked = $(DdlParentControl).is(":checked");
+        var ParentControl = valuesCheckeds;
+        //if (isChecked == true)
+        //    var ParentControl = DdlParentControl.value;
+        //else
+        //    var ParentControl = '';
+        var selecteValueChildList = $("#" + ddlChildControl).val();
+
+        if (ParentControl != '') {
+            $(".btnAtions").attr("disabled", "disabled");
+            var select = $("#" + ddlChildControl);
+            select.empty();
+            select.append($('<option/>', {
+                value: "",
+                text: "Cargando..."
+            }));
+            var srValuesChecked = valuesCheckeds.toString();
+            //for (x = 0; x < valuesCheckeds.length; x++) {
+            //    srValuesChecked += valuesCheckeds[x] + ",";
+            //}
+            $.getJSON("@Url.Action("GetItemOfChildSelect", "Strategy")", { ChildControl: ddlChildControl, Value: srValuesChecked },
+            function (carData) {
+
+
+                var select = $("#" + ddlChildControl);
+                select.empty();
+                select.append($('<option/>', {
+                    value: "",
+                    text: ""
+                }));
+
+                $.each(carData, function (index, itemData) {
+                    if (itemData.Value == selecteValueChildList)
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: true
+
+                        }));
+                    else
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text,
+                            selected: false
+
+                        }));
+                });
+                $(".btnAtions").removeAttr('disabled');
+                if ($("#" + ddlChildControl)[0].attributes.onchange != undefined) {
+                    var arg = $("#" + ddlChildControl)[0].attributes.onchange.nodeValue.split(",");
+                    var patron = "'"
+                    var ControlChildId = arg[1].replace(patron, '');
+                    var ControlChildId = ControlChildId.replace(patron, '');
+                    LoadChildDropDown($("#" + ddlChildControl)[0], ControlChildId, "");
+                    //LoadChildDropDownFromRadioList($(this)[0], ControlChildId)
+                }
+
+
+            });
+
+        }
+        else {
+            var select = $("#" + ddlChildControl);
+            select.empty();
+            if ($("#" + ddlChildControl)[0].attributes.onchange != undefined) {
+                var arg = $("#" + ddlChildControl)[0].attributes.onchange.nodeValue.split(",");
+                var patron = "'"
+                var ControlChildId = arg[1].replace(patron, '');
+                var ControlChildId = ControlChildId.replace(patron, '');
+                LoadChildDropDown($("#" + ddlChildControl)[0], ControlChildId, "");
+            }
+        }
+    }
+
+    function drawBarChart(spIndicator, IndicatorType, Id, WarningMinValue, WarningMaxValue, ViolationMinvalue, ViolationMaxvalue) {
+
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Home/GetChartData/",
+                data: {
+                    '__RequestVerificationToken': tokenValue,
+                    'sp': spIndicator
+                },
+                dataType: "json",
+                success: function (data) {
+                    var tdata = new google.visualization.DataTable();
+
+                    var numRows = data.length;
+                    var numCols = data[0].length;
+
+                    if (data[1] != null) {
+                        tdata.addColumn('string', data[1][0]);
+
+                        // all other columns are of type 'number'.
+                        for (var i = 1; i < numCols; i++)
+                            tdata.addColumn('number', data[1][i]);
+
+                        for (var i = 1; i < numRows; i++)
+                            for (var j = 1; j < numCols; j++) {
+                                data[i][j] = parseInt(data[i][j]);
+                            }
+
+
+
+                        for (var i = 2; i < numRows; i++)
+                            tdata.addRow(data[i]);
+
+                        var options = {
+                            title: data[0][0],
+                            width: 260,
+                            height: 300,
+                            //chartArea: { height: '500px' },
+                            //legend: { position: 'in' },
+                            legend: { position: 'top', maxLines: 6 },
+                            redFrom: ViolationMinvalue, redTo: ViolationMaxvalue,
+                            yellowFrom: WarningMinValue, yellowTo: WarningMaxValue,
+                            backgroundColor: 'transparent',
+                            bar: { groupWidth: '75%' },
+                            //isStacked: true,
+                            minorTicks: 5,
+                            is3D: true
+                        };
+
+                        //Crea div para la grafica
+
+                        //
+                        jQuery('<div/>', {
+                            id: spIndicator + "_" + Id.toString(),
+                        }).appendTo('#chart');
+                        jQuery('<br/>', {
+                        }).appendTo('#chart');
+                        //
+
+                        if (IndicatorType == 1)
+                            var chart = new google.visualization.PieChart(document.getElementById(spIndicator + "_" + Id.toString()));
+                        if (IndicatorType == 2)
+                            var chart = new google.visualization.Gauge(document.getElementById(spIndicator + "_" + Id.toString()));
+                        if (IndicatorType == 3)
+                            var chart = new google.visualization.BarChart(document.getElementById(spIndicator + "_" + Id.toString()));
+                        if (IndicatorType == 4)
+                            var chart = new google.visualization.ColumnChart(document.getElementById(spIndicator + "_" + Id.toString()));
+                        if (IndicatorType > 4)
+                            alert("Tipo de gráfica: " + IndicatorType + " no es válida");
+                        chart.draw(tdata, options);
+                    }
+                },
+
+            });
+        });
+    }
+</Script>
+

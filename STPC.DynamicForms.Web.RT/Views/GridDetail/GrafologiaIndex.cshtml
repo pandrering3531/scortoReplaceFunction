@@ -1,0 +1,288 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasicaAnalista_GridGrafologia>
+
+<input type="hidden" id="inRequestId" value="@ViewBag.RequestId"/>
+
+@{ 
+    var grid = new WebGrid(ajaxUpdateContainerId: "contenedor-grid-graf", rowsPerPage: ViewBag.PageSize, canPage: true);
+    grid.Bind(Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+}
+<div id="contenedor-grid-graf">
+@{
+    
+    IEnumerable<WebGridColumn> cols =
+        new List<WebGridColumn> {
+                new WebGridColumn{
+                    Header="Soporte",
+                    Format = @<text>
+                                <input type="hidden" id="inID" value="@item.F_Id" class="edit"/>
+                                <input type="hidden" id="inHiddenSoporte" value="@item.F_varSoporte" class="edit"/>
+                                <a class="display" target="_blank" href="/FormPage/GetPrivateResource?resource=@item.F_varSoporte">Ver Soporte</a>
+            <div class="MvcFieldWrapper edit" id="inNombreSoporte_wrapper" >
+                <label class="STPC_DynamicFieldPrompt" for="inEditNombreSoporte"></label>
+                <input class="tooltip" id="inEditNombreSoporte" name="inEditNombreSoporte" onclick="ModalFileUpload(this, 4000, '*.png,*.jpg,*.jpeg,*.bmp,*.pdf,*.xls,*.xlsx,*.xlsb', '');" title="" type="button" value="Cargar Archivo">
+                <a id="UriFile_inEditNombreSoporte" target="_blank" tabindex="1" text="" value="" style="visibility: visible;"></a>
+                <a id="UriFileDelete_inEditNombreSoporte" target="_blank" tabindex="1" text="" value="" style="visibility: visible;"></a>
+                <input id="hidden_inEditNombreSoporte" name="inEditNombreSoporte" type="text"  style="visibility : hidden;"/>
+            </div>
+
+                                </text>, Style="col2Width"
+                },
+                new WebGridColumn{
+                    Header="Resultado", 
+                    Format = @<text>
+                                <span class="display"><label id="lblResultado">@item.F_varResultado</label></span>
+                    @Html.DropDownList("value",  new SelectList(ViewBag.listResult, "Value", "Text", @item.F_varResultado),  "---Seleccione---", new{ @id="inEditResultado", @required="true", @class="basico1_select edit", @tooltip="true", @data_val="true", @data_val_required="* Campo requerido", @Width="100%"})
+                                </text>, Style="col2Width"
+                },
+                new WebGridColumn{
+                    Header="Observaciones",
+                    Format = @<text>
+                                <span class="display"><label id="lblObservacion">@item.F_varObservacion</label></span>
+                                <input type="text" id="inEditObservacion" value="@item.F_varObservacion" class="edit" required = "true", maxlength="10", tooltip="true", data_val="true", data_val_required="* Campo requerido"/>
+                                </text>, Style="col2Width"
+                },
+                new WebGridColumn{Header="Acciones",
+
+                    Format = @<text>
+                            <div style="display:@ViewBag.EditRoles">
+                                <input type="button" value="Editar" class="display edit-btn"/>
+                                <input type="button" value="Eliminar" class="display delete-btn"/>
+                                <input type="button" value="Guardar" class="edit save-btn"/>
+                                <input type="button" value="Cancelar" class="edit cancel-btn"/>
+                            </div>
+                            </text>, Style="col2Width"
+                }
+                
+            };
+}
+
+    <div>
+@grid.GetHtml(columns: cols, tableStyle: "webgrid-table",
+    headerStyle: "webgrid-header",
+    rowStyle: "webgrid-row-style",
+    alternatingRowStyle: "webgrid-alternating-row",
+    selectedRowStyle: "webgrid-selected-row",
+    footerStyle: "webgrid-footer", htmlAttributes: new { id = "contenedor-grid-graf" })
+    <br />
+    <br />
+    <div style="display: none" id="divAddRowG">
+
+        @{
+            STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasicaAnalista_GridGrafologia t = new STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasicaAnalista_GridGrafologia();
+        }
+        @Html.Partial("_addGrafologia", t)
+            <input type="text" id="txtSender" name="txtSender" style="visibility : hidden;"/>
+
+    </div>
+    <div style="display:@ViewBag.EditRoles">
+        <input type="button" value="Nuevo Registro" id="ClickToAddG" class="display ins-btn"/>
+    </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#ClickToAddG').click(function () {
+
+            $("#divAddRowG").css("display", "block");
+
+        })
+
+        $(document).ready(function () {
+
+            $('.edit').hide();                                                  //Default is display
+
+            $('.ins-btn').on("click", function () {
+                var tr = $(this).parents('tr:first');
+                tr.find('.edit, .display').toggle();
+            });
+
+            $('.edit-btn, .cancel-btn').on("click", function () {
+                var tr = $(this).parents('tr:first');
+                tr.find('.edit, .display').toggle();
+                
+            });
+
+            $('.inssave-btn').on("click", function () {
+                var tr = $(this).parents('tr:first');
+                var requestid = $('#inRequestId').val();
+                var Soporte = tr.find("#hidden_inNombreSoporte").val();
+                //var Soporte = tr.find("#inNumeroCuenta").val();
+                var Resultado = tr.find("#inResultado").val();
+                var Observacion = tr.find("#inObservacion").val();
+                var isSuccess = -1;
+
+                var Registro =
+                {
+                    "F_RequestId": requestid,
+                    "F_varSoporte": Soporte,
+                    "F_varResultado": Resultado,
+                    "F_varObservacion": Observacion
+                };
+                blockScreen("Un momento por favor....");
+                $.ajax({
+
+                    url: '/GridDetail/GrafologiaInsertData/',                           //InsertData method
+
+                    data: JSON.stringify(Registro),
+
+                    type: 'POST',
+
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function (result) {
+                        isSuccess = result;
+
+                    },
+                    error: function (result) {
+                        isSuccess = result;
+                    }
+
+                }).done(function (e) {
+                    if (isSuccess == "1") {                                     //Successfully saved
+                        var requestid = $('#inRequestId').val();
+                        var url = "/GridDetail/GrafologiaIndex?requestId=" + requestid + "&EditRol=''"; //Grid update
+                        var $container = $("#contenedor-grid-graf");
+                        $container.load(url);
+                        $.unblockUI();
+                        alert("Registro guardado correctamente");
+
+                    }
+                    else {
+                        $.unblockUI();
+                        alert("Error. Por favor, revise los datos" + "\n" + isSuccess);            //Data Error
+                    }
+                });
+            });
+
+
+            $('.cancelinssave-btn').on("click", function () {
+                $("#divAddRowG").css("display", "none");
+                var requestid = $('#inRequestId').val();
+                var url = "/GridDetail/GrafologiaIndex?requestId=" + requestid + "&EditRol=''";
+                var $container = $("#contenedor-grid-graf");
+                $container.load(url);
+            });
+
+
+            $('.save-btn').on("click", function () {
+                var requestid = $('#inRequestId').val();
+                var tr = $(this).parents('tr:first');
+                var id = tr.find("#inID").val();
+                var requestid = $('#inRequestId').val();
+                var Soporte = tr.find("#hidden_inEditNombreSoporte").val();
+                var Soporte1 = tr.find("#inHiddenSoporte").val();
+                var Resultado = tr.find("#inEditResultado").val();
+                var Observacion = tr.find("#inEditObservacion").val();
+                var isSuccess = -1;
+
+                var soportefinal = "";
+
+                if(Soporte=="")
+                    soportefinal = Soporte1;
+                else
+                    soportefinal = Soporte;
+                //tr.find("#lnk_inEditNombreSoporte").href("/FormPage/GetPrivateResource?resource=" + Soporte);
+                //tr.find("#lblResultado").text(Resultado);
+                //tr.find("#lblObservacion").text(Observacion);
+                blockScreen("Un momento por favor....");
+                var Registro =
+                {
+                    "F_Id": id,
+                    "F_RequestId": requestid,
+                    "F_varSoporte": soportefinal,
+                    "F_varResultado": Resultado,
+                    "F_varObservacion": Observacion
+                };
+
+                $.ajax({
+
+                    url: '/GridDetail/GrafologiaSaveData/',
+
+                    data: JSON.stringify(Registro),
+
+                    type: 'POST',
+
+                    contentType: 'application/json; charset=utf-8',
+
+                    success: function (result) {
+                        isSuccess = result;
+
+                    },
+                    error: function (result) {
+                        isSuccess = result;
+                    }
+
+                }).done(function () {
+                    if (isSuccess == "1") {                                     //Successfully saved
+                        tr.find('.edit, .display').toggle();
+                        var requestid = $('#inRequestId').val();
+                        var url = "/GridDetail/GrafologiaIndex?requestId=" + requestid + "&EditRol=''";
+                        var $container = $("#contenedor-grid-graf");
+                        $container.load(url);
+                        $.unblockUI();
+                        alert("Registro guardado correctamente");
+                    }
+                    else {                                                      //Data Error
+                        $.unblockUI();
+                        alert("Error. Por favor, revise los datos" + "\n" + isSuccess);
+                    }
+                });
+
+            });
+
+
+            $('.delete-btn').on("click", function () {
+                if (confirm("¿Seguro de borrar este registro?")) {
+
+                    var requestid = $('#inRequestId').val();
+                    var tr = $(this).parents('tr:first');
+                    var id = tr.find("#inID").val();
+                    var isSuccess = -1;
+
+                    var Registro =
+                    {
+                        "F_Id": id,
+                        "F_RequestId": requestid
+                    };
+                    blockScreen("Un momento por favor....");
+                    $.ajax({
+
+                        url: '/GridDetail/GrafologiaDeleteData/',
+
+                        data: JSON.stringify(Registro),
+
+                        type: 'POST',
+
+                        contentType: 'application/json; charset=utf-8',
+
+                        success: function (result) {
+                            isSuccess = result;
+
+                        },
+                        error: function (result) {
+                            isSuccess = result;
+                        }
+
+                    }).done(function () {
+                        if (isSuccess == "1") {                                         // Successfully Deleted
+                            var requestid = $('#inRequestId').val();
+                            var url = "/GridDetail/GrafologiaIndex?requestId=" + requestid + "&EditRol=''";
+                            var $container = $("#contenedor-grid-graf");
+                            $container.load(url);
+                            $.unblockUI();
+                            alert("Registro eliminado correctamente");
+                        }
+                        else {
+                            $.unblockUI();
+                            alert("Error. Por favor, revise los datos: ");                //Data Error
+                        }
+
+                    });
+
+                }
+            });
+ 
+        });
+
+</script>
+</div>
+        <div id="error"></div>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="e2452437-1d35-4111-b7e2-2c5ce0fb41e0" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:6615/ScriptGeneratorService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ScriptGeneratorService.xsd" MetadataType="Schema" ID="48a9f978-53e2-41b7-bba2-7cb9301b31f5" SourceId="1" SourceUrl="http://localhost:6615/ScriptGeneratorService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ScriptGeneratorService1.xsd" MetadataType="Schema" ID="b5aad754-949e-4747-87cd-7af146752668" SourceId="1" SourceUrl="http://localhost:6615/ScriptGeneratorService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ScriptGeneratorService.disco" MetadataType="Disco" ID="e4e23aad-32e2-4079-8523-05d4457cd5b2" SourceId="1" SourceUrl="http://localhost:6615/ScriptGeneratorService.svc?disco" />
+    <MetadataFile FileName="ScriptGeneratorService.wsdl" MetadataType="Wsdl" ID="871476a8-9a67-4347-9874-eaa991146f54" SourceId="1" SourceUrl="http://localhost:6615/ScriptGeneratorService.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

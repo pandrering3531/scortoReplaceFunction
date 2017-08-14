@@ -1,0 +1,50 @@
+﻿@model STPC.DynamicForms.Web.Models.LoginViewModel
+@{
+    ViewBag.Title = "LiSim Abc";
+}
+<div id="login">
+
+
+    <div id="loginbox">
+        <h1>Bienvenido.</h1>
+        <h4>Ingrese su nombre de usuario y contraseña para iniciar la sesi&oacute;n. </h4>
+        @using (Html.BeginForm("LogOn", "Account", FormMethod.Post, new { @class = "align_center" }))
+        {
+            @Html.ValidationSummary(true)
+            <table class="tablalogin">
+                <tr>
+                    <td>
+                        <h2>Usuario</h2>
+                        <label>
+                            @Html.DropDownListFor(r => r.Idtype, Model.IDTypes)
+                        </label>
+
+                        @Html.EditorFor(model => model.Username)
+                        @Html.ValidationMessageFor(model => model.Username)
+
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <h2>Contraseña</h2>
+                        <label>
+                            @Html.EditorFor(model => model.Password)
+                            @Html.ValidationMessageFor(model => model.Password)
+                        </label>
+                    </td>
+                    <td class="align_bottom">
+                        <input type="submit" value="Ingresar" class="decoratedButton" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <p><a href="#">Olvid&oacute; su contraseña</a></p>
+                    </td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+        }
+        @*    <p>Usuario por defecto CC1 pwd 654321</p>*@
+
+    </div>
+</div>

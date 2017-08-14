@@ -1,0 +1,325 @@
+﻿@model  STPC.DynamicForms.Core.MyViewModel
+@{
+    ViewBag.Title = "Mis Solicitudes";
+}
+<script src="@Url.Content("~/Scripts/jquery.toolTip.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/math.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Request/Request.js")" type="text/javascript"></script>
+@*@Html.TextBoxFor("PanelGuidList", (string)ViewBag.nameSp)*@
+
+@Html.Hidden("nameSp", (string)ViewBag.nameSp, new { id = "txtNameSp" })
+@Html.Hidden("fetch", (string)ViewBag.fetchCount, new { id = "txtfetch" })
+
+<div id="paginatorOptions">
+    <table id="tblOptionsPagination">
+        <tr style="width: 100%">
+            <td>
+                <input type="button" value="<<" id="btnFirst" />
+            </td>
+            <td>
+                <input type="button" value="<" id="btnPrevius" />
+            </td>
+            <td>
+                @Html.Label("Pagina")
+            </td>
+            <td>
+                <input type="text" value="1" id="txtPageNumber" style="width: 50px;" disabled="disabled" />
+            </td>
+            <td>
+                @Html.Label("De")
+            </td>
+            <td>
+                <input type="text" value="@ViewBag.PageCount" id="txtTotalPage" style="width: 50px;" disabled="disabled" />
+            </td>
+            <td>
+                <input type="button" value=">" id="btnNext" />
+            </td>
+            <td>
+                <input type="button" value=">>" id="btnLast" />
+            </td>
+            <td>Buscar
+            </td>
+            <td>
+                <input type="text" value="" id="txtSearchUser" />
+            </td>
+            <td>
+                <input type="button" value="..." id="btnBuscar" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="dvForm">
+
+    <table id="TheTable" class="resultados" summary="Sus páneles">
+        <thead>
+            <tr>
+                @if (Model != null)
+                {
+                    foreach (var item in Model.Columns)
+                    {
+                        if (@item.Name != "FormId" && @item.Name != "TotalCount" && @item.Name != "Solicitud" && @item.Name != "PageFlowId")
+                        {
+                    <th>
+                        @item.Name
+                    </th>
+                        }
+
+                    }
+                }
+                <th>Ver</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                foreach (STPC.DynamicForms.Core.RowViewModel row in Model.Rows)
+                {
+                <tr>
+                    @foreach (STPC.DynamicForms.Core.CellValueViewModel cel in row.Values)
+                    {
+                        if (cel.ColumnName != "FormId" && cel.ColumnName != "TotalCount" && cel.ColumnName != "Solicitud" && cel.ColumnName != "PageFlowId")
+                        {
+                        <td>
+                            @cel.Value
+                        </td>
+                        }
+                    }
+                    <td>
+
+                        @*<a href="@Url.Action("FormPageRespondView", "Form", new { FormId = row.Values[1].Value, requestId = row.Values[0].Value })"data-form-method="post">*@
+                        <a id=@row.Values[1].Value name=@row.Values[0].Value itemid=@row.Values[2].Value class="GetRequest"  style="cursor: pointer;">
+
+
+                            <img src="@Url.Content("~/Content/images/pendiente_th.gif")"  alt="Contestar"/></a>
+
+                        @if (ViewData["ShowPrintButton"] == "1")
+                        {
+                            <a id=@row.Values[1].Value name=@row.Values[0].Value  onclick="GetReport('@row.Values[1].Value','@row.Values[0].Value')"  style="cursor: pointer;">
+
+                                <img src="@Url.Content("~/Content/images/imprimir.gif")"  alt="Contestar"/></a>
+                        }
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+   
+    $(document).ready(function () {
+        var txtTotalPage=$("#txtTotalPage").val();
+        if (txtTotalPage == 0)
+        {
+            $("#paginatorOptions").html("");
+        }
+    });
+
+    
+
+
+    
+    function HideRadioControl(sender, ChildrenIdControl, ControlEvent) {
+
+
+        var inputs = $('#' + sender.id + ' li input:checked')
+
+        //var classObject = $(inputs).attr('class');
+        var classObject = $(sender).attr('class');
+
+
+        //if ($target[0].checked)
+        var allVals = [];
+        $('#STPC_DFi_' + controlsChild[i]).removeAttr("style");
+        $('#STPC_DFi_' + controlsChild[i]).css('visibility', 'visible');
+        $("label[for=" + "STPC_DFi_" + controlsChild[i] + "]").css('visibility', 'visible');
+        $('#UriFile_STPC_DFi_' + controlsChild[i]).removeAttr("style");
+        $('#UriFile_STPC_DFi_' + controlsChild[i]).css('visibility', 'visible').is(':hidden');
+        $('#UriFileDelete_STPC_DFi_' + controlsChild[i]).css('visibility', 'visible').is(':hidden');
+        $('#STPC_DFi_' + controlsChild[i]).prop('disabled', false);
+
+        if ($('#STPC_DFi_' + controlsChild[i]).length > 0)
+            var LocalName = $('#STPC_DFi_' + controlsChild[i])[0].localName;
+
+        if (LocalName != "ul") {
+            if ($('#STPC_DFi_' + controlsChild[i]).attr('readonly') == undefined)
+                $("#STPC_DFi_" + controlsChild[i] + ":input").attr("disabled", false);
+            else {
+                $("#" + $('#STPC_DFi_' + controlsChild[i]).attr('id') + ' li input').each(function (idx1, chele) {
+                    $(this).attr("disabled", false);
+                });
+            }
+        }
+        else {
+            $("#" + $('#STPC_DFi_' + controlsChild[i]).attr('id') + ' li input').each(function (idx1, chele) {
+                $(this).attr("disabled", false);
+                $(this).prop('checked', false)
+            });
+        }
+        if (inputs.length > 0) {
+            var checkBox = inputs[0];
+
+            var i = 0;
+            var values = $("#" + sender.id + ' input:radio:checked').map(function () {
+                allVals[i] = this.value;
+                i++;
+            }).get();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Strategy/GetListCascadeControls',
+                data: {
+                    'UidControl': inputs[0].name,
+                    'valueControl': inputs[0].value
+                },
+                dataType: 'json',
+                success: function (result) {
+
+                    for (x = 0; x < result.length; x++) {
+                        var fer = result[x].EventType;
+
+                        //Busca controles
+                        var childControl = $("#STPC_DFi_" + result[x].ListenerFieldId).prop("tagName");
+
+                        if (childControl == "SELECT")
+                            LoadChildDropDownFromRadioList(inputs, $("#STPC_DFi_" + result[x].ListenerFieldId).attr('id'), allVals);
+                        else
+                            LoadChildRadioList(inputs, $("#STPC_DFi_" + result[x].ListenerFieldId).attr('id'), allVals);
+                    }
+                    if (/Hide/.test(classObject) || /Disabled/.test(classObject)) {
+                        $.ajax({
+                            type: 'POST',
+                            url: '/Strategy/GetShowControls',
+                            data: {
+                                'UidControl': inputs[0].name,
+                                'valueControl': ''
+                            },
+                            dataType: 'json',
+                            success: function (resultShowControls) {
+
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Strategy/GetHiddenControls',
+                                    data: {
+                                        'UidControl': inputs[0].name,
+                                        'valueControl': inputs[0].value
+                                    },
+                                    dataType: 'json',
+                                    success: function (result) {
+
+                                        HideControlsById(result);
+
+
+                                    },
+                                    error: function (req, status, error) {
+                                        alert("Error: " + error);
+                                    }
+                                });
+
+                            },
+                            error: function (req, status, error) {
+                                alert("Error: " + error);
+                            }
+                        });
+                    }
+                },
+                error: function (req, status, error) {
+                    alert("Error: " + error);
+                }
+
+            });
+
+
+        }
+        //if (allVals.length == 0) {
+        //HideChildControls(sender)
+        //}
+
+    }
+
+    function LoadChildRadioList(DdlParentControl, ddlChildControl, valuesCheckeds, parentUl) {
+
+        var isChecked = $(DdlParentControl).is(":checked");
+        if (isChecked == true)
+            var ParentControl = DdlParentControl.value;
+        else
+            var ParentControl = '';
+
+        var srValuesChecked = valuesCheckeds.toString();
+
+        if (srValuesChecked != '') {
+            $.getJSON("@Url.Action("GetItemOfChildSelect", "Strategy")", { ChildControl: ddlChildControl, Value: srValuesChecked },
+                                function (carData) {
+
+                                    var numberOfCheckedRadio = $(DdlParentControl.id + 'input:radio:checked').length
+
+                                    var tipyeChildControl = carData[0].Type;
+
+                                    $('#' + ddlChildControl + ' li').remove()
+                                    $('#' + ddlChildControl + ' li').remove()
+                                    $.each(carData, function (index, itemData) {
+                                        $('#' + ddlChildControl).append("<li style='display: inline;list-style-type: none;'><input type=" + tipyeChildControl + " name='" + ddlChildControl + "' value='" + itemData.Value + "'><label class='STPC_DynamicListFieldInputLabel' for='" + ddlChildControl + "'  text='" + itemData.Text + "'>" + itemData.Text + "</li>");
+                                    });
+
+                                    if ($("#" + ddlChildControl)[0].attributes.onchange != undefined) {
+                                        var arg = $("#" + ddlChildControl)[0].attributes.onchange.nodeValue.split(",");
+                                        var patron = "'"
+                                        var ControlChildId = arg[1].replace(patron, '');
+                                        var ControlChildId = ControlChildId.replace(patron, '');
+                                        LoadChildDropDown($("#" + ddlChildControl)[0], ControlChildId, "");
+                                    }
+
+                                });
+        }
+        else {
+            var select = $("#" + ddlChildControl);
+            select.empty();
+
+        }
+
+    }
+
+    $(".GetRequest").click(function () {
+        try {
+            blockScreen("Un momento por favore...");           
+            if ($(this).attr('id') != "")
+                $.ajax({
+                    type: "POST",
+                    url: "/form/formpagerespondview/",
+                    data: {
+                        'formid': $(this).attr('id'),
+                        'requestid': $(this).attr('name'),
+                        'PageFlowId': $(this).attr('itemid')
+                    },
+                    dataType: "html",
+                    success: function (evt) {
+
+                        $('#dvForm').html(evt);
+                        $('#paginatorOptions').empty();
+                        $('#tblParameters').empty()
+                        $('#tblParametros2').empty()
+
+                        $.unblockUI();
+
+                    },
+                    error: function (result) {
+
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                        $.unblockUI();
+                    }
+                });
+        }
+        catch (err) {
+            $.unblockUI();
+            alert(err);
+
+        }
+    });
+</script>
+

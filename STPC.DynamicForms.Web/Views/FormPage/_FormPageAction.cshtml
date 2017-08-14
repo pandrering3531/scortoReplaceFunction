@@ -1,0 +1,207 @@
+﻿@model List<STPC.DynamicForms.Web.Services.Entities.FormPageActions>
+@{
+    ViewBag.Title = "Acciones por Página";
+
+    foreach (var action in Model)
+    {
+        ViewBag.GuidList = ViewBag.GuidList + action.Uid.ToString() + "/";
+    }
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div id="Acciones">
+
+    <table id="TheTable" class="resultados" summary="Sus páginas" style="width: 100%">
+        <tr class="nodrop nodrag">
+            <th>Asociado</th>
+            <th>Descripción</th>
+            <th>Acción</th>
+            <th>Ejecuta               
+                estrategia</th>
+            <th>Guardar</th>
+            <th>Modifica
+                <br />
+                estado</th>
+            <th>Roles</th>
+            <th>Estados</th>
+        </tr>
+        @Html.HiddenFor(e => e.FirstOrDefault().PageId, new { id = "PageId" })
+
+        @foreach (var action in Model)
+        {
+            var idLabel = "EstadoAccion" + @action.Uid;
+            var idDiv = "checkStates" + @action.Uid;
+            @Html.HiddenFor(e => action.Uid, new { id = "actionId" + action.Uid })
+            <tr class="classrow" id=@action.Uid>
+                <td class="dragHandle">
+                    @Html.CheckBox("Asociar" + action.Uid, action.IsAssociated, new { @style = "display: inline", id = action.Uid, @class = "chkAcion" })
+                </td>
+                <td style="width: 70px;">
+                    @action.Description
+                </td>
+                <td>
+                    @*@Html.TextBox("Mensaje",action.Caption)*@
+                    @Html.TextBoxFor(cl => action.Caption, new { style = "width:70px;" })
+                    @*@Html.Hidden("ActionNewCaption-" + action.Name + "/" + action.Uid)*@
+                </td>
+                <td>
+                    @if (action.IsAssociated == true)
+                    {
+                        @Html.CheckBox("EjecutaEstrategia" + action.Uid, action.IsExecuteStrategy, new { @style = "display: inline", id = action.Uid, @class = "chkStrategyExec" })
+                    }
+                    else
+                    {
+                        @Html.CheckBox("EjecutaEstrategia" + action.Uid, action.IsExecuteStrategy, new { @style = "display: inline", id = action.Uid, disabled = "disabled", @class = "chkStrategyExec" })
+                    }
+                </td>
+                <td>
+                    @if (action.Caption != "Guardar")
+                    {
+                        if (action.IsAssociated == true)
+                        {
+                        @Html.CheckBox("Guarda" + action.Uid, action.Save, new { @style = "display: inline", id = action.Uid, @class = "chkSaveAction" })
+                        }
+                        else
+                        {
+                        @Html.CheckBox("Guarda" + action.Uid, action.Save, new { @style = "display: inline", id = action.Uid, disabled = "disabled", @class = "chkSaveAction" })
+                        }
+                    }
+                </td>
+                <td>
+                    @if (action.FormStatesUid == null)
+                    {
+                        if (action.IsAssociated == false)
+                        {
+                        @Html.CheckBox("ModificaEstado" + action.Uid, (action.FormStatesUid != null ? true : false), new { @style = "display: inline", id = action.Uid, @class = "chkState", disabled = "disabled" })
+                        }
+                        else
+                        {
+                        @Html.CheckBox("ModificaEstado" + action.Uid, (action.FormStatesUid != null ? true : false), new { @style = "display: inline", id = action.Uid, @class = "chkState" })
+                        }
+                    }
+
+                    else
+                    {
+                        if (action.IsAssociated == false)
+                        {
+                        @Html.CheckBox("ModificaEstado" + action.Uid, (action.FormStatesUid != null ? true : false), new { @style = "display: inline", id = action.Uid, @class = "chkState", disabled = "disabled" })
+                        }
+                        else
+                        { 
+                        @Html.CheckBox("ModificaEstado" + action.Uid, (action.FormStatesUid != null ? true : false), new { @style = "display: inline", id = action.Uid, @class = "chkState", })
+                        }
+                    }
+
+                    @if (action.FormStatesUid != null)
+                    {
+
+
+                        if (action.IsAssociated != false)
+                        {
+                            
+                        
+                        <label id="@idLabel" name= @action.Uid class="chkStateLabel">@action.FormStates.StateName</label>
+                        
+                        }
+                        else
+                        {
+                        <label id="@idLabel" name= @action.Uid class="chkStateLabel"></label>
+                        }
+                    }
+                    else
+                    {
+                        <label id="@idLabel" name= @action.Uid class="chkStateLabel"></label>
+                    }
+                </td>
+
+                <td>
+                    @{foreach (string rol in @ViewBag.roles)
+                      {
+                        <p>
+                            @if (action.IsAssociated == false)
+                            {
+                                if (action.FormPageActionsRolesList.Where(e => e.FormPageActionsUid == action.Uid && e.Rolename == rol).FirstOrDefault() != null)
+                                { 
+                                @Html.CheckBox(rol.ToString() + "_" + action.Uid, true, new { disabled = "disabled", @class = "chkRol_" + action.Uid, onClick = "updateRollAction('" + @rol.ToString() + "','" + @action.Uid + "')", id = @rol.ToString() + "-" + @action.Uid })
+                                }
+                                else
+                                { 
+                                @Html.CheckBox(rol.ToString() + "_" + action.Uid, false, new { disabled = "disabled", @class = "chkRol_" + action.Uid, onClick = "updateRollAction('" + @rol.ToString() + "','" + @action.Uid + "')", id = @rol.ToString() + "-" + @action.Uid }) 
+                                }
+                            }
+                            else
+                            {
+                                if (action.FormPageActionsRolesList.Where(e => e.FormPageActionsUid == action.Uid && e.Rolename == rol).FirstOrDefault() != null)
+                                { 
+                                @Html.CheckBox(rol.ToString() + "_" + action.Uid, true, new { @class = "chkRol_" + action.Uid, onClick = "updateRollAction('" + @rol.ToString() + "','" + @action.Uid + "')", id = @rol.ToString() + "-" + @action.Uid })
+                                }
+                                else
+                                { 
+                                @Html.CheckBox(rol.ToString() + "_" + action.Uid, false, new { @class = "chkRol_" + action.Uid, onClick = "updateRollAction('" + @rol.ToString() + "','" + @action.Uid + "')", id = @rol.ToString() + "-" + @action.Uid })
+                                }
+                            }
+                            @rol.ToString()
+                        </p> 
+                      }
+                    }
+
+                </td>
+                <td>
+
+                    <div id=@idDiv>
+                        @{List<STPC.DynamicForms.Web.Services.Entities.FormPageActionsByStates> listStatesByAction = action.FormPageActionsByStatesList.ToList();
+                          listStatesByAction = listStatesByAction.Where(e => e.FormPageActionsUid == action.Uid).ToList();
+
+                          foreach (STPC.DynamicForms.Web.Services.Entities.FormPageActionsByStates _states in listStatesByAction.OrderBy(e=>e.FormStates.StateName))
+                          {
+                            <p>
+                                @if (action.IsAssociated == false)
+                                {
+                               
+                                    @Html.CheckBox(_states.FormStates.StateName + "_" + action.Uid, true, new { disabled = "disabled", @class = "chkRol_" + action.Uid, onClick = "UpdateStateByAction('" + @_states.FormStates.Uid + "','" + @action.Uid + "')", id = @_states.FormStates.Uid + "-" + @action.Uid })
+                                   
+
+                                }
+                                else
+                                {
+                                    @Html.CheckBox(_states.FormStates.StateName + "_" + action.Uid, true, new { @class = "chkRol_" + action.Uid, onClick = "UpdateStateByAction('" + @_states.FormStates.Uid + "','" + @action.Uid + "')", id = @_states.FormStates.Uid + "-" + @action.Uid })
+                                }
+                                @_states.FormStates.StateName
+                            </p> 
+                          }
+                        
+                        }
+                    </div>
+                    @Html.DropDownList("Estados", new SelectList(@ViewBag.states, "Uid", "StateName"), "---Seleccione el estado---", new { style = "width:160px;", id = action.Uid, @class = "ddlStatesByAction" })
+
+                </td>
+                @Html.Hidden(action.Uid + "StateGuid", action.FormStatesUid + "/" + action.Uid, new { id = action.Uid + "StateGuid" })
+                @Html.Hidden(action.Uid + "GoToPage", action.GoToPageId + "/" + action.Uid, new { id = action.Uid + "GoToPage" })
+
+                @Html.HiddenFor(e => action.Name, new { id = action.Uid + "NameAction" })
+            </tr>
+        }
+    </table>
+</div>
+<div id="modalAddActions"></div>
+
+<script type="text/javascript">
+
+
+    $(function () {
+        $('.ddlStatesByAction').change(function () {
+            var actionUid = $(this).attr('id');
+            var NameState = $(this).find(":selected").text();
+            var idState = $(this).find(":selected").val();
+            $("#checkStates" + actionUid).append('<p><input checked="checked" class="chkRol_' + actionUid + '" id="' + idState + "-" + actionUid.trim() + '" name="' + NameState + '_' + actionUid + '" onclick=UpdateStateByAction("' + idState + '","' + actionUid + '")  type="checkbox" value="true">' + NameState + '</p>');
+            UpdateStateByAction(idState, actionUid);
+
+            $("#" + actionUid + " option[value=" + idState + "]").remove();
+        });
+    });
+    function updateSuccess(data) {
+        $("#CustomerForm").submit();
+
+    }
+</script>

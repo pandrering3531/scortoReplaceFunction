@@ -1,0 +1,39 @@
+﻿@model STPC.DynamicForms.Web.Models.FormViewModel
+@{
+  ViewBag.Title = "Columnas de panel";
+}
+
+<div id="migas">
+  <p>Columnas del panel: @Model.panel.Name</p>
+</div>
+
+<div id="Columnas">
+  <br />
+  <br />
+  <table id="TheTable" class="resultados" summary="Sus páginas">
+    <tr>
+      <th>Nombre</th>
+      <th>Acciones</th>
+    </tr>
+    @for (int i = 1; i <= Model.panel.Columns; i++)
+    {
+      <tr>
+        <td>
+          @Html.Label("", "Columna " + i.ToString())
+        </td>
+        <td>
+          <a href="@Url.Action("Edit", "Panel", new { id = Model.panel.Uid, colunmNumber = i })">
+            <img src="@Url.Content("~/Content/images/editar.gif")" title="Editar" alt="Editar"/></a>
+        </td>
+      </tr>
+    }
+  </table>
+</div>
+@*@Html.Hidden("FormPageId", (Guid)ViewBag.FormPageId)*@
+@Html.ActionLink("Volver a la lista de paneles", "Edit", "FormPage", new { id = Model.panel.Page.Uid }, new { @class = "decorated" })
+<br />
+<br />
+@section BottomAssets 
+  {
+  <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+}

@@ -1,0 +1,244 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.Panel>
+@{    
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>            
+    <script src="@Url.Content("~/Scripts/Panel/Delete.js")" type="text/javascript"></script>    
+    <script src="@Url.Content("~/Scripts/TableDnD/jquery.tablednd.0.7.min.js")" type="text/javascript"></script>    
+    
+    ViewBag.Title = "Paneles de la página";
+
+    foreach (var panel in Model)
+    {
+        ViewBag.PanelGuidList = ViewBag.PanelGuidList + panel.Uid.ToString() + "/";
+    }
+}
+<div id="migas">
+    <p>Páneles de la página @ViewBag.FormPageName</p>
+</div>
+<div class="cols_home">
+    <button id="NewPanel">Agregar nuevo panel</button>
+    @{if (Model.Count() == 0)
+      { 
+        @Html.Hidden("NoItems", true)
+      }
+    }
+    <table id="TheTable" class="resultados" summary="Sus páneles">
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Columnas</th>
+            <th>Estilo</th>
+            <th>Acciones</th>
+        </tr>
+        @foreach (var panel in Model)
+        {
+            <tr class="classrow" id=@panel.Uid >
+                <td class="dragHandle">
+                    @panel.Name
+                </td>
+                <td>
+                    @panel.Description
+                </td>
+                <td>
+                    @panel.Columns
+                </td>
+                <td>
+                    @panel.DivCssStyle
+                </td>
+                <td>
+                    @*<a href="@Url.Action("Edit", "Panel", new { id = page.Uid })">
+            <img src="@Url.Content("~/Content/images/editar.gif")" alt="Editar"/></a>*@
+                    <a onclick="getColumns('@panel.Uid')">
+                        <img src="@Url.Content("~/Content/images/editar.gif")" title="Editar" alt="Editar" ID = "btnColumns"/></a>
+
+                    <span  data-key="@panel.Uid" title="Borrar panel" onclick="deletePanel('@panel.Uid');" style="CURSOR: pointer;">
+                        <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Borrar panel" ID = "btnCancel"/></span>
+
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div id="NothingToSeeHere">
+    <p>No hay paneles en esta página, cree uno nuevo</p>
+</div>
+<div id="NewPanelDialog" title="Crear nuevo Panel">
+    <p class="validateTips">Todos los campos son obligatorios.</p>
+    <form>
+        <h2>Nombre</h2>
+        <input type="text" name="PanelName" id="PanelName" class="text ui-widget-content ui-corner-all" />
+        <h2>Descripción</h2>
+        <input type="text" name="PanelDescription" id="PanelDescription" class="text ui-widget-content ui-corner-all" />
+        <h2>Columnas:</h2>
+        @*<h2 style="display: inline-block;">Columnas:</h2>*@
+        <input type="text" name="PanelColumns" id="PanelColumns" style="border: 0; font-weight: bold; display: inline-block;" disabled="disabled" value="1" />
+        <div id="slider-range-min" style="margin: 10px;"></div>
+        <h2>Hoja de estilos</h2>
+        <input type="text" name="PanelStylesheet" id="PanelStylesheet" class="text ui-widget-content ui-corner-all" value='@ViewBag.DefaultPanelStyle' />
+    </form>
+</div>
+
+@Html.Hidden("FormPageId", (Guid)ViewBag.FormPageId)
+@Html.Hidden("arrayOrder", null, new { id = "txtArrayOrder" })
+@Html.Hidden("PanelGuidList", (string)ViewBag.PanelGuidList)
+
+
+@*@Html.ActionLink("Volver a la lista de páginas", "Edit", "Form", new { id = ViewBag.FormId }, new { @id = "btnReturnForm", @class = "decorated" })*@
+
+<span class="ui-button-text" id="backToPanels" onclick="getPages('@ViewBag.FormId')">Volver a la lista de páginas</span>
+
+
+
+@section BottomAssets 
+  {
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Forms/Edit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/TableDnD/jquery.tablednd.0.7.min.js")" type="text/javascript"></script>    
+
+}
+
+<script type="text/javascript">
+
+    function getPages(id) {
+
+        blockScreen("Un momento por favor....");
+        console.log('Removing div')
+        $('div#EditIEvent').remove();
+        console.log('Removed div')
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/FormPage/LisPagePost/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+                    $('#right-column').html
+
+                    if ($('div#NewPageDialog').length > 0) {
+                        console.log($('div#NewPageDialog').length)
+                        $('#NewPageDialog').remove();
+                    }
+                    $('#right-column').html(evt);
+
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+
+    }
+
+
+    function getColumns(id) {
+
+        blockScreen("Un momento por favor....");
+        $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+            var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+            $('input[name="__RequestVerificationToken"]').val(tokenValue);
+            $.ajax({
+                type: "POST",
+                url: "/Panel/GetColumns/",
+                data: {
+                    '__RequestVerificationToken': tokenValue, 'id': id
+                },
+                dataType: "html",
+                success: function (evt) {
+                    $('#right-column').html
+
+                    if ($('div#NewPageDialog').length > 0) {
+                        console.log($('div#NewPageDialog').length)
+                        $('#NewPageDialog').remove();
+                    }
+                    $('#right-column').html(evt);
+
+
+                    $.unblockUI();
+                    //$("#EditCustomerProfileForm").submit();
+                },
+                error: function (result, status, error) {
+                    $.unblockUI();
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        });
+
+    }
+
+
+    function blockScreenMessage(Mensaje) {
+        $.blockUI({
+            message: Mensaje,
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }
+        });
+    }
+    function blockScreenMessage(Mensaje) {
+        $.blockUI({
+            message: Mensaje,
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            }
+        });
+    }
+    $(document).ready(function () {
+        // Initialise the table 
+        $("#TheTable").tableDnD({
+            onDragClass: "myDragClass",
+            onDrop: function (table, row) {
+                $('#txtArrayOrder').val($('#TheTable').tableDnDSerialize());
+                blockScreenMessage("Actualizando orden de los paneles..")
+                var iNewOrderList = $('#txtArrayOrder').val();
+                var iGuidList = $('#PanelGuidList').val();
+                $.post("@Url.Action("SavePanelOrder", "FormPage")", {
+                        iNewOrderList: iNewOrderList,
+                        iGuidList: iGuidList
+                    },
+          function (carData) {
+              $.unblockUI();
+          });
+                },
+            });
+            //------------------------------
+        });
+        $("#btnReturnForm")
+           .button()
+           .click(function () {
+
+           });
+
+</script>

@@ -1,0 +1,258 @@
+﻿@model ICollection<STPC.DynamicForms.Web.Common.Services.Users.User>
+@{
+    ViewBag.Title = "Usuarios";
+}
+
+<div id="migas">
+    <p>Usuarios</p>
+</div>
+<table id="tblOptionsPagination">
+    <tr style="width: 100%">
+        <td>
+            @Html.ActionLink("Crear nuevo...", "Register", null, new { @class = "decoratedButton" })
+        </td>
+        <td>
+            @Html.ActionLink("Cargue Masivo", "massiveLoad", null, new { @class = "decoratedButton" })
+        </td>
+    </tr>
+    <tr style="width: 100%">
+        <td>
+            <input type="button" value="<<" id="btnFirst" />
+        </td>
+        <td>
+            <input type="button" value="<" id="btnPrevius" />
+        </td>
+        <td>
+            @Html.Label("Pagina")
+        </td>
+        <td>
+            <input type="text" value="1" id="txtPageNumber" style="width: 50px;" disabled="disabled" />
+        </td>
+        <td>
+            @Html.Label("De")
+        </td>
+        <td>
+            <input type="text" value="" id="txtTotalPage" style="width: 50px;" disabled="disabled" />
+        </td>
+        <td>
+            <input type="button" value=">" id="btnNext" />
+        </td>
+        <td>
+            <input type="button" value=">>" id="btnLast" />
+        </td>
+        <td>Buscar
+        </td>
+        <td>
+            <input type="text" value="" id="txtSearchUser" />
+        </td>
+        <td>
+            <input type="button" value="..." id="btnBuscar" />
+        </td>
+    </tr>
+</table>
+
+<div class="cols_home" id="tblUsuarios">
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+       
+        getAllUser();
+    })
+    function getFilterUser()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/Account/ListPagedAndFilter/",
+            data: {
+                'pageIndex': 1, 'PageSize': 30, 'searchText': $("#txtSearchUser").val()
+            },
+            dataType: "html",
+            success: function (evt) {
+                //
+                
+                console.log(evt)
+                $('#tblUsuarios').html(evt);
+                $("#txtTotalPage").val(parseInt($("#txtTotalPagesList").val()));
+            },
+            error: function (result, status, error) {
+                console.log(evt)
+                if (result.responseText == "EndSesion") {
+                    var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                    location.href = urlSite
+                }
+                else {
+                    alert("Error al cargar la pagina: " + result.responseText);
+                }
+
+            }
+        });
+    }
+    function getAllUser() {
+        $.ajax({
+            type: "POST",
+            url: "/Account/ListPaged/",
+            data: {
+                'pageIndex': 0, 'PageSize': 30
+            },
+            dataType: "html",
+            success: function (evt) {
+                console.log(evt)
+                $('#tblUsuarios').html(evt);
+                $('#txtTotalPage').val($('#txtTotalPagesList').val());
+            },
+            error: function (result, status, error) {
+
+                if (result.responseText == "EndSesion") {
+                    var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                    location.href = urlSite
+                }
+                else {
+                    alert("Error al cargar la pagina: " + result.responseText);
+                }
+
+            }
+        });
+    }
+    $("#btnFirst").button().click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Account/ListPagedAndFilter/",
+            data: {
+                'pageIndex': 1, 'PageSize': 30, 'searchText': $("#txtSearchUser").val()
+            },
+            dataType: "html",
+            success: function (evt) {
+                $("#txtPageNumber").val(1);
+                $('#tblUsuarios').html(evt);
+            },
+            error: function (result, status, error) {
+
+                if (result.responseText == "EndSesion") {
+                    var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                    location.href = urlSite
+                }
+                else {
+                    alert("Error al cargar la pagina: " + result.responseText);
+                }
+
+            }
+        });
+    });
+
+    $("#btnPrevius").button().click(function () {
+        var page = parseInt($("#txtPageNumber").val());
+        page--;
+
+        if (page >= 1) {
+            $.ajax({
+                type: "POST",
+                url: "/Account/ListPagedAndFilter/",
+                data: {
+                    'pageIndex': page, 'PageSize': 30, 'searchText': $("#txtSearchUser").val()
+                },
+                dataType: "html",
+                success: function (evt) {
+                    //
+                    $("#txtPageNumber").val(page);
+                    console.log(evt)
+                    $('#tblUsuarios').html(evt);
+                },
+                error: function (result, status, error) {
+
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        }
+        else
+            p = 1;
+    });
+
+    $("#btnNext").button().click(function () {
+        var page = parseInt($("#txtPageNumber").val());
+
+        page++;
+        var totalPage = parseInt($('#txtTotalPage').val());
+        if (page <= totalPage) {
+            $.ajax({
+                type: "POST",
+                url: "/Account/ListPagedAndFilter/",
+                data: {
+                    'pageIndex': page, 'PageSize': 30, 'searchText': $("#txtSearchUser").val()
+                },
+                dataType: "html",
+                success: function (evt) {
+                    //
+                    console.log(evt)
+                    $("#txtPageNumber").val(page);
+                    $('#tblUsuarios').html(evt);
+                },
+                error: function (result, status, error) {
+
+                    if (result.responseText == "EndSesion") {
+                        var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                        location.href = urlSite
+                    }
+                    else {
+                        alert("Error al cargar la pagina: " + result.responseText);
+                    }
+
+                }
+            });
+        }
+        else {
+
+            page--;
+        }
+    });
+
+    $("#btnLast").button().click(function () {
+        $('#txtPageNumber').val($('#txtTotalPagesList').val());
+        $.ajax({
+            type: "POST",
+            url: "/Account/ListPagedAndFilter/",
+            data: {
+                'pageIndex': $('#txtTotalPagesList').val(), 'PageSize': 30, 'searchText': $("#txtSearchUser").val()
+            },
+            dataType: "html",
+            success: function (evt) {
+                //
+                console.log(evt)
+                $('#tblUsuarios').html(evt);
+            },
+            error: function (result, status, error) {
+
+                if (result.responseText == "EndSesion") {
+                    var urlSite = window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                    location.href = urlSite
+                }
+                else {
+                    alert("Error al cargar la pagina: " + result.responseText);
+                }
+
+            }
+        });
+    });
+
+    $("#btnBuscar").button().click(function () {
+
+        var textSearch = $("#txtSearchUser").val()
+        console.log(textSearch)
+        if (textSearch == '') {
+            getAllUser()
+        }
+        else {
+            getFilterUser()
+        }
+        $("#txtPageNumber").val("1")
+    })
+</script>

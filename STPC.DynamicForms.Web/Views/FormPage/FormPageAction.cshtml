@@ -1,0 +1,92 @@
+﻿@model List<STPC.DynamicForms.Web.Services.Entities.FormPageActions>
+@{
+    ViewBag.Title = "Acciones por Página";
+
+    foreach (var action in Model)
+    {
+        ViewBag.GuidList = ViewBag.GuidList + action.Uid.ToString() + "/";
+    }
+}
+
+@using (Ajax.BeginForm("UpdateActions", "FormPage",
+   new AjaxOptions { UpdateTargetId = "CustomerFormActions", OnSuccess = "onEditCustomerProfileSuccessActions" },
+   new { id = "EditCustomerProfileForm" }))
+{
+    @Html.Hidden("GoToPage", null, new { id = "GoToPage" })
+    @Html.Hidden("FormStateId", null, new { id = "FormStateId" })
+    @Html.Hidden("ActionId", null, new { id = "ActionId" })
+    
+    <div id="migas">
+        <p>Seleccionar las acciones que aplican para esta página: @ViewBag.FormPageName</p>
+    </div>
+    <br />
+    <table>
+        <tr>
+            <td>
+                <button id="NewAccion">Agregar nueva acción</button>
+
+            </td>
+            <td style="width: 50px;"></td>
+            <td></td>
+            <td>
+                @Html.DropDownList("PageStrategy",
+                        new SelectList((IEnumerable<SelectListItem>)ViewBag.StrategiesSelect, "Value", "Text"), new { @class = "text ui-widget-content ui-corner-all" })
+            </td>
+        </tr>
+
+
+    </table>
+
+    <br />
+    <div id="CustomerFormActions">
+        @{Html.RenderPartial("_FormPageAction");}
+    </div>
+  
+    @Html.Hidden("FormPageId", (Guid)ViewBag.FormPageId)
+    @Html.Hidden("FormId", (Guid)ViewBag.FormId)
+    @Html.ActionLink("Volver a la lista de páginas", "Edit", "Form", new { id = ViewBag.FormId }, new { @class = "decorated" })
+    @Html.Hidden("arrayOrder", null, new { id = "txtArrayOrder" })
+    @Html.Hidden("GuidList", (string)ViewBag.GuidList)
+
+    <button id="StarQuery" type="submit">
+        Guardar</button>
+    <div id="testDiv"></div>
+}
+
+
+<div id="modalContent2"></div>
+<div id="modalContentStates" title="Agregar estado a la acción"></div>
+
+
+@section BottomAssets 
+  {
+    <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/TableDnD/jquery.tablednd.0.7.min.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        @* $(document).ready(function () {
+            // Initialise the table 
+            $("#TheTable").tableDnD({
+                onDragClass: "myDragClass",
+                onDrop: function (table, row) {
+                    $('#txtArrayOrder').val($('#TheTable').tableDnDSerialize());
+                    //alert($('#TheTable').tableDnDSerialize());
+                    var iNewOrderList = $('#txtArrayOrder').val();
+                    var iGuidList = $('#GuidList').val();
+
+                    $.post("@Url.Action("SaveOrder", "FormPage")", {
+                        iNewOrderList: iNewOrderList,
+                        iGuidList: iGuidList
+                    },
+          function (carData) {
+          });
+                }
+            });
+        });*@
+
+        
+
+    </script>
+}
+
+
+

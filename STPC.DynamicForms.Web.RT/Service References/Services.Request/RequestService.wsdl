@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="RequestService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd3" namespace="http://STPC.LiSim.Abc" />
+      <xsd:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/STPC.DynamicForms.Core" />
+      <xsd:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/STPC.DynamicForms.Services.RequestService" />
+      <xsd:import schemaLocation="http://localhost:6615/RequestService.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/STPC.DynamicForms.Web.Models" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IRequestService_GetRequest_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequest" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestDynamic_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestDynamic" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestDynamic_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestDynamicResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestDynamicSearcher_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestDynamicSearcher" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestDynamicSearcher_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestDynamicSearcherResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestByProcedure_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestByProcedure" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestByProcedure_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestByProcedureResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetIndicatorByProcedure_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetIndicatorByProcedure" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetIndicatorByProcedure_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetIndicatorByProcedureResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestsByParamProcedure_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestsByParamProcedure" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestsByParamProcedure_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestsByParamProcedureResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetSchemaTable_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSchemaTable" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetSchemaTable_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSchemaTableResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_InsertAtributesHierarchy_InputMessage">
+    <wsdl:part name="parameters" element="tns:InsertAtributesHierarchy" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_InsertAtributesHierarchy_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InsertAtributesHierarchyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_UpdateAtributesHierarchy_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateAtributesHierarchy" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_UpdateAtributesHierarchy_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateAtributesHierarchyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_FindRecordIntoAtributeTable_InputMessage">
+    <wsdl:part name="parameters" element="tns:FindRecordIntoAtributeTable" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_FindRecordIntoAtributeTable_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FindRecordIntoAtributeTableResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_CreateRequest_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateRequest" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_CreateRequest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_CreatePageFlowStepInstance_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreatePageFlowStepInstance" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_CreatePageFlowStepInstance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreatePageFlowStepInstanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_NewPageFlowStepInstance_InputMessage">
+    <wsdl:part name="parameters" element="tns:NewPageFlowStepInstance" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_NewPageFlowStepInstance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NewPageFlowStepInstanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetPageFlowStepInstance_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPageFlowStepInstance" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetPageFlowStepInstance_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPageFlowStepInstanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestById_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestById" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetRequestById_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRequestByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_UpdateRequest_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateRequest" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_UpdateRequest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateRequestResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_InsertDecisionEngineResult_InputMessage">
+    <wsdl:part name="parameters" element="tns:InsertDecisionEngineResult" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_InsertDecisionEngineResult_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InsertDecisionEngineResultResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetUserFormPageActionsByState_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserFormPageActionsByState" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_GetUserFormPageActionsByState_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserFormPageActionsByStateResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_getFieldByPage_InputMessage">
+    <wsdl:part name="parameters" element="tns:getFieldByPage" />
+  </wsdl:message>
+  <wsdl:message name="IRequestService_getFieldByPage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:getFieldByPageResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IRequestService">
+    <wsdl:operation name="GetRequest">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetRequest" message="tns:IRequestService_GetRequest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetRequestResponse" message="tns:IRequestService_GetRequest_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestDynamic">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetRequestDynamic" message="tns:IRequestService_GetRequestDynamic_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetRequestDynamicResponse" message="tns:IRequestService_GetRequestDynamic_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestDynamicSearcher">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetRequestDynamicSearcher" message="tns:IRequestService_GetRequestDynamicSearcher_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetRequestDynamicSearcherResponse" message="tns:IRequestService_GetRequestDynamicSearcher_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestByProcedure">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetRequestByProcedure" message="tns:IRequestService_GetRequestByProcedure_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetRequestByProcedureResponse" message="tns:IRequestService_GetRequestByProcedure_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIndicatorByProcedure">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetIndicatorByProcedure" message="tns:IRequestService_GetIndicatorByProcedure_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetIndicatorByProcedureResponse" message="tns:IRequestService_GetIndicatorByProcedure_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestsByParamProcedure">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetRequestsByParamProcedure" message="tns:IRequestService_GetRequestsByParamProcedure_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetRequestsByParamProcedureResponse" message="tns:IRequestService_GetRequestsByParamProcedure_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSchemaTable">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetSchemaTable" message="tns:IRequestService_GetSchemaTable_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetSchemaTableResponse" message="tns:IRequestService_GetSchemaTable_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InsertAtributesHierarchy">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/InsertAtributesHierarchy" message="tns:IRequestService_InsertAtributesHierarchy_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/InsertAtributesHierarchyResponse" message="tns:IRequestService_InsertAtributesHierarchy_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateAtributesHierarchy">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/UpdateAtributesHierarchy" message="tns:IRequestService_UpdateAtributesHierarchy_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/UpdateAtributesHierarchyResponse" message="tns:IRequestService_UpdateAtributesHierarchy_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FindRecordIntoAtributeTable">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/FindRecordIntoAtributeTable" message="tns:IRequestService_FindRecordIntoAtributeTable_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/FindRecordIntoAtributeTableResponse" message="tns:IRequestService_FindRecordIntoAtributeTable_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateRequest">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/CreateRequest" message="tns:IRequestService_CreateRequest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/CreateRequestResponse" message="tns:IRequestService_CreateRequest_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreatePageFlowStepInstance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/CreatePageFlowStepInstance" message="tns:IRequestService_CreatePageFlowStepInstance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/CreatePageFlowStepInstanceResponse" message="tns:IRequestService_CreatePageFlowStepInstance_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NewPageFlowStepInstance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/NewPageFlowStepInstance" message="tns:IRequestService_NewPageFlowStepInstance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/NewPageFlowStepInstanceResponse" message="tns:IRequestService_NewPageFlowStepInstance_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPageFlowStepInstance">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetPageFlowStepInstance" message="tns:IRequestService_GetPageFlowStepInstance_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetPageFlowStepInstanceResponse" message="tns:IRequestService_GetPageFlowStepInstance_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestById">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetRequestById" message="tns:IRequestService_GetRequestById_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetRequestByIdResponse" message="tns:IRequestService_GetRequestById_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRequest">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/UpdateRequest" message="tns:IRequestService_UpdateRequest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/UpdateRequestResponse" message="tns:IRequestService_UpdateRequest_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InsertDecisionEngineResult">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/InsertDecisionEngineResult" message="tns:IRequestService_InsertDecisionEngineResult_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/InsertDecisionEngineResultResponse" message="tns:IRequestService_InsertDecisionEngineResult_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserFormPageActionsByState">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/GetUserFormPageActionsByState" message="tns:IRequestService_GetUserFormPageActionsByState_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/GetUserFormPageActionsByStateResponse" message="tns:IRequestService_GetUserFormPageActionsByState_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="getFieldByPage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRequestService/getFieldByPage" message="tns:IRequestService_getFieldByPage_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRequestService/getFieldByPageResponse" message="tns:IRequestService_getFieldByPage_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RequestServiceEndpoint" type="tns:IRequestService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetRequest">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestDynamic">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetRequestDynamic" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestDynamicSearcher">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetRequestDynamicSearcher" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestByProcedure">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetRequestByProcedure" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIndicatorByProcedure">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetIndicatorByProcedure" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestsByParamProcedure">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetRequestsByParamProcedure" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSchemaTable">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetSchemaTable" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertAtributesHierarchy">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/InsertAtributesHierarchy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateAtributesHierarchy">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/UpdateAtributesHierarchy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindRecordIntoAtributeTable">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/FindRecordIntoAtributeTable" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateRequest">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/CreateRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreatePageFlowStepInstance">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/CreatePageFlowStepInstance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NewPageFlowStepInstance">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/NewPageFlowStepInstance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPageFlowStepInstance">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetPageFlowStepInstance" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestById">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetRequestById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRequest">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/UpdateRequest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertDecisionEngineResult">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/InsertDecisionEngineResult" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserFormPageActionsByState">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/GetUserFormPageActionsByState" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFieldByPage">
+      <soap:operation soapAction="http://tempuri.org/IRequestService/getFieldByPage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RequestService">
+    <wsdl:port name="RequestServiceEndpoint" binding="tns:RequestServiceEndpoint">
+      <soap:address location="http://localhost:6615/RequestService.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

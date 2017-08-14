@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/STPC.DynamicForms.Web.Models" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/STPC.DynamicForms.Web.Models" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:6615/UsersService.svc?xsd=xsd2" namespace="http://STPC.LiSim.Abc" />
+  <xs:import schemaLocation="http://localhost:6615/UsersService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="FormPage">
+    <xs:sequence>
+      <xs:element name="_x003C_Description_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_DisplayOrder_x003E_k__BackingField" type="xs:int" />
+      <xs:element xmlns:q1="http://STPC.LiSim.Abc" name="_x003C_FormPageByStates_x003E_k__BackingField" nillable="true" type="q1:ArrayOfFormPageByStates" />
+      <xs:element xmlns:q2="http://STPC.LiSim.Abc" name="_x003C_Form_x003E_k__BackingField" nillable="true" type="q2:Form" />
+      <xs:element name="_x003C_Name_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element xmlns:q3="http://STPC.LiSim.Abc" name="_x003C_PageActions_x003E_k__BackingField" nillable="true" type="q3:ArrayOfFormPageActions" />
+      <xs:element xmlns:q4="http://STPC.LiSim.Abc" name="_x003C_PageEvents_x003E_k__BackingField" nillable="true" type="q4:ArrayOfPageEvent" />
+      <xs:element xmlns:q5="http://STPC.LiSim.Abc" name="_x003C_Panels_x003E_k__BackingField" nillable="true" type="q5:ArrayOfPanel" />
+      <xs:element name="_x003C_ReadOnlyState_x003E_k__BackingField" nillable="true" type="ser:guid" />
+      <xs:element name="_x003C_ShortPath_x003E_k__BackingField" nillable="true" type="xs:string" />
+      <xs:element name="_x003C_SortOrder_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_StrategyID_x003E_k__BackingField" type="xs:int" />
+      <xs:element name="_x003C_Timestamp_x003E_k__BackingField" type="xs:dateTime" />
+      <xs:element name="_x003C_Uid_x003E_k__BackingField" type="ser:guid" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="FormPage" nillable="true" type="tns:FormPage" />
+  <xs:complexType name="ArrayOfFormPage">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FormPage" nillable="true" type="tns:FormPage" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFormPage" nillable="true" type="tns:ArrayOfFormPage" />
+</xs:schema>

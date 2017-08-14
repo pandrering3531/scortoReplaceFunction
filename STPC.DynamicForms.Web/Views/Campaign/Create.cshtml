@@ -1,0 +1,87 @@
+﻿@model STPC.DynamicForms.Web.Services.Entities.AdCampaign
+<script src="@Url.Content("~/Scripts/jquery.numeric.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Request/RequestQuery.js")" type="text/javascript"></script>
+
+@{
+}
+
+
+
+@using (Ajax.BeginForm("Create", "Campaign", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccess"
+}, new { @id = "updateModeloForm" }))
+{
+    @Html.ValidationSummary(true)
+    
+    <fieldset>
+
+        <legend>Campaña</legend>
+
+        <table class="tableDialog">
+            <tr>
+                <td>Texto campaña
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Text)
+                </td>
+            </tr>
+            <tr>
+                <td>Imágen
+                </td>
+                <td>
+                    @*@Html.TextBoxFor(e => e.Image)*@
+                    <input type="file" id="IDbtnUpload" name="NAMEbtnUpload" />
+                </td>
+            </tr>
+            <tr>
+                <td>Fecha inicio campaña
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.BeginDate, new { id = "txtBeginDate", @class = "jQueryCalendarInput" })
+                </td>
+            </tr>
+            <tr>
+                <td>Fecha fin campaña
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.EndDate, new { id = "txtEndDate", @class = "jQueryCalendarInput" })
+                </td>
+            </tr>
+            <tr>
+                <td>Url Destino
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Url)
+                </td>
+            </tr>
+            <tr>
+                <td>Aplica a los nodos hijos
+                </td>
+                <td>
+                    @Html.CheckBoxFor(e => e.ApplyToChilds)
+                </td>
+            </tr>
+        </table>
+
+    </fieldset>
+    @Html.Hidden("txtPanelText")
+    @Html.Hidden("Jerarquia")
+   
+}
+@*@Html.TextBox("Jerarquia", null, new { id = "txtJerarquia", style = "width:40px", disabled = "disabled" })*@
+<button id="NewCategory">
+    Ver jerarquía</button>
+<div id="NewCategoryForm" title="Seleccionar jerarquía">
+
+    <form>
+        @{Html.RenderPartial("Hierarchies", Model.HierarchyByCampaign);}
+    </form>
+</div>
+
+<script type="text/javascript">
+    
+</script>

@@ -1,0 +1,76 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.Option
+<script src="@Url.Content("~/Scripts/jquery.numeric.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Request/RequestQuery.js")" type="text/javascript"></script>
+
+
+@using (Ajax.BeginForm("Edit", "Option", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccess"
+}, new { @id = "updateModelEditForm" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(e => e.Uid, new { id = "idOption" })
+    @Html.HiddenFor(e => e.Option_Uid_Parent, new { id = "idOptionParent" })
+    @Html.HiddenFor(e => e.Category_Uid)
+
+    
+    <fieldset>
+
+        <legend>Opciones</legend>
+
+        <table class="tableDialog">
+            <tr>
+                <td>LLave
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Key)
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>Valor
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Value)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Dependencia")
+                </td>
+                <td>
+                    @Html.DropDownList("ddlDependencyOptionEdit",
+            new SelectList(Enumerable.Empty<SelectListItem>(), "text", "value"), "---Seleccione la dependencia---",
+            new { style = "width:200px" })
+                </td>
+            </tr>
+            <tr>
+                @if (ViewBag.IsSingleTenant == 1)
+                {
+                    @Html.Hidden("CategoryName", (string)@ViewBag.categoryname)
+                  
+                   
+                    <td>
+                        <label for="parent">Empresa</label></td>
+                    <td>
+
+                        @Html.DropDownList("ddlAplicationNameOptionsEdit",
+            new SelectList(ViewBag.listAplication, "Value", "Text",Model.AplicationNameId), "---Ver todas las opciones---",
+            new { style = "width:200px" })
+
+                    </td>
+                  
+                  
+                }
+            </tr>
+        </table>
+
+    </fieldset>
+ 
+   
+}
+

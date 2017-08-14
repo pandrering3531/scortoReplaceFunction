@@ -1,0 +1,211 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.PerformanceIndicator>
+@{
+    ViewBag.Title = "Index";
+    
+}
+
+<script src="@Url.Content("~/Scripts/jquery.form.js")" type="text/javascript"></script>
+
+@Html.ActionLink("Crear Indicador", "Create", null, new { @class = "decorated NewIndicatorLink", title = "Nuevo" })
+<table id="TheTable" class="resultados" summary="Sus páginas" style="width: 100%">
+    <tr class="nodrop nodrag">
+        <th>Tipo Indicador</th>
+        <th>Procedimiento</th>
+        <th>Asignación</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.IndicatorType
+            </td>
+            <td>
+                @item.Source
+            </td>
+            <td>
+                @if (item.Role != null)
+                {
+                    @item.Role.Rolename
+                }
+                else if(item.Hierarchy != null)
+                {
+                    @item.Hierarchy.Name
+                }
+                else if(item.LastModifiedBy != null)
+                {
+                 <p>Usuario que modificó</p>
+                }
+
+            </td>
+            <td>
+                @item.Enabled
+            </td>
+            <td>
+
+                @Html.ActionLink(" ", "Edit", new { id = item.Id }, new { @class = "decorated EditIndicatorLink BotonEdit", title = "Editar" })
+
+                <span  data-key="@item.Id" title="Borrar Formulario" onclick="deletePage('@item.Id');" style="CURSOR: pointer;">
+                    <img src="@Url.Content("~/Content/images/eliminar.gif")" alt="Eliminar" ID = "btnCancel"/></span>
+            </td>
+        </tr>
+    }
+</table>
+
+<script type="text/javascript">
+    function deletePage(key) {
+        if (confirm("¿Esta seguro de borrar este indicador?")) {
+            $.post("/PerformanceIndicator/Delete", { id: key },
+                     function (data) {
+                         if (data.Success == true) {
+
+                             updateSuccess(data);
+                         }
+                         else alert("Delete failed");
+                     }, "json");
+        }
+    }
+
+    function CreateIndicator() {
+
+
+        var ajaxSubmitOptions = {
+
+            beforeSubmit: showRequest,  // pre-submit callback 
+            success: showResponse,  // post-submit callback 
+            error: function (response, status, err) {
+                // This option doesn't catch any of the error below, 
+                // everything is always 'OK' a.k.a 200
+                if (response.status == 400) {
+                    alert("Sorry, this is bad request!");
+                }
+                if (response.status == 601) {
+                    sessionTimedOut();
+                }
+            }
+        }
+
+        $("#updateModelForm").ajaxSubmit(ajaxSubmitOptions);
+        return false;
+        //        updateSuccess();
+    }
+
+    function EditIndicator() {
+
+
+        var ajaxSubmitOptions = {
+
+            beforeSubmit: showRequest,  // pre-submit callback 
+            success: showResponse,  // post-submit callback 
+            error: function (response, status, err) {
+                // This option doesn't catch any of the error below, 
+                // everything is always 'OK' a.k.a 200
+                if (response.status == 400) {
+                    alert("Sorry, this is bad request!");
+                }
+                if (response.status == 601) {
+                    sessionTimedOut();
+                }
+            }
+        }
+
+        $("#updateModelEditForm").ajaxSubmit(ajaxSubmitOptions);
+        return false;
+        //        updateSuccess();
+    }
+    // pre-submit callback 
+    function showRequest(formData, jqForm, options) {
+
+        var queryString = $.param(formData);
+
+        return true;
+    }
+
+    // post-submit callback 
+    function showResponse(responseText, statusText, xhr, $form) {
+        updateSuccess();
+    }
+
+
+    $(function () {
+        $(".NewIndicatorLink").button();
+        $(".decorated").button();
+        $('#modalContent').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+
+                    CreateIndicator();
+
+                }
+            }
+        });
+
+        $(".NewIndicatorLink").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#modalContent');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModelForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+
+    $(function () {
+        $(".EditIndicatorLink").button();
+        $(".decorated").button();
+        $('#EditIndicator').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    EditIndicator();
+                }
+            }
+        });
+
+        $(".EditIndicatorLink").click(function () {
+            linkObj = $(this);
+            var dialogDiv = $('#EditIndicator');
+            var viewUrl = linkObj.attr('href');
+            $.get(viewUrl, function (data) {
+                dialogDiv.html(data);
+                var $form = $("#updateModelEditForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+
+    function updateSuccess(data) {
+
+        $("#PerfmIndicatorListForm").submit();
+
+        $('#modalContent').dialog("close");
+        $('#EditIndicator').dialog("close");
+    }
+
+
+
+
+</script>
+
+

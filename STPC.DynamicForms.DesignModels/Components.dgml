@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="Core" Bounds="95.6652561442057,6.72571088790893,50,25.96" UseManualLocation="True" />
+    <Node Id="DataAccess.RT" Bounds="-153.155983031315,75.3217935271665,96.0466666666666,25.96" UseManualLocation="True" />
+    <Node Id="Database" Category="Category10" Bounds="-65.7701806894938,132.950246930538,69.2233333333333,25.96" UseManualLocation="True" />
+    <Node Id="DecisionEngine" Bounds="252.360613517256,75.8003328306604,104.146666666667,25.96" Label="Decision Engine" UseManualLocation="True" />
+    <Node Id="Infraestrcutre" Bounds="175.665256144206,7.57851364135742,90.9933333333333,25.96" Label="Infrastructure" UseManualLocation="True" />
+    <Node Id="Services" Category="Category4" Bounds="-2.20684863952958,-51.1272988134882,62.39,25.96" UseManualLocation="True" />
+    <Node Id="Web" Category="Category2" Bounds="419.987984667981,-105.261534696054,50,25.96" UseManualLocation="True" />
+    <Node Id="Web,RT" Category="Category2" Bounds="238.081094329475,-105.466110841373,60.6033333333335,25.96" Label="Web.RT" UseManualLocation="True" />
+    <Node Id="Web.Common" Bounds="399.400033997391,75.4911909777293,96.0933333333332,25.96" UseManualLocation="True" />
+    <Node Id="Web.Models" Bounds="-8.40898081382117,76.9901469305383,86.29,25.96" UseManualLocation="True" />
+  </Nodes>
+  <Links>
+    <Link Source="DataAccess.RT" Target="Database" Bounds="-88.4710157543414,101.281793527167,33.5510265503066,26.1374320247388" />
+    <Link Source="Services" Target="Core" Bounds="49.5569830640377,-25.1672988134882,42.9282306165026,27.0899408110556" />
+    <Link Source="Services" Target="DataAccess.RT" Bounds="-84.8166574583918,-25.1672997665405,100.03730815236,94.3151755259276" />
+    <Link Source="Services" Target="Infraestrcutre" Bounds="60.1831513604704,-28.6177578896293,109.881337616725,33.5668762169237" />
+    <Link Source="Services" Target="Web.Models" Bounds="29.5704869295657,-25.1672997665405,4.17982616501809,93.1664905705904" />
+    <Link Source="Web" Target="Core" Bounds="154.172384940519,-83.649142040928,265.815599727462,91.7849852282106" />
+    <Link Source="Web" Target="DecisionEngine" Bounds="320.028825397803,-79.301534696054,114.883092808528,147.992527672393" />
+    <Link Source="Web" Target="Infraestrcutre" Bounds="254.945139868596,-80.1410745554561,165.961400113383,83.668060169392" />
+    <Link Source="Web" Target="Services" Bounds="69.1079030344642,-89.0282740245197,350.880081633517,45.6601748001225" />
+    <Link Source="Web" Target="Web.Common" Bounds="445.164547060111,-79.301534696054,1.98317868978978,145.793558202597" />
+    <Link Source="Web,RT" Target="Core" Bounds="144.922566619472,-79.506110841373,106.370060858696,80.7883325483566" />
+    <Link Source="Web,RT" Target="DecisionEngine" Bounds="270.964288955268,-79.506110841373,29.1325489880454,146.47933001385" />
+    <Link Source="Web,RT" Target="Infraestrcutre" Bounds="230.052890168881,-79.506110841373,32.9078838690185,78.7800368959779" />
+    <Link Source="Web,RT" Target="Services" Bounds="68.9598938510089,-85.6081089864545,169.121200478466,38.3878531630908" />
+    <Link Source="Web,RT" Target="Web.Common" Bounds="281.226950832775,-79.506110841373,147.045154760239,148.599960999031" />
+    <Link Source="Web.Models" Target="Database" Bounds="-9.01417821242045,102.950149993896,28.4658967814197,24.1743040259951" />
+  </Links>
+  <Categories>
+    <Category Id="Category10" Label="Category 10" Background="#FF672878" IsTag="True" />
+    <Category Id="Category2" Label="Category 2" Background="#FF339933" IsTag="True" />
+    <Category Id="Category4" Label="Category 4" Background="#FF1BA1E2" IsTag="True" />
+  </Categories>
+  <Properties>
+    <Property Id="Background" Label="Background" Description="The background color" DataType="System.Windows.Media.Brush" />
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="IsTag" DataType="System.Boolean" />
+    <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="UseManualLocation" DataType="System.Boolean" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+  </Properties>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Category 10" ValueLabel="Has category">
+      <Condition Expression="HasCategory('Category10')" />
+      <Setter Property="Background" Value="#FF672878" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Category 4" ValueLabel="Has category">
+      <Condition Expression="HasCategory('Category4')" />
+      <Setter Property="Background" Value="#FF1BA1E2" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Category 2" ValueLabel="Has category">
+      <Condition Expression="HasCategory('Category2')" />
+      <Setter Property="Background" Value="#FF339933" />
+    </Style>
+  </Styles>
+</DirectedGraph>

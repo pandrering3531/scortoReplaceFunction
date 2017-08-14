@@ -1,0 +1,64 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.Form>
+<div class="menu-option">
+    <div class="title">
+        Opciones
+    </div>
+    <div class="item"><a href="@Url.Action("Index", "Home")">Inicio</a></div>
+    <div class="dynamicItem">
+        @if (Model != null)
+        {
+            string index = string.Empty;
+            foreach (var form in Model)
+            {
+                index = "content-list_" + form.Name.Replace(" ", "_");
+            <div class="@index">
+            </div> 
+            }
+
+        }
+    </div>
+    <div class="item">
+        Nuevas Solicitudes
+        @paintMenu()
+    </div>
+    <div class="item"><a href="@Url.Action("MyRequest", "Request")">Mis solicitudes</a></div>
+    <div class="item"><a href="@Url.Action("RequestByState", "Request", new { GuidState="6e96b992-c489-407f-8a6f-0b77654f9921"})">Entrevistas</a></div>
+    <div class="item"><a href="@Url.Action("RequestByState", "Request", new { GuidState="fec38aa0-7e78-420d-b736-407488bac85b"})">Solicitudes por verificars</a></div>
+    <div class="item"><a href="@Url.Action("RequestByState", "Request", new { GuidState="fec38aa0-7e78-420d-b736-407488bac85c"})">Scoring Total</a></div>
+    <div class="item"><a href="@Url.Action("List", "Request")">Busqueda de Solicitudes</a></div>
+</div>
+@helper paintMenu()
+{
+    <ul class="request-list">
+        @if (Model != null)
+        {
+            foreach (var form in Model)
+            {
+                if (ViewBag.ViewLinkMenu == "1")
+                {          
+            <li>
+
+                <a href="@Url.Action("CreateRequest", "Form", new { id = form.Uid })" >@form.Name</a>
+            </li>         
+                }
+                else
+                { 
+            <li>
+                @form.Name
+            </li>
+                }
+
+            }
+        }
+    </ul>
+}
+
+
+
+
+
+
+
+
+
+

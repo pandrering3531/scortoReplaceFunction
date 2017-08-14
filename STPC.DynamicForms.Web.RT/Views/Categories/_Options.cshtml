@@ -1,0 +1,244 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.Category
+@if (Model == null)
+{ 
+    <h2>Seleccione una categoria o cree una nueva</h2>
+}
+else
+{
+    if (Model.Options.Count() == 0)
+    { 
+    <h2>No hay opciones en esta categoria</h2>
+    }
+    
+    <table id="OptionsList" class="resultados" summary="Opciones por categoria" @{if (Model.Options.Count() == 0)
+                                                                                  {<text>style="display:none"</text>}}>
+        <tr>
+            <th>Llave</th>
+            <th>Valor</th>
+            <th>Acciones</th>
+        </tr>
+        </><tbody>
+
+            @foreach (var item in ViewBag.listOpciones)
+            {<tr>
+                <td>@item.Key</td>
+                <td>@item.Value</td>
+                <td>
+                    @if (ViewData["Removeable"].ToString() == "1")
+                    {
+                        <span class="ui-icon ui-icon-trash ui-state-default ui-corner-all" data-key="@item.Key" title="Borrar Opción" onclick="deleteme('@item.Uid');"></span>                         
+                    }
+                    @if (ViewData["Editable"].ToString() == "1")
+                    {
+                        @Html.ActionLink(" ", "Edit", new { id = item.Uid }, new { @class = "decorated EditLink ui-icon ui-icon-pencil ui-state-default ui-corner-all", title = "Editar Opción" })
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+            if (ViewData["Editable"].ToString() == "1")
+            {
+    <button id="NewOption" data-categoryid="@Model.Name">Crear una nueva opción en esta categoria</button>
+            }
+    <div id="NewOptionForm" title="Crear opción nueva">
+        <p class="validateTips">Todos los campos son obligatorios.</p>
+        <form>
+            <table>
+                <tr>
+                    <td>
+                        @Html.Label("Llave")
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="Key" class="text ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Valor")
+
+                    </td>
+                    <td>
+                        <input type="text" name="name" id="Value" class="text ui-widget-content ui-corner-all" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Dependencia")
+
+                    </td>
+                    <td>
+                        @Html.DropDownList("ddlDependencyOption",
+            new SelectList(Enumerable.Empty<SelectListItem>(), "text", "value"), "---Seleccione la dependencia---",
+            new { style = "width:200px" })
+                    </td>
+                </tr>
+                <tr>
+                    @if (ViewBag.IsSingleTenant == 1)
+                    {
+                        @Html.Hidden("CategoryName", (string)@ViewBag.categoryname)
+                  
+                   
+                        <td>
+                            <label for="parent">Empresa</label></td>
+                        <td>
+
+                            @Html.DropDownList("ddlAplicationNameOptions",
+            new SelectList(ViewBag.listAplication, "Value", "Text"), "---Ver todas las opciones---",
+            new { style = "width:200px" })
+
+                        </td>
+                  
+                  
+                    }
+                </tr>
+            </table>
+
+        </form>
+    </div>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/Categories/Options.js")"></script>
+}
+
+<script type="text/javascript">
+
+
+
+    $(function () {
+        $(".EditLink").button();
+        $(".decorated").button();
+        $('#EditOption').dialog({
+            autoOpen: false,
+            width: 550,
+            resizable: false,
+            modal: true,
+            buttons: {
+                "Actualizar": function () {
+                    UpdateOptionDataModel();
+                }
+            }
+        });
+
+        $(".EditLink").click(function () {
+
+            linkObj = $(this);
+            var dialogDiv = $('#EditOption');
+            var viewUrl = linkObj.attr('href');
+
+            $.get(viewUrl, function (data) {
+                $.getJSON("@Url.Action("LoadOptionsByIdOption", "Categories")", { IdCategoria: '@Model.Dependency' },
+                   function (carData) {
+                       var select = $("#ddlDependencyOptionEdit");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: "",
+                           text: "---Seleccione la dependencia---"
+                       }));
+                       console.log($("#idOptionParent").val())
+                       $.each(carData, function (index, itemData) {
+                           if (parseInt($("#idOptionParent").val()) == itemData.Value) {
+
+                               select.append($('<option/>', {
+                                   value: itemData.Value,
+                                   selected: true,
+                                   text: itemData.Text
+
+                               }));
+                           }
+                           else {
+                               select.append($('<option/>', {
+                                   value: itemData.Value,
+                                   text: itemData.Text
+
+                               }));
+                           }
+                       });
+
+
+                   });
+
+                dialogDiv.html(data);
+                var $form = $("#updateModelEditForm");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse(document);
+                $form.validate($form.data("unobtrusiveValidation").options);
+                dialogDiv.dialog('open');
+            });
+            return false;
+        });
+    });
+        $(document).ready(function () {
+
+            $("#NewOption").click(function () {
+
+                $.getJSON("@Url.Action("LoadOptionsByIdOption", "Categories")", { IdCategoria: '@Model.Dependency' },
+                   function (carData) {
+                       var select = $("#ddlDependencyOption");
+                       select.empty();
+                       select.append($('<option/>', {
+                           value: "",
+                           text: "---Seleccione la dependencia---"
+                       }));
+                       $.each(carData, function (index, itemData) {
+                           select.append($('<option/>', {
+                               value: itemData.Value,
+                               text: itemData.Text
+
+                           }));
+                       });
+
+
+                   });
+            });
+        });
+
+
+        function UpdateOptionDataModel() {
+
+
+            var ajaxSubmitOptions = {
+
+                beforeSubmit: showRequest,  // pre-submit callback 
+                success: showResponse,  // post-submit callback 
+                error: function (response, status, err) {
+                    // This option doesn't catch any of the error below, 
+                    // everything is always 'OK' a.k.a 200
+                    if (response.status == 400) {
+                        alert("Sorry, this is bad request!");
+                    }
+                    if (response.status == 601) {
+                        sessionTimedOut();
+                    }
+                }
+            }
+
+            $("#updateModelEditForm").ajaxSubmit(ajaxSubmitOptions);
+            return false;
+        }
+
+
+
+
+
+
+
+        // pre-submit callback 
+        function showRequest(formData, jqForm, options) {
+
+            var queryString = $.param(formData);
+
+            return true;
+        }
+
+        // post-submit callback 
+        function showResponse(responseText, statusText, xhr, $form) {
+            updateSuccess();
+        }
+
+        function updateSuccess(data) {
+            $("#Options").load("/Categories/Options/", { categoryname: $("#CategoriesList").val() });
+            $("#CategoriesForm").submit();
+            $('#EditOption').dialog("close");
+        }
+
+</script>
+
+

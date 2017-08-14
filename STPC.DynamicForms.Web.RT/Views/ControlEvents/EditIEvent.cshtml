@@ -1,0 +1,290 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.PageEvent
+@{
+    
+}
+
+@using (Ajax.BeginForm("Edit", "ControlEvents", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccess"
+}, new { @id = "updateModelForm" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        @Html.Hidden("Data_FormPageId", (Guid)ViewBag.Data_FormPageId)
+        <legend>Disparador</legend>
+        <table class="tableDialog">
+            <tr>
+                <td>
+
+                    @Html.Label("Evento del control:")
+                </td>
+                <td>
+                    @*<label>@Html.RadioButton("Inactivo", "False")Oculto</label>
+                    <label>@Html.RadioButton("Inactivo", "True")Inactivo</label>
+                    <label>@Html.RadioButton("Inactivo", "True")Cascade</label>*@
+                    @Html.DropDownListFor(e => e.EventType, new SelectList(@ViewBag.Eventos, "Value", "Text"), new { @class = "chzn-select", style = "width:200px", id = "ddlEvento" })
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Seleccione el panel:")
+                </td>
+                <td>
+                    @Html.DropDownList("ddlPanels",
+                    new SelectList((IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.Panel>)ViewBag.Panels, "Uid", "Name", ViewBag.selectedTriggerPanelValue),
+                    "---Seleccione el panel---",
+            new { style = "width:200px" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Control que genera evento:")
+
+                </td>
+                <td>
+                    @Html.DropDownListFor(m => m.PageFieldUid, new SelectList(ViewBag.triggerPageFieldsList, "Uid", "FormFieldName"),
+"---Seleccione el control---", new { id = "ddlControlTrigger", style = "width:200px;" })
+                </td>
+                @*<td>
+                    @Html.ValidationMessageFor(e => e.PageFieldUid)
+                </td>*@
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Condición del control")
+                </td>
+                <td>
+                    @Html.EditorFor(e => e.FieldValue, new { id = "txtValue" })
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(e => e.FieldValue)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Opción de la categoría")
+                </td>
+                <td>
+                    @Html.DropDownList("Opciones", new SelectList(ViewBag.categoryOptionsList, "Value", "Text", ViewBag.selectCategoryOptionsList),
+"---Seleccione la opción---", new { id = "ddlOpciones", style = "width:200px;" })
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(e => e.FieldValue)
+                </td>
+            </tr>
+        </table>
+
+    </fieldset>
+    <fieldset>
+
+        <legend>Control objeto del evento</legend>
+
+        <table class="tableDialog">
+            <tr>
+                <td>
+                    @Html.Label("Seleccione la página:")
+                </td>
+                <td>
+                    @Html.DropDownList("ddlPage",
+            new SelectList((IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.FormPage>)ViewBag.FormPages, "Uid", "Name", ViewBag.selectedAssignedPageId), "---Seleccione la página---",
+            new { style = "width:200px" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Seleccione el panel:")
+                </td>
+                <td>
+                    @Html.DropDownList("ddlPanelsResult",
+            new SelectList((IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.Panel>)ViewBag.assignedPanelList, "Uid", "Name", ViewBag.selectedAssignedPanelValue), "---Seleccione el panel---",
+            new { style = "width:200px" })
+                </td>
+                <td>Oculta panel completo
+                </td>
+                <td>
+                    @Html.CheckBox("SelectedPanel", (bool)ViewBag.isListenerPanel, new { id = "ckeckPanelHide" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Control que genera evento:")
+
+                </td>
+                <td>
+                    @Html.DropDownListFor(m => m.ListenerFieldId, new SelectList(ViewBag.assignedPageFieldsList, "Uid", "FormFieldName"),
+"---Seleccione el control---", new { id = "ddlControl", style = "width:200px;", title = "Campo que se inactiva" })
+                </td>
+                <td>
+                    @Html.ValidationMessageFor(e => e.ListenerFieldId)
+                </td>
+            </tr>
+
+        </table>
+
+    </fieldset>
+    @Html.Hidden("txtPanelText")
+    @Html.Hidden("Uid")
+}
+<script type="text/javascript">
+
+    $("#ckeckPanelHide").live("click", function () {
+        var ddlTextPanel = $("#ddlPanelsResult");
+        if ($(this).is(":checked")) {
+            $("#ddlControl").prop('disabled', 'disabled');
+            $("#txtPanelText").val($("#ddlPanelsResult :selected").text());
+        }
+        else
+            $("#ddlControl").removeAttr('disabled');
+    });
+
+    $("#ddlEvento").live("change", function () {
+        if ($(this).val() == 'Cascade') {
+            $("#FieldValue").attr('disabled', 'disabled');
+            $("#ddlOpciones").attr('disabled', 'disabled');
+
+        }
+        else
+            $("#FieldValue").removeAttr('disabled');
+
+    });
+
+
+    $("#ddlPanelsResult").live("change", function () {
+        if ($("#ckeckPanelHide").is(":checked")) {
+            $("#txtPanelText").val($("#ddlPanelsResult :selected").text());
+        }
+
+    });
+
+
+    $(document).ready(function () {
+        if ($("#ckeckPanelHide").attr('checked')) {
+            $("#ddlControl").attr("disabled", "false");
+        }
+
+        if ($("#ddlOpciones").val()) {
+            $("#FieldValue").attr("disabled", "false");
+        }
+
+
+        $("#ddlPage").change(function () {
+            var idModel = $(this).val();
+            if (idModel != "") {
+
+                $.getJSON("@Url.Action("GetPanelsByPage", "ControlEvents")", { id: idModel },
+                           function (carData) {
+
+                               var select = $("#ddlPanelsResult");
+                               select.empty();
+                               select.append($('<option/>', {
+                                   value: "",
+                                   text: "---Seleccione el panel---"
+                               }));
+                               $.each(carData, function (index, itemData) {
+                                   select.append($('<option/>', {
+                                       value: itemData.Value,
+                                       text: itemData.Text
+
+                                   }));
+                               });
+
+
+                           });
+            }
+
+        });
+
+
+        $("#ddlPanels").change(function () {
+            var idModel = $(this).val();
+            if (idModel != "") {
+
+                $.getJSON("@Url.Action("GetFieldByPanel", "ControlEvents")", { id: idModel },
+                           function (carData) {
+
+                               var select = $("#ddlControlTrigger");
+                               select.empty();
+                               select.append($('<option/>', {
+                                   value: "",
+                                   text: "---Seleccione el control---"
+                               }));
+                               $.each(carData, function (index, itemData) {
+                                   select.append($('<option/>', {
+                                       value: itemData.Value,
+                                       text: itemData.Text
+
+                                   }));
+                               });
+
+
+                           });
+            }
+
+        });
+        $("#ddlPanelsResult").change(function () {
+            var idModel = $(this).val();
+            if (idModel != "") {
+
+                $.getJSON("@Url.Action("GetFieldByPanel", "ControlEvents")", { id: idModel },
+                           function (carData) {
+
+                               var select = $("#ddlControl");
+                               select.empty();
+                               select.append($('<option/>', {
+                                   value: "",
+                                   text: "---Seleccione el control---"
+                               }));
+                               $.each(carData, function (index, itemData) {
+                                   select.append($('<option/>', {
+                                       value: itemData.Value,
+                                       text: itemData.Text
+
+                                   }));
+                               });
+
+
+                           });
+            }
+
+        });
+        $("#ddlControlTrigger").change(function () {
+            var idModel = $(this).val();
+
+            if (idModel != "" && $("#ddlEvento").val() != "Cascade") {
+
+                $.getJSON("@Url.Action("GetOptionsByCategory", "ControlEvents")", { id: idModel },
+                           function (carData) {
+
+                               var select = $("#ddlOpciones");
+                               select.empty();
+                               select.append($('<option/>', {
+                                   value: "",
+                                   text: "---Seleccione a opción---"
+                               }));
+                               if (carData != 'Empty') {
+                                   select.removeAttr('disabled');
+                                   $("#FieldValue").attr('disabled', 'disabled');
+                                   $.each(carData, function (index, itemData) {
+
+                                       select.append($('<option/>', {
+                                           value: itemData.Value,
+                                           text: itemData.Text
+
+                                       }));
+
+                                   });
+                               }
+                               else {
+                                   select.attr('disabled', 'disabled');
+                                   $("#FieldValue").removeAttr('disabled');
+                               }
+
+                           });
+            }
+
+        });
+    });
+</script>

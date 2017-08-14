@@ -1,0 +1,93 @@
+﻿@model STPC.DynamicForms.Web.Services.Entities.Hierarchy
+@{
+
+}
+
+@using (Ajax.BeginForm("Edit", "Hierarchies", new AjaxOptions
+{
+    UpdateTargetId = "CustomerFormAttr",
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "updateSuccessUpdate"
+}, new { @id = "updateJerarquiaFormEdit" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+
+        <legend>Editar</legend>
+
+        @Html.HiddenFor(e => e.Id, new { id = "NodeIdEdit" })
+        @Html.Hidden("AddAttr", (object)@ViewBag.AddAttr)
+
+        <table class="tableDialog">
+            <tr>
+                <td>
+                    @Html.Label("Nombre")
+                </td>
+                <td>
+                    @Html.TextBoxFor(e => e.Name, new { id = "txtHierarchyNameEdit" })
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("Nivel:")
+                </td>
+                <td>
+
+                    @Html.TextBoxFor(e => e.Level, new { disabled = "disabled" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Label("TipoNodo:")
+
+                </td>
+                <td>
+                    @Html.DropDownListFor(e => e.NodeType, new SelectList(@ViewBag.HierarchyNodeType, "Id", "NodeType"), "---Seleccione el tipo de nodo---", new { style = "width:200px", id = "ddlEditTipoNodo" })
+                </td>
+            </tr>
+
+        </table>
+
+    </fieldset>
+    
+    <div id="CustomerFormAttrEdit">
+        @if ((List<STPC.DynamicForms.Web.Services.Entities.NodeTypeDetail_Extended>)ViewBag.modelQuery != null)
+        {
+            { Html.RenderPartial("_Atributes", (List<STPC.DynamicForms.Web.Services.Entities.NodeTypeDetail_Extended>)ViewBag.modelQuery); }
+        }
+    </div>
+    <div id="CustomerFormAttr2Edit" style="display: inline-block; float: left; width: 100%">
+    </div>
+   
+}
+
+
+<script type="text/javascript">
+   
+
+    $("#ddlEditTipoNodo").change(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Hierarchies/GetSchemaTable/",
+            data: {
+                'NodeType': $("#ddlEditTipoNodo").val(),
+                'NodeId': $("#NodeIdEdit").val()
+            },
+            dataType: "html",
+            success: function (evt) {
+                //
+                $('#CustomerFormAttr2Edit').html(evt);
+                $("#CustomerFormAttrEdit").css('visibility', 'hidden').is(':hidden') == false
+                $("#CustomerFormAttrEdit").html('');
+                //$("#EditCustomerProfileForm").submit();
+            },
+            error: function (req, status, error) {
+                alert("Error!Occured" + error);
+
+            }
+        });
+    });
+
+</script>

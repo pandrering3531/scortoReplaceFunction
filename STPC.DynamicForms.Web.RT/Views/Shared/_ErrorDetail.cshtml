@@ -1,0 +1,15 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Error Detallado";
+}
+<div class="menu-option" style="align-content:center">
+    <h4>Ha ocurrido un error procesando su solicitud.</h4>
+    <br />
+    <h4 style="color:black">Origen del Error: @Model.ControllerName </h4>
+    <h4>Accion Ejecutada: @Model.ActionName </h4>
+    <h4>Mensaje: @Model.Exception.Message </h4>
+    <h4>Codigo del Error: @ViewBag.correlationID</h4>
+    <div class="menu-option">
+        <div class="decoratedButton"><a href="@Url.Action("Index", "Home")">Volver al inicio</a></div>
+    </div>
+</div>

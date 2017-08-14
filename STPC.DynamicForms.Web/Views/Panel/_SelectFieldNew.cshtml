@@ -1,0 +1,36 @@
+﻿@model STPC.DynamicForms.Web.Models.FormFieldViewModel
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#newFormField").click(function () {
+      $.ajax({
+        url: this.href.replace("SelectedFieldUid", document.getElementById("SelectedFieldUid").value),
+        cache: false,
+        success: function (html) {
+          $("#FormFieldList").append(html);
+          $("#FieldType").fadeOut('slow');
+        }
+      });
+      return false;
+    });
+  });
+</script>
+
+<div id="FieldType">
+  <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 8px 8px 8px 8px;">
+    <legend></legend>
+    <table>
+      <tr>
+        <th colspan="4">Seleccione un tipo de campo</th>
+      </tr>
+      <tr>
+        <td colspan="4">
+          @Html.DropDownListFor(formfield => formfield.SelectedFormFieldType, new SelectList(Model.FormFieldTypes, "Value", "Text", Model.SelectedFormFieldType), new { id = "SelectedFieldUid" })
+          @Html.ValidationMessageFor(formfield => formfield.SelectedFormFieldType)
+          @Html.ActionLink("Add Field", "NewFormField", new { formId = ViewContext.FormContext.FormId, selectedFieldType = "SelectedFieldUid" }, new { id = "newFormField" })
+        </td>
+      </tr>
+    </table>
+  </fieldset>
+    <br />
+
+</div>

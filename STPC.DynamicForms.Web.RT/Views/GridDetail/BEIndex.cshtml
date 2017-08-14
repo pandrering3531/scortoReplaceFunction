@@ -1,0 +1,161 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasica_GridSimuladorCuotasBE>
+
+<input type="hidden" id="inRequestId" value="@ViewBag.RequestId"/>
+
+@{ 
+    var grid = new WebGrid(ajaxUpdateContainerId: "contenedor-grid", rowsPerPage: ViewBag.PageSize, canPage: true);
+    grid.Bind(Model, rowCount: ViewBag.TotalRows, autoSortAndPage: false);
+}
+<div id="contenedor-grid">
+@{
+    
+    IEnumerable<WebGridColumn> cols =
+        new List<WebGridColumn> {
+                new WebGridColumn{
+                    Header="Entidad",
+                    Format = @<text>
+                                <input type="hidden" id="inID" value="@item.F_Id" class="edit"/>
+                                <span class="display"><label id="lblEntidad">@item.F_varEntidadBE</label></span>
+    <div style="display:none;">
+            <label class="SumValorCuota">@item.F_monValorCuotaBe</label>
+            <label class="SumValorObligacion">@item.F_monValorObligacionBe</label>
+            <label class="SumValorSaldo">@item.F_monSaldo</label>
+    </div>
+                                </text>, Style="col1Width"
+                },
+                new WebGridColumn{
+                    Header="Nro Obligacion",
+                    Format = @<text>
+                                <span class="display"><label id="lblObligacion">@item.F_varNumeroObligacionBe</label></span>
+                                </text>, Style="col1Width"
+                },
+                new WebGridColumn{
+                    Header="Valor Cuota", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrcuota">@String.Format("{0:C}",item.F_monValorCuotaBe)</label></span>
+                                </text>, Style="col1Width"
+                },
+                new WebGridColumn{
+                    Header="Valor Obligacion", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrObligacion">@String.Format("{0:C}",item.F_monValorObligacionBe)</label></span>
+                                </text>, Style="col1Width"
+                },
+                new WebGridColumn{
+                    Header="Saldo", 
+                    Format = @<text>
+                                <span class="display"><label id="lblVrSaldoBE">@String.Format("{0:C}",item.F_monSaldo)</label></span>
+                                </text>, Style = "col1Width"
+                },
+                new WebGridColumn{Header="Seleccionar",
+
+                    Format = @<text>
+    <div style="display:@ViewBag.EditRoles">
+        <input type="checkbox" id="inSelectBE" class="SelectBE" @((@item.F_bitSeleccionado ? "checked" : ""))/>
+    </div>
+                            </text>, Style="col1Width"
+                }
+                
+            };
+}
+
+<div class="test" style="overflow: scroll; width: 900px">
+    <div style="width: 1000px">
+@grid.GetHtml(columns: cols, tableStyle: "webgrid-table",
+    headerStyle: "webgrid-header",
+    rowStyle: "webgrid-row-style",
+    alternatingRowStyle: "webgrid-alternating-row",
+    selectedRowStyle: "webgrid-selected-row", 
+    footerStyle: "webgrid-footer", htmlAttributes: new { id = "contenedor-grid" })
+    <br />
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.SelectBE').on("click", function () {
+
+            var requestid = $('#inRequestId').val();
+            var tr = $(this).parents('tr:first');
+            var id = tr.find("#inID").val();
+            var chkSelect = tr.find("#inSelectBE").prop('checked');
+            var isSuccess = -1;
+
+            var Registro =
+            {
+                "F_Id": id,
+                "F_RequestId": requestid,
+                "F_bitSeleccionado": chkSelect
+            };
+
+            blockScreen("Un momento por favor....");
+
+            $.ajax({
+
+                url: '/GridDetail/BEUpdateSelect/',
+
+                data: JSON.stringify(Registro),
+
+                type: 'POST',
+
+                contentType: 'application/json; charset=utf-8',
+
+                success: function (result) {
+                    isSuccess = result;
+
+                },
+                error: function (result) {
+                    isSuccess = result;
+                }
+
+            }).done(function () {
+                if (isSuccess != "-1") {                                     //Successfully saved
+                    //alert(isSuccess);
+                    $('#STPC_DFi_090d4c46-6b9e-41f8-89f8-9a2995056a00').val(isSuccess);
+                    $.unblockUI();
+                }
+                else {                                                      //Data Error
+                    alert("Error. Por favor, revise los datos" + "\n" + isSuccess);
+                    $.unblockUI();
+                }
+            });
+
+        });
+
+        function updateGrid(e) {
+            e.preventDefault();
+            blockScreen("Un momento por favor....");
+            var page = $(this).text();
+            var requestid = $('#inRequestId').val();
+
+            var url = "/GridDetail/BEIndex?requestId=" + requestid + "&page=" + page ;
+            var $container = $("#contenedor-grid");
+            $container.load(url);
+            $.unblockUI();
+
+        };
+        $('#contenedor-grid tfoot tr a').removeAttr('onclick').live('click', updateGrid);
+
+        var totalValorCuota = 0;
+        var totalValorObligacion = 0;
+        var totalValorSaldo = 0;
+
+        $('#contenedor-grid .SumValorCuota').each(function () {
+            totalValorCuota = totalValorCuota + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-grid .SumValorObligacion').each(function () {
+            totalValorObligacion = totalValorObligacion + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-grid .SumValorSaldo').each(function () {
+            totalValorSaldo = totalValorSaldo + parseFloat($(this)[0].innerHTML.toLocaleString());
+        });
+
+        $('#contenedor-grid tbody').append('<tr><td colspan="2"><b>TOTALES</b></td><td><b>$' + totalValorCuota.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td><b>$' + totalValorObligacion.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td><b>$' + totalValorSaldo.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '</b></td><td><b></b></td></tr>');
+
+    });
+</script>
+</div>

@@ -1,0 +1,232 @@
+﻿@model STPC.DynamicForms.Web.RT.Models.FormViewModel
+@{
+    ViewBag.Title = "Campos de panel";
+    
+    <script src="@Url.Content("~/Scripts/tinymce/tiny_mce_jquery.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Panel/Edit.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Panel/Delete.js")" type="text/javascript"></script>
+    
+    }
+    @Html.AntiForgeryToken()
+    <div id="migas">
+        <p>Campos del panel: @Model.panel.Name</p>
+    </div>
+    @Html.Hidden("panelId", @Model.panel.Uid)
+    @Html.Hidden("columnNumber", @Model.panel.Columns)
+
+    @using (Html.BeginForm("Edit", "Panel", FormMethod.Post, new { id = "frmData" }))
+    {
+        <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 5px 5px 5px 5px;">
+            <legend></legend>
+            <br />
+
+            <table>
+
+                <tr>
+                    <td>
+                        <h2>Nombre del panel</h2>
+                        @Html.TextBoxFor(form => form.panel.Name)
+                        @Html.ValidationMessageFor(form => form.panel.Name)
+                    </td>
+                    <td>
+                        <h2>Descripción</h2>
+                        @Html.TextBoxFor(form => form.panel.Description)
+                        @Html.ValidationMessageFor(form => form.panel.Description)
+                        @Html.HiddenFor(form => form.panel.Uid)
+                        @Html.Hidden("ListFields", (string)ViewBag.ListFields)
+                        @Html.Hidden("colunmNumber", (int)ViewBag.colunmNumber)
+                    </td>
+                    <td>
+                        <h2>Estilo</h2>
+                        @Html.TextBoxFor(form => form.panel.DivCssStyle)
+                        @Html.ValidationMessageFor(form => form.panel.DivCssStyle)
+                    </td>
+                    <td>
+                        <h2>Tipo de Panel</h2>
+                        @Html.TextBoxFor(form => form.panel.Type)
+                    </td>
+                    <td>
+                        <h2>Nombre Tabla</h2>
+                        @Html.TextBoxFor(form => form.panel.TableDetailName)
+                    </td>
+                </tr>
+            </table>
+
+
+        </fieldset>
+    
+        <br />
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse1">Collapsible panel</a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-body">Panel Body</div>
+                    <div id="FormFieldList">
+                        @foreach (var formfield in Model.formfields)
+                        {
+@*<hr />*@
+                            switch (formfield.ControlType)
+                            {
+                                case ("Generic"):
+                                    Html.RenderPartial("_Generic", formfield);
+                                    break;
+                                case ("StateImage"):
+                                    Html.RenderPartial("_StateImage", formfield);
+                                    break;
+                                case ("ChoiceList"):
+                                    Html.RenderPartial("_ChoiceList", formfield);
+                                    break;
+                                case ("SelectList"):
+                                    Html.RenderPartial("_SelectList", formfield);
+                                    break;
+                                case ("TextArea"):
+                                    Html.RenderPartial("_TextArea", formfield);
+                                    break;
+                                case ("CheckBox"):
+                                    Html.RenderPartial("_CheckBox", formfield);
+                                    break;
+                                case ("Literal"):
+                                    Html.RenderPartial("_Literal", formfield);
+                                    break;
+                                case ("FileUpload"):
+                                    Html.RenderPartial("_FileUpload", formfield);
+                                    break;
+                                case ("LHyperLink"):
+                                    Html.RenderPartial("_LHyperLink", formfield);
+                                    break;
+                                case ("Blank"):
+                                    Html.RenderPartial("_Blank", formfield);
+                                    break;
+                            }
+
+                        }
+                    </div>
+                </div>
+                <h4>
+                    <a href="javascript:;" id="newFieldSelect" class="decoratedButton" style="display: none;">[+] Agregar un campo</a>
+                    <br />
+                </h4>
+            </div>
+        </div>
+    
+        <div id="FieldType">
+            <br />
+            <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 5px 5px 5px 5px;">
+                <legend>Seleccione un tipo de campo </legend>
+                <table>
+                    @*<tr>
+          <th>Seleccione un tipo de campo</th>
+        </tr>*@
+                    <tr>
+                        <td>
+                            <br />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.DropDownList("FieldTypes", new SelectList(Model.formfields[0].FormFieldTypes, "Value", "Text"), new { id = "SelectedFieldUid" })
+                            @Html.ActionLink("Agregar campo", "NewFormField", new { formId = ViewContext.FormContext.FormId, selectedFieldType = "SelectedFieldUid", panelUid = @Model.panel.Uid }, new { @id = "newFormField", @class = "decoratedButton" })
+                            @Html.ValidationMessageFor(model => model.formfields)
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+        <p>
+            <input type="button" value="Guardar" id="btnSave" />
+            @*<input type="button" value="Cancelar" class = "decorated"
+                    onclick="confirmation('Seguro que quiere cancelar todos los cambios?', 
+                    '@Url.Action("Edit", "FormPage", new { id = Model.panel.Page.Uid })  ');" />*@
+
+            <input type="button" value="Cancelar" class = "decorated" id="btnCancelar" onclick="cancelAddControl('@Model.panel.Uid    ')" />
+
+
+        </p>
+    }
+    @section BottomAssets {
+        <script src="@Url.Content("~/Scripts/FormPage/Edit.js")" type="text/javascript"></script>
+
+    }
+<script type="text/javascript">
+    function ValidNum() {
+        if (event.keyCode < 48 || event.keyCode > 57) {
+            event.returnValue = false;
+        }
+    }
+
+    //$(function () {
+    //  $("#btnSave").click(function () {
+    //    alert('aqui');        
+
+    //    return RecorrerForm();        
+    //  });
+    //});
+
+    function RecorrerForm()
+    {
+        alert('RecorrerForm');
+        var sAux="";
+        var frm = document.getElementById("frmData");
+
+        var dict ="";
+
+        for (i=0;i<frm.elements.length;i++)
+        {
+            var nombreCampo=frm.elements[i].name;
+            var pos=nombreCampo.indexOf("FormFieldName");
+
+            if (frm.elements[i].name.indexOf("FormFieldName") >= 0) {
+                alert('iguales');
+            }
+
+            if (pos>=0) {
+                alert('nombreCampo: '+nombreCampo);
+                alert('posicion: '+pos);
+
+                var valor=frm.elements[i].value;
+                //alert('valor: '+ valor);
+        
+                var posValor=dict.indexOf(valor);
+                //alert('posValor: '+ posValor);
+
+                if (posValor>=0) {
+                    alert('Existen nombres de campo repetidos, por favor corregir.');
+                    return false;
+                }
+
+                else {
+                    dict += dict +"," + valor;
+                }
+            }
+        }
+
+        return true;
+    }
+    function cancelAddControl(id)
+    {
+        if (confirm("Seguro que quiere cancelar todos los cambios?")) {
+            blockScreen("Un momento por favor....");
+            $.post('@Url.Action("RefreshToken", "Account")', function (html) {
+                var tokenValue = $('<div />').html(html).find('input[type="hidden"]').val();
+                $('input[name="__RequestVerificationToken"]').val(tokenValue);
+                $.ajax({
+                    url: "/Panel/GetColumns/",
+                    data: { '__RequestVerificationToken': tokenValue, 'id':id},
+                    type: 'POST',
+                    dataType: 'html',            
+                    success: function (html) {
+                        $('#right-column').html("")
+                        $('#right-column').html(html);
+                        $("#FieldType").fadeOut('slow');
+                        $("#newFieldSelect").fadeIn('slow');
+                        $.unblockUI();
+                    }
+                });
+            });
+        }
+    }
+</script>

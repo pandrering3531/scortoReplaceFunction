@@ -1,0 +1,34 @@
+﻿@model IEnumerable<STPC.DynamicForms.Web.Services.Entities.FormStates>
+@{
+    ViewBag.Title = "Páginas del formulario";
+   
+}
+@*@using (Ajax.BeginForm("GetPagesOfForm", "FormPage", new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            
+            HttpMethod = "POST",
+            OnSuccess = "updateSuccess"
+        }, new { @id = "newModeloForm" }))
+{   
+    *@<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<br />
+<br />
+@Html.Hidden("hiddenDate", (object)ViewBag.ActionId)
+<table style="width: 90%">
+
+    <tr>
+
+        <td>
+            @Html.Label("Estados")
+        </td>
+        <td>@Html.DropDownList("fieldList",
+        new SelectList((IEnumerable<STPC.DynamicForms.Web.Services.Entities.FormStates>)Model.OrderBy(e=>e.StateName), "Uid", "StateName", ViewBag.formState),
+        "-- Seleccionar el estado --",
+        new { id = "ddlPages" })</td>
+    </tr>
+</table>
+
+
+

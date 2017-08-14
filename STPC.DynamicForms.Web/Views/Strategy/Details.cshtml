@@ -1,0 +1,121 @@
+﻿@model List<STPC.DynamicForms.Web.Models.ParameterViewModel>
+@{
+  ViewBag.Title = "Index";
+}
+
+@Html.Hidden("Data_FormPageName", (string)ViewBag.Data_FormPageName)
+@Html.Hidden("Data_FormPageId", (Guid)ViewBag.Data_FormPageId)
+@Html.Hidden("Data_FormId", (Guid)ViewBag.Data_FormId)
+@Html.Hidden("Data_StrategyId", (int)ViewBag.Data_StrategyId)
+
+<table style="width: 80%">
+  <tr>
+    <td>
+      <input type="checkbox" id="chkTrigger" name="Trigger" onclick="onTriggerchanged(this);" >Campo que dispara ejecucion:<br>
+    </td>
+    <td>@Html.DropDownList("ddlTriggerField",
+        new SelectList((IEnumerable<STPC.DynamicForms.Web.Services.Entities.PageField>)ViewBag.fieldList, "Uid", "FormFieldName"),
+        new { @class = "text ui-widget-content ui-corner-all", disabled = "disabled", style = "width:auto" })
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <input type="checkbox" id="chkResponse" name="Response" onclick="onResponsechanged(this);">Mostrar respuesta en:<br>
+    </td>
+    <td>@Html.DropDownList("ddlResponseField",
+        new SelectList((IEnumerable<STPC.DynamicForms.Web.Services.Entities.PageField>)ViewBag.fieldList, "Uid", "FormFieldName"),
+        new { @class = "text ui-widget-content ui-corner-all", disabled = "disabled", style = "width:auto" })
+    </td>
+  </tr>
+</table>
+
+@foreach (var param in @Model)
+{
+  var index = 1;
+  <br />
+  
+  <fieldset style="border-color: lightgray; border-style: solid; border-width: thin; padding: 5px 5px 5px 5px;">
+    <legend>@param.Name</legend>
+    <table style="width: 100%">
+      <tr>
+        <td>
+          <h2>Tipo de Parámetro</h2>
+        </td>
+        <td>@Html.DropDownList("ddlParameterType" + "_ParamName:" + param.Name,
+        new SelectList((IEnumerable<string>)ViewBag.listaTypes),
+        new { @class = "text ui-widget-content ui-corner-all", style = "width:auto", onchange = "switchParatemerType('" + param.Name + "');" })
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h2>Campo Formulario</h2>
+        </td>
+        <td>@Html.DropDownList("fieldList" + "_ParamName:" + param.Name,
+        new SelectList((IEnumerable<STPC.DynamicForms.Web.Services.Entities.PageField>)ViewBag.fieldList, "Uid", "FormFieldName"),
+        new { @class = "text ui-widget-content ui-corner-all", style = "width:auto" })
+          @Html.Hidden("FieldTypeList" + "_ParamName:" + param.Name, param.Type)
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <br />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h2>Valor Manual</h2>
+        </td>
+        <td>
+          @switch (param.Type)
+          {
+            case "Texto":
+            @Html.TextBox("txtManualValue" + "_ParamName:" + param.Name, "", new { style = "width:auto", disabled = "disabled" })
+              break;
+
+            case "Número":
+            @Html.TextBox("txtManualValue" + "_ParamName:" + param.Name, "", new { style = "width:auto", disabled = "disabled", @class = "CustomInteger" })
+              break;
+
+            case "Fecha":
+            @Html.TextBox("txtManualValue" + "_ParamName:" + param.Name, "", new { style = "width:auto", disabled = "disabled", @class = "jQueryCalendarInput" })
+              break;
+          }
+        </td>
+        @*<td>@Html.DropDownList("fieldList" + "_ParamName:" + @param.Name,
+        new SelectList((IEnumerable<STPC.DynamicForms.Web.Services.Entities.PageField>)ViewBag.fieldList, "Uid", "FormFieldName"),
+        "-- Ingreso Manual --",
+        new { @class = "text ui-widget-content ui-corner-all" })
+          @Html.Hidden("FieldTypeList" + "_ParamName:" + param.Name, param.Type)
+        </td>*@
+      </tr>
+    </table>
+    <br />
+  </fieldset>
+  <br />
+          index = index + 1;
+}
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    if ($("#chkTrigger").is(":checked")) {
+      document.getElementById("ddlTriggerField").removeAttribute("disabled");
+    }
+
+    else {
+      document.getElementById("ddlTriggerField").setAttribute("disabled", "disabled")
+    }
+
+    if ($("#chkResponse").is(":checked")) {
+      document.getElementById("ddlResponseField").removeAttribute("disabled");
+    }
+
+    else {
+      document.getElementById("ddlResponseField").setAttribute("disabled", "disabled")
+    }
+  });
+</script>

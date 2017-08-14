@@ -1,0 +1,66 @@
+﻿@model List<STPC.DynamicForms.Web.RT.Services.Entities.StrategySettings>
+@{
+    ViewBag.Title = "Index";
+    <script src="@Url.Content("~/Scripts/Forms/Respond.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/StrategySettings/StrategySettings.js")" type="text/javascript"></script>
+    
+}
+
+
+@Html.Hidden("Error", (string)@ViewBag.error, new { id = "txtError" })
+
+<table class="resultados">
+
+    <tr>
+        <th>Nombre</th>
+        <th style="width: 80px;">Valor</th>
+        <th>Tipo</th>
+        <th></th>
+    </tr>
+
+    @foreach (var strategySetting in Model)
+    {
+        <tr>
+
+            <td>@strategySetting.AttributeName</td>
+
+            @if (strategySetting.ValueType == "Numero")
+            {
+                <td>@Html.TextBoxFor(e => strategySetting.Value, new { id = "id_" + strategySetting.Uid, @class = "CustomInteger" })</td>
+            }
+            @if (strategySetting.ValueType == "Fecha")
+            {
+                <td>@Html.TextBoxFor(e => strategySetting.Value, new { id = "id_" + strategySetting.Uid, @class = "jQueryCalendarInput" })</td>
+            }
+            @if (strategySetting.ValueType == "Moneda")
+            {
+                <td>@Html.TextBoxFor(e => strategySetting.Value, new { id = "id_" + strategySetting.Uid, @class = "CustomCurrency" })</td>
+            }
+             
+
+
+            <td>@strategySetting.ValueType</td>
+            <td>
+                <img src="@Url.Content("~/Content/images/editar.gif")" title="Editar" alt="Editar" onclick="EditStrategyAttribute('@strategySetting.Uid','@strategySetting.StrategyID')" id="btnEdit"/>
+
+            </td>
+        </tr>
+    }
+
+
+</table>
+@section BottomAssets 
+  {
+    
+    
+    <script src="@Url.Content("~/Scripts/StrategySettings/StrategySettings.js")" type="text/javascript"></script>
+
+}
+
+<script type="text/javascript">
+
+   
+ 
+</script>
+
+

@@ -1,0 +1,41 @@
+﻿@model STPC.DynamicForms.Web.RT.Services.Entities.TBL_CapturaInformacionBasica_GridSimuladorCuotasFNC
+
+@using (Html.BeginForm()) {
+        <table class="webgrid-table">
+
+            <tr>
+
+                <td style="width:19%">
+
+                    @Html.TextBoxFor(m=>m.F_varEntidadFnc, new {@class="basico1_input", required = "true", maxlength="50", tooltip="true", data_val="true", data_val_required="* Campo requerido", onkeypress="return soloLetras(event)"})
+                    @Html.ValidationMessageFor(m=>m.F_varEntidadFnc)
+
+                </td>
+
+                <td style="width:19%">
+
+                    @Html.TextBoxFor(m=>m.F_varNumeroObligacionFnc, new {@class="basico1_input", required = "true", maxlength="10", tooltip="true", data_val="true", data_val_required="* Campo requerido" })
+                    @Html.ValidationMessageFor(m=>m.F_varNumeroObligacionFnc)
+
+                </td>
+
+                <td style="width:19%">
+
+                    @Html.TextBoxFor(m=>m.F_monValorCuotaFnc, new {@class = "basico1_input allownumericwithoutdecimal currency required", data_val="true", data_val_required="* Campo requerido", max="999999999999", min="0"})
+                    @Html.ValidationMessageFor(m=>m.F_monValorCuotaFnc)
+                </td>
+                <td style="width:19%">
+
+                    @Html.TextBoxFor(m=>m.F_monValorObligacionFnc, new {@class = "basico1_input allownumericwithoutdecimal currency required", data_val="true", data_val_required="* Campo requerido", max="999999999999", min="0"})
+                    @Html.ValidationMessageFor(m=>m.F_monValorObligacionFnc)
+                </td>
+                <td>
+                    <input type="button" value="Guardar" class="inssave-btnFNC"/>
+                    <input type="button" value="Cancelar" class="cancelinssave-btnFNC"/>
+                </td>
+            </tr>
+
+        </table>
+    
+}
+
